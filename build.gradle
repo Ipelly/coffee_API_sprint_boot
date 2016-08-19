@@ -1,4 +1,17 @@
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "4.0.3"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -8,31 +21,36 @@ apply plugin: 'application'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = "com.demazetech.coffee.api.Application"
+mainClassName = 'com.demazetech.coffee.api.Application'
 
 jar {
     baseName = 'coffee-api'
-    version =  '1.0.0'
+    version  = '1.0.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
-    }
-}
-
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
+    compile "org.springframework:spring-jdbc:$springVersion"
+    compile "org.flywaydb:flyway-core:$flywayVersion"
+    compile "mysql:mysql-connector-java:6.0.3"
+    runtime fileTree (dir: 'config', include: '*.properties')
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
+}
+
+task flyway {
+    Properties props = new Properties()
+    props.load(new FileInputStream("config/application.properties"))
+    flyway.url=props.getProperty("spring.datasource.url")
+    flyway.user=props.getProperty("spring.datasource.username")
+    flyway.password=props.getProperty("spring.datasource.password")
+    flyway.baselineOnMigrate=true
 }
