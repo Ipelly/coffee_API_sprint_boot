@@ -2,10 +2,11 @@
 
 APP="coffee-api"
 BASEDIR="/usr/local/xiaoslab/${APP}"
-START_SCRIPT="java -jar ${BASEDIR}/coffee-api*.jar"
-PID_FILE="/var/run/${APP}/${APP}.pid"
-LOGDIR="/var/log/${APP}"
-LOGFILE="$LOGDIR/${APP}.out"
+START_SCRIPT="java -jar ${BASEDIR}/{APP}*.jar"
+PID_DIR="/var/run/${APP}"
+PID_FILE="${PID_DIR}/${APP}.pid"
+LOG_DIR="/var/log/${APP}"
+LOG_FILE="$LOG_DIR/${APP}.out"
 
 # ***********************************************
 # ***********************************************
@@ -24,8 +25,9 @@ echoGreen() { echo -e "${green}$1${reset}"; }
 echoYellow() { echo -e "${yellow}$1${reset}"; }
 
 start() {
-  mkdir -p $LOGDIR
-  PID=`$DAEMON $ARGS > $LOGFILE 2>&1 & echo $!`
+  mkdir -p $LOG_DIR
+  mkdir -p $PID_DIR
+  PID=`$DAEMON $ARGS > $LOG_FILE 2>&1 & echo $!`
 }
 
 case "$1" in
