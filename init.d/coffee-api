@@ -10,7 +10,7 @@ LOGFILE="$LOGDIR/${APP}.out"
 # ***********************************************
 # ***********************************************
 
-ARGS="" # optional start script arguments
+ARGS="--spring.config.location=$BASEDIR/config/application.properties"
 DAEMON=$START_SCRIPT
 
 # colors

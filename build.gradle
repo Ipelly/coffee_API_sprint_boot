@@ -97,6 +97,11 @@ task rpm(type: Rpm) {
         fileMode = 0755
     }
 
+    from('config') {
+        into "${basedir}/config"
+        fileMode = 0755
+    }
+
     from('init.d') {
         into "/etc/init.d"
         fileMode = 0755
