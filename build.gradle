@@ -74,37 +74,32 @@ task flyway {
 }
 
 task rpm(type: Rpm) {
+
     packageName = 'coffee-api'
-    description = 'Xiaoslab Coffee REST API Service'
+    summary = 'Xiaoslab Coffee REST API Service'
     version = project.appVersion
-    release = 1
+    release = project.majorVersion
     license = 'Xiaoslab'
-    arch = I386
+    arch = 'noarch'
     os = LINUX
     group = 'Applications/Xiaoslab'
-    packager = 'Rafaat Hossain <rafaat123@gmail.com>'
     vendor = 'Xiaoslab'
     url = 'http://www.xiaoslab.com'
-
-//    installUtils = file('scripts/rpm/utils.sh')
-//    preInstall = file('scripts/rpm/preInstall.sh')
-//    postInstall = file('scripts/rpm/postInstall.sh')
-//    preUninstall = file('scripts/rpm/preUninstall.sh')
-//    postUninstall = file('scripts/rpm/postUninstall.sh')
 
     requires('java')
     requires('httpd')
 
-    into '/usr/local/xiaoslab/coffee-api'
+    def basedir = '/usr/local/xiaoslab/coffee-api'
 
-    from('build/libs/coffee-api-*.jar') {
-        into '/'
-        fileMode = 0755
-    }
-    from('init.d/coffee-api') {
-        into '/init.d/'
+    from('build/libs') {
+        into "${basedir}"
+        include 'coffee-api-*.jar'
         fileMode = 0755
     }
 
-    link('/usr/local/xiaoslab/init.d/coffee-api', '/etc/init.d/coffee-api')
+    from('init.d') {
+        into "/etc/init.d"
+        fileMode = 0755
+    }
+
 }
