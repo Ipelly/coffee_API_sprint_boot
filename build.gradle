@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "com.netflix.nebula:gradle-ospackage-plugin:4.0.0"
     }
 }
 
@@ -17,15 +18,19 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
+apply plugin: 'nebula.rpm'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
 mainClassName = 'com.demazetech.coffee.api.Application'
+
+project.ext {
+    appVersion = '1.0.0'
+}
 
 jar {
     baseName = 'coffee-api'
-    version  = '1.0.0'
+    version  = project.appVersion
 }
 
 repositories {
@@ -43,7 +48,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.13'
 }
 
 task flyway {
@@ -53,4 +58,40 @@ task flyway {
     flyway.user=props.getProperty("spring.datasource.username")
     flyway.password=props.getProperty("spring.datasource.password")
     flyway.baselineOnMigrate=true
+}
+
+task rpm(type: Rpm) {
+    packageName = 'coffee-api'
+    description = 'Xiaoslab Coffee REST API Service'
+    version = project.appVersion
+    release = 1
+    license = 'Xiaoslab'
+    arch = I386
+    os = LINUX
+    group = 'Applications/Xiaoslab'
+    packager = 'Rafaat Hossain <rafaat123@gmail.com>'
+    vendor = 'Xiaoslab'
+    url = 'http://www.xiaoslab.com'
+
+//    installUtils = file('scripts/rpm/utils.sh')
+//    preInstall = file('scripts/rpm/preInstall.sh')
+//    postInstall = file('scripts/rpm/postInstall.sh')
+//    preUninstall = file('scripts/rpm/preUninstall.sh')
+//    postUninstall = file('scripts/rpm/postUninstall.sh')
+
+    requires('java-1.8.0-openjdk.x86_64')
+    requires('httpd')
+
+    into '/usr/local/xiaoslab/coffee-api'
+
+    from('build/libs/coffee-api-*.jar') {
+        into '/'
+        fileMode = 0755
+    }
+    from('init.d/coffee-api') {
+        into '/init.d/'
+        fileMode = 0755
+    }
+
+    link('/usr/local/xiaoslab/init.d/coffee-api', '/etc/init.d/coffee-api')
 }
