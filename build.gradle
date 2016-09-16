@@ -25,7 +25,20 @@ targetCompatibility = 1.8
 mainClassName = 'com.demazetech.coffee.api.Application'
 
 project.ext {
-    appVersion = '1.0.0'
+    majorVersion = 0
+    minorVersion = 0
+    patchVersion = System.getenv('BUILD_NUMBER')
+    
+    if (patchVersion == null || patchVersion.isEmpty()) {
+        patchVersion = getTimestamp()
+    }
+    appVersion = String.format('%s.%s.%s', majorVersion, minorVersion, patchVersion)
+}
+
+def getTimestamp() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
 }
 
 jar {
@@ -79,7 +92,7 @@ task rpm(type: Rpm) {
 //    preUninstall = file('scripts/rpm/preUninstall.sh')
 //    postUninstall = file('scripts/rpm/postUninstall.sh')
 
-    requires('java-1.8.0-openjdk.x86_64')
+    requires('java')
     requires('httpd')
 
     into '/usr/local/xiaoslab/coffee-api'
