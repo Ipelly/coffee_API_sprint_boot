@@ -2,7 +2,7 @@
 
 APP="coffee-api"
 BASEDIR="/usr/local/xiaoslab/${APP}"
-START_SCRIPT="java -jar ${BASEDIR}/{APP}*.jar"
+START_SCRIPT="java -jar ${BASEDIR}/${APP}*.jar"
 PID_DIR="/var/run/${APP}"
 PID_FILE="${PID_DIR}/${APP}.pid"
 LOG_DIR="/var/log/${APP}"
