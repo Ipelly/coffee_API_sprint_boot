@@ -54,6 +54,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
     compile "org.springframework:spring-jdbc:$springVersion"
+    compile "org.springframework.security.oauth:spring-security-oauth2:$springOAuthVersion"
     compile "org.flywaydb:flyway-core:$flywayVersion"
     compile "mysql:mysql-connector-java:6.0.3"
     runtime fileTree (dir: 'config', include: '*.properties')
