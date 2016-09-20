@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -42,9 +43,21 @@ public class SecurityConfig {
     @EnableResourceServer
     protected static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+        @Autowired
+        private SocialTokenFilter socialTokenFilter;
+
+        @Autowired
+        private FacebookAuthenticationProvider facebookAuthenticationProvider;
+
+        @Autowired
+        private GoogleAuthenticationProvider googleAuthenticationProvider;
+
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-            resources.tokenStore(tokenStore).resourceId(SERVER_RESOURCE_ID);
+            resources
+                    .tokenStore(tokenStore)
+                    .resourceId(SERVER_RESOURCE_ID)
+                    .stateless(false);
         }
 
         @Override
@@ -52,7 +65,12 @@ public class SecurityConfig {
             http
                     .requestMatchers().and().authorizeRequests()
                     .antMatchers("/v1/status").permitAll()
-                    .antMatchers("/**").authenticated();
+                    .antMatchers("/**").authenticated()
+                    .and()
+                    .addFilterBefore(socialTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
+                    .authenticationProvider(facebookAuthenticationProvider)
+                    .authenticationProvider(googleAuthenticationProvider);
+
         }
     }
 
@@ -66,7 +84,10 @@ public class SecurityConfig {
 
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-            endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore).approvalStoreDisabled();
+            endpoints
+                    .authenticationManager(authenticationManager)
+                    .tokenStore(tokenStore)
+                    .approvalStoreDisabled();
         }
 
         @Override
@@ -81,3 +102,7 @@ public class SecurityConfig {
         }
     }
 }
+
+
+//https://www.googleapis.com/plus/v1/people/me/?access_token=
+//https://graph.facebook.com/me/?access_token=
