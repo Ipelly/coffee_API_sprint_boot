@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "com.netflix.nebula:gradle-ospackage-plugin:4.0.0"
     }
 }
 
@@ -17,15 +18,32 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
+apply plugin: 'nebula.rpm'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
 mainClassName = 'com.demazetech.coffee.api.Application'
+
+project.ext {
+    majorVersion = 0
+    minorVersion = 0
+    patchVersion = System.getenv('BUILD_NUMBER')
+    
+    if (patchVersion == null || patchVersion.isEmpty()) {
+        patchVersion = getTimestamp()
+    }
+    appVersion = String.format('%s.%s.%s', majorVersion, minorVersion, patchVersion)
+}
+
+def getTimestamp() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
+}
 
 jar {
     baseName = 'coffee-api'
-    version  = '1.0.0'
+    version  = project.appVersion
 }
 
 repositories {
@@ -36,6 +54,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
     compile "org.springframework:spring-jdbc:$springVersion"
+    compile "org.springframework.security.oauth:spring-security-oauth2:$springOAuthVersion"
+    compile "org.springframework.social:spring-social-facebook"
+    compile "org.springframework.social:spring-social-google:1.0.0.RC1"
     compile "org.flywaydb:flyway-core:$flywayVersion"
     compile "mysql:mysql-connector-java:6.0.3"
     runtime fileTree (dir: 'config', include: '*.properties')
@@ -43,7 +64,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.13'
 }
 
 task flyway {
@@ -53,4 +74,40 @@ task flyway {
     flyway.user=props.getProperty("spring.datasource.username")
     flyway.password=props.getProperty("spring.datasource.password")
     flyway.baselineOnMigrate=true
+}
+
+task rpm(type: Rpm) {
+
+    packageName = 'coffee-api'
+    summary = 'Xiaoslab Coffee REST API Service'
+    version = project.appVersion
+    release = project.majorVersion
+    license = 'Xiaoslab'
+    arch = 'noarch'
+    os = LINUX
+    group = 'Applications/Xiaoslab'
+    vendor = 'Xiaoslab'
+    url = 'http://www.xiaoslab.com'
+
+    requires('java')
+    requires('httpd')
+
+    def basedir = '/usr/local/xiaoslab/coffee-api'
+
+    from('build/libs') {
+        into "${basedir}"
+        include 'coffee-api-*.jar'
+        fileMode = 0755
+    }
+
+    from('config') {
+        into "${basedir}/config"
+        fileMode = 0755
+    }
+
+    from('init.d') {
+        into "/etc/init.d"
+        fileMode = 0755
+    }
+
 }
