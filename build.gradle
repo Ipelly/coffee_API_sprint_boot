@@ -22,7 +22,7 @@ apply plugin: 'nebula.rpm'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-mainClassName = 'com.demazetech.coffee.api.Application'
+mainClassName = 'com.xiaoslab.coffee.api.Application'
 
 project.ext {
     majorVersion = 0
@@ -58,7 +58,7 @@ dependencies {
     compile "org.springframework.social:spring-social-facebook"
     compile "org.springframework.social:spring-social-google:1.0.0.RC1"
     compile "org.flywaydb:flyway-core:$flywayVersion"
-    compile "mysql:mysql-connector-java:6.0.3"
+    compile "mysql:mysql-connector-java:5.1.39"
     runtime fileTree (dir: 'config', include: '*.properties')
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
@@ -75,6 +75,8 @@ task flyway {
     flyway.password=props.getProperty("spring.datasource.password")
     flyway.baselineOnMigrate=true
 }
+
+test.dependsOn flywayMigrate
 
 task rpm(type: Rpm) {
 
