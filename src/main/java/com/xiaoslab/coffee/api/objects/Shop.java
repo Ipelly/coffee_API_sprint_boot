@@ -8,88 +8,89 @@ import java.math.BigDecimal;
 
 public class Shop {
 
-    private int ShopID;
-    private String Name;
-    private String Address1;
-    private String Address2;
-    private String City;
-    private String State;
-    private String Zip;
-    private String Phone;
-    private BigDecimal Longitute;
+    private int shopID;
+    private String name;
+    private String address1;
+    private String address2;
+    private String city;
+    private String state;
+    private String zip;
+    private String phone;
+    private BigDecimal longitute;
     private BigDecimal latitude;
-    private int Rating;
+    private int rating;
+
 
     public int getShopID() {
-        return ShopID;
+        return shopID;
     }
 
     public void setShopID(int shopID) {
-        ShopID = shopID;
+        this.shopID = shopID;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getAddress1() {
-        return Address1;
+        return address1;
     }
 
     public void setAddress1(String address1) {
-        Address1 = address1;
+        this.address1 = address1;
     }
 
     public String getAddress2() {
-        return Address2;
+        return address2;
     }
 
     public void setAddress2(String address2) {
-        Address2 = address2;
+        this.address2 = address2;
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public void setCity(String city) {
-        City = city;
+        this.city = city;
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        this.state = state;
     }
 
     public String getZip() {
-        return Zip;
+        return zip;
     }
 
     public void setZip(String zip) {
-        Zip = zip;
+        this.zip = zip;
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
     public void setPhone(String phone) {
-        Phone = phone;
+        this.phone = phone;
     }
 
     public BigDecimal getLongitute() {
-        return Longitute;
+        return longitute;
     }
 
     public void setLongitute(BigDecimal longitute) {
-        Longitute = longitute;
+        this.longitute = longitute;
     }
 
     public BigDecimal getLatitude() {
@@ -101,10 +102,10 @@ public class Shop {
     }
 
     public int getRating() {
-        return Rating;
+        return rating;
     }
 
     public void setRating(int rating) {
-        Rating = rating;
+        this.rating = rating;
     }
 }

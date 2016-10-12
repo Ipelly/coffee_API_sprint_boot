@@ -27,7 +27,7 @@ public class DaoBeans {
 
 
     @Bean
-    public ShopDao shopDaoDao() {
+    public ShopDao shopDao() {
         return new ShopDao();
     }
 

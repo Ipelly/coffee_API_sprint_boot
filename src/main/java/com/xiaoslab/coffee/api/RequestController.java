@@ -5,6 +5,7 @@ import com.xiaoslab.coffee.api.services.MenuItemService;
 import com.xiaoslab.coffee.api.services.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ public class RequestController {
 
     @Autowired
     MenuItemService menuItemService;
+
     @Autowired
     ShopService shopService;
     @Autowired
@@ -32,10 +34,11 @@ public class RequestController {
     }
 
     //--- Need to talk with rafaat hossain
-    @RequestMapping(value = "/shops/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/shops/{shopId}", method = RequestMethod.GET)
     // @PathParam
-    public Object getShop(int shopId) {
-        return shopService.listshops().get(shopId);
+    public Object getShop(@PathVariable int shopId) {
+        return shopService.listshops().stream().filter(p -> p.getShopID() == shopId).collect(Collectors.toList());
+        //return shopService.listshops();
     }
 
     //--- Need to talk with rafaat hossain
