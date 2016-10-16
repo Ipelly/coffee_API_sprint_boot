@@ -1,9 +1,7 @@
 package com.xiaoslab.coffee.api;
 
-import com.xiaoslab.coffee.api.services.FacebookService;
-import com.xiaoslab.coffee.api.services.GoogleService;
-import com.xiaoslab.coffee.api.services.MenuItemService;
-import com.xiaoslab.coffee.api.services.ShopService;
+import com.xiaoslab.coffee.api.objects.*;
+import com.xiaoslab.coffee.api.services.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,12 +14,6 @@ public class ServiceBeans {
     }
 
     @Bean
-    public ShopService shopService() {
-        return new ShopService();
-    }
-
-
-    @Bean
     public FacebookService facebookService() {
         return new FacebookService();
     }
@@ -31,4 +23,39 @@ public class ServiceBeans {
         return new GoogleService();
     }
 
+
+    @Bean
+    public IService<Shop> shopService() {
+        return new ShopService();
+    }
+
+    @Bean
+    public IService<Addon> addonService() {
+        return new AddonService();
+    }
+
+    @Bean
+    public IService<Ingredient> ingredientService() {
+        return new IngredientService();
+    }
+
+    @Bean
+    public IService<Item> itemService() {
+        return new ItemService();
+    }
+
+    @Bean
+    public IService<ItemOption> itemOptionService() {
+        return new ItemOptionService();
+    }
+
+    @Bean
+    public IService<ItemAddon> itemAddonService() {
+        return new ItemAddonService();
+    }
+
+    @Bean
+    public IService<ItemIngredient> itemIngredientService() {
+        return new ItemIngredientService();
+    }
 }

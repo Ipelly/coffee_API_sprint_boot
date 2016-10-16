@@ -32,3 +32,6 @@ CHANGE COLUMN `XipliUserID` `UserID` INT(11) NOT NULL ;
 
 ALTER TABLE `xipli`.`Shop`
 CHANGE COLUMN `latitude` `Latitude` DECIMAL(20,4) NULL DEFAULT NULL ;
+
+ALTER TABLE `xipli`.`ItemOption`
+CHANGE COLUMN `itemOptionID` `ItemOptionID` INT(11) NOT NULL AUTO_INCREMENT ;

@@ -2,34 +2,31 @@ package com.xiaoslab.coffee.api;
 
 import com.xiaoslab.coffee.api.services.FacebookService;
 import com.xiaoslab.coffee.api.services.MenuItemService;
-import com.xiaoslab.coffee.api.services.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 // git practice/
 
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/")
 public class RequestController {
 
     @Autowired
     MenuItemService menuItemService;
 
-    @Autowired
-    ShopService shopService;
+//    @Autowired
+//    ShopService shopService;
+
     @Autowired
     private FacebookService facebookService;
-
+/*
     @RequestMapping(value = "/shops", method = RequestMethod.GET)
     public Object getShops() {
         return shopService.listshops();
@@ -58,7 +55,7 @@ public class RequestController {
                 .filter(p -> p.getName().equals(shopName))
                 .collect(Collectors.toList());
     }
-
+*/
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public Object getStatus() {

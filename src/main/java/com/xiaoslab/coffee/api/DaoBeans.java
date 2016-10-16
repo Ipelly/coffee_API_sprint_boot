@@ -1,7 +1,6 @@
 package com.xiaoslab.coffee.api;
 
-import com.xiaoslab.coffee.api.dao.MenuItemDao;
-import com.xiaoslab.coffee.api.dao.ShopDao;
+import com.xiaoslab.coffee.api.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,4 +30,33 @@ public class DaoBeans {
         return new ShopDao();
     }
 
+    @Bean
+    public AddonDao addonDaoDao() {
+        return new AddonDao();
+    }
+
+    @Bean
+    public IngredientDao ingredientDao() {
+        return new IngredientDao();
+    }
+
+    @Bean
+    public ItemAddonDao itemAddonDaoDao() {
+        return new ItemAddonDao();
+    }
+
+    @Bean
+    public ItemDao itemDao() {
+        return new ItemDao();
+    }
+
+    @Bean
+    public ItemOptionDao itemOptionDao() {
+        return new ItemOptionDao();
+    }
+
+    @Bean
+    public ItemIngredientDao itemIngredientDao() {
+        return new ItemIngredientDao();
+    }
 }
