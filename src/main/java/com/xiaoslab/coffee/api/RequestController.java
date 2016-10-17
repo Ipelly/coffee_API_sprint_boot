@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api;
 
+import com.xiaoslab.coffee.api.objects.MenuItem;
 import com.xiaoslab.coffee.api.services.FacebookService;
 import com.xiaoslab.coffee.api.services.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class RequestController {
 
     @RequestMapping(value = "/test-menu", method = RequestMethod.GET)
     public Object getTestMenu() {
+        return menuItemService.listMenuItems();
+    }
+
+    @RequestMapping(value = "/test-menu", method = RequestMethod.POST)
+    public Object createTestMenu(MenuItem menuItem) {
+        menuItemService.create(menuItem);
         return menuItemService.listMenuItems();
     }
 

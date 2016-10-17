@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class StatusAPITest extends _BaseAPITest {
 
     static final String STATUS_ENDPOINT = "/status";
+
     @Test
     public void statusAsJsonString() throws Exception {
         ResponseEntity entity = get(STATUS_ENDPOINT, String.class);

@@ -18,4 +18,9 @@ public class MenuItemService {
         return menuItemDao.listMenuItems();
     }
 
+    public MenuItem create(MenuItem menuItem) {
+        int id = menuItemDao.create(menuItem);
+        return menuItemDao.get(id);
+    }
+
 }
