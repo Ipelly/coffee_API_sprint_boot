@@ -24,7 +24,7 @@ public class ShopTest {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
-    private ShopService shopService;
+    private IService<Shop> shopService;
     @Autowired
     private LoginUtils loginUtils;
 
@@ -38,7 +38,7 @@ public class ShopTest {
     @Test
     public void shopService() {
         loginUtils.loginWithUserRole();
-        List<Shop> items = shopService.listshops();
+        List<Shop> items = shopService.getAll();
         logger.info(items);
         assertNotNull(items);
         assertEquals(0, items.size());

@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/v1/")
+@RequestMapping("/v1")
 public class RequestController {
 
     @Autowired
