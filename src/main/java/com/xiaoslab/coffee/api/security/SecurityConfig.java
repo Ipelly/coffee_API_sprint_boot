@@ -26,20 +26,6 @@ public class SecurityConfig {
     private static InMemoryTokenStore tokenStore = new InMemoryTokenStore();
 
     @Configuration
-    @EnableWebSecurity
-    @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
-    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Autowired
-        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                    .inMemoryAuthentication()
-                    .withUser("john@yahoo.com").password("password").roles("USER");
-        }
-
-    }
-
-    @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
@@ -65,7 +51,7 @@ public class SecurityConfig {
             http
                     .requestMatchers().and().authorizeRequests()
                     .antMatchers("/v1/status").permitAll()
-                    .antMatchers("/**").authenticated()
+                    //  .antMatchers("/**").authenticated()
                     .and()
                     .addFilterBefore(socialTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
                     .authenticationProvider(facebookAuthenticationProvider)
@@ -100,6 +86,20 @@ public class SecurityConfig {
                     .resourceIds(SERVER_RESOURCE_ID)
             ;
         }
+    }
+
+    @Configuration
+    @EnableWebSecurity
+    @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
+    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Autowired
+        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+            auth
+                    .inMemoryAuthentication()
+                    .withUser("john@yahoo.com").password("password").roles("USER");
+        }
+
     }
 }
 

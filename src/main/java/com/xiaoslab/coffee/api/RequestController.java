@@ -12,15 +12,51 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+// git practice/
+
+
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/")
 public class RequestController {
 
     @Autowired
-    private FacebookService facebookService;
+    MenuItemService menuItemService;
+
+//    @Autowired
+//    ShopService shopService;
 
     @Autowired
-    MenuItemService menuItemService;
+    private FacebookService facebookService;
+/*
+    @RequestMapping(value = "/shops", method = RequestMethod.GET)
+    public Object getShops() {
+        return shopService.listshops();
+    }
+
+    //--- Need to talk with rafaat hossain
+    @RequestMapping(value = "/shops/{shopId}", method = RequestMethod.GET)
+    // @PathParam
+    public Object getShop(@PathVariable int shopId) {
+        return shopService.listshops().stream().filter(p -> p.getShopID() == shopId).collect(Collectors.toList());
+        //return shopService.listshops();
+    }
+
+    //--- Need to talk with rafaat hossain
+    @RequestMapping(value = "/shops/?lat=60&long=56&radius=5/", method = RequestMethod.GET)
+    public Object getShops(int shopId, BigDecimal lat, BigDecimal lng, double radius) {
+        return shopService.listshops().stream()
+                .filter(p -> p.getLatitude().equals(lat) & p.getLongitute().equals(lng))
+                .collect(Collectors.toList());
+    }
+
+    //--- Need to talk with rafaat hossain
+    @RequestMapping(value = "shops/?search=deli&page=1&pageSize=20", method = RequestMethod.GET)
+    public Object getShops(int shopId, String shopName, int sPage, int ePage) {
+        return shopService.listshops().stream()
+                .filter(p -> p.getName().equals(shopName))
+                .collect(Collectors.toList());
+    }
+*/
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public Object getStatus() {
@@ -44,4 +80,6 @@ public class RequestController {
     public Object getProfile() {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+
 }
