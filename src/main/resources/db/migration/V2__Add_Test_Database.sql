@@ -1,4 +1,5 @@
 
+DROP DATABASE IF EXISTS demaze;
 CREATE DATABASE IF NOT EXISTS demaze;
 
 CREATE TABLE demaze.TestMenu (

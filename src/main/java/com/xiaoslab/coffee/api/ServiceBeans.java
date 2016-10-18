@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceBeans {
 
     @Bean
+    public UserService userService() {
+        return new UserService();
+    }
+
+    @Bean
     public MenuItemService menuItemService() {
         return new MenuItemService();
     }

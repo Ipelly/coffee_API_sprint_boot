@@ -1,26 +1,22 @@
--- Create database xipli if not exists;
-CREATE DATABASE IF NOT EXISTS xipli;
 
-
--- Create database xipli if not exists;
-CREATE TABLE xipli.XipliUser (
-  XipliXipliUserID int(11) NOT NULL AUTO_INCREMENT,
-  FirstName varchar(500) NOT NULL,
-  LastName varchar(500) DEFAULT NULL,
-  EmailAddress varchar(100) DEFAULT NULL,
-  PhoneNo varchar(45) DEFAULT NULL,
-  Password varchar(45) NOT NULL,
-  Provider varchar(45) DEFAULT NULL,
-  ProviderXipliUserID varchar(45) DEFAULT NULL,
-  Usercol varchar(45) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (XipliXipliUserID,Usercol)
-) ;
+CREATE TABLE xipli.user (
+  user_id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  first_name varchar(255) NOT NULL,
+  last_name varchar(255) DEFAULT NULL,
+  email_address varchar(255) DEFAULT NULL,
+  phone varchar(20) DEFAULT NULL,
+  password varchar(255) DEFAULT NULL,
+  password_salt varchar(45) DEFAULT NULL,
+  provider_type varchar(45) DEFAULT NULL,
+  provider_user_id varchar(45) DEFAULT NULL,
+  status tinyint(3) UNSIGNED NULL DEFAULT '1',
+  PRIMARY KEY (user_id)
+);
 
 
 CREATE TABLE xipli.Addon (
   AddonID int(11) NOT NULL,
-  Name varchar(500) NOT NULL,
+  Name varchar(255) NOT NULL,
   Price decimal(20,2) NOT NULL,
   ShopID int(11) NOT NULL,
   Active TINYINT(1) NULL DEFAULT '1',
@@ -28,18 +24,19 @@ CREATE TABLE xipli.Addon (
 );
 
 
-
 CREATE TABLE xipli.Ingredient (
   IngredientID int(11) NOT NULL AUTO_INCREMENT,
-  Name varchar(500) NOT NULL,
+  Name varchar(255) NOT NULL,
   Price decimal(20,2) NOT NULL,
   Active TINYINT(1) NULL DEFAULT '1',
   PRIMARY KEY (IngredientID,Name)
 ) ;
+
+
 CREATE TABLE xipli.Item (
   ItemID int(11) NOT NULL AUTO_INCREMENT,
-  Name varchar(500) NOT NULL,
-  Description varchar(500) DEFAULT NULL,
+  Name varchar(255) NOT NULL,
+  Description varchar(255) DEFAULT NULL,
   ShopID int(11) NOT NULL,
   Price decimal(20,2) DEFAULT NULL,
   Active TINYINT(1) NULL DEFAULT '1',

@@ -20,8 +20,10 @@ apply plugin: 'spring-boot'
 apply plugin: 'application'
 apply plugin: 'nebula.rpm'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+ext.java_version = '1.8'
+
+sourceCompatibility = java_version
+targetCompatibility = java_version
 mainClassName = 'com.xiaoslab.coffee.api.Application'
 
 project.ext {
@@ -39,6 +41,13 @@ def getTimestamp() {
     def date = new Date()
     def formattedDate = date.format('yyyyMMddHHmmss')
     return formattedDate
+}
+
+idea {
+    project {
+        jdkName = java_version
+        languageLevel = java_version
+    }
 }
 
 jar {
@@ -59,6 +68,7 @@ dependencies {
     compile "org.springframework.social:spring-social-facebook"
     compile "org.springframework.social:spring-social-google:1.0.0.RC1"
     compile "org.flywaydb:flyway-core:$flywayVersion"
+    compile "org.apache.commons:commons-lang3:3.4"
     compile "mysql:mysql-connector-java:5.1.39"
     runtime fileTree (dir: 'config', include: '*.properties')
     testCompile "org.springframework.boot:spring-boot-starter-test"
