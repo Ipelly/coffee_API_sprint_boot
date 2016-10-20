@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemAddonController {
 
     @Autowired
-    IService<ItemAddon> itemAddonService;
+    IService<ItemAddon, String> itemAddonService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getIitemAddons() {

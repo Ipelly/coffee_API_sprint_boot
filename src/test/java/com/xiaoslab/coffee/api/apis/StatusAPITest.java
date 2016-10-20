@@ -19,6 +19,7 @@ public class StatusAPITest extends _BaseAPITest {
         String response = (String) entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals("{\"status\":\"running\"}", response);
+
     }
 
     @Test

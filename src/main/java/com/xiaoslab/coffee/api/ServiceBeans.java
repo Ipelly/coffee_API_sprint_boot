@@ -13,6 +13,7 @@ public class ServiceBeans {
         return new UserService();
     }
 
+
     @Bean
     public MenuItemService menuItemService() {
         return new MenuItemService();
@@ -30,37 +31,40 @@ public class ServiceBeans {
 
 
     @Bean
-    public IService<Shop> shopService() {
+    public IService<Shop, String> shopService() {
         return new ShopService();
     }
 
     @Bean
-    public IService<Addon> addonService() {
+    public IService<Addon, String> addonService() {
         return new AddonService();
     }
 
     @Bean
-    public IService<Ingredient> ingredientService() {
+    public IService<Ingredient, String> ingredientService() {
         return new IngredientService();
     }
 
     @Bean
-    public IService<Item> itemService() {
+    public IService<Item, String> itemService() {
         return new ItemService();
     }
 
     @Bean
-    public IService<ItemOption> itemOptionService() {
+    public IService<ItemOption, String> itemOptionService() {
         return new ItemOptionService();
     }
 
     @Bean
-    public IService<ItemAddon> itemAddonService() {
+    public IService<ItemAddon, String> itemAddonService() {
         return new ItemAddonService();
     }
 
     @Bean
-    public IService<ItemIngredient> itemIngredientService() {
+    public IService<ItemIngredient, String> itemIngredientService() {
         return new ItemIngredientService();
     }
+
+
+
 }

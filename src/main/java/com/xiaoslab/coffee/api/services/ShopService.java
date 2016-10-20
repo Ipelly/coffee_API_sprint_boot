@@ -2,41 +2,48 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.dao.ShopDao;
 import com.xiaoslab.coffee.api.objects.Shop;
+import com.xiaoslab.coffee.api.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
-public class ShopService implements IService<Shop> {
+public class ShopService implements IService<Shop, String> {
 
     @Autowired
     private ShopDao shopDao;
+
+    @Autowired
+    ShopRepository shopRepository;
 
     // access control and business logics will be implemented here at service level
     // @RolesAllowed("USER")
     @Override
     public List<Shop> getAll() {
-        return shopDao.Shops();
+        return shopRepository.findAll().stream().filter(p -> p.isactive()  == true).collect(Collectors.toList());
     }
 
     @Override
-    public Shop get(String id) {
-        return (Shop) (shopDao.Shops()
-                .stream().filter(p -> p.getShopID() == Integer.parseInt(id)).collect(Collectors.toList())).get(0);
+    public Shop get(String shopId) {
+       return (Shop) (shopRepository.findAll()
+                .stream().filter(p -> p.getShopID() == Integer.parseInt(shopId)).collect(Collectors.toList())).get(0);
     }
 
     @Override
-    public Boolean Insert(Shop obj) {
-        return null;
+    public Shop Create(Shop shop) {
+        shop.setIsactive(true);
+        return  shopRepository.save(shop);
     }
 
     @Override
-    public Boolean Update(Shop pbj) {
-        return null;
+    public Shop Update(Shop shop) {
+        return  shopRepository.save(shop);
     }
 
     @Override
-    public Boolean Delete(Shop obj) {
-        return null;
+    public Shop Delete(String shopid) {
+        Shop shop = get(shopid);
+        shop.setIsactive(false);
+        return shopRepository.save(shop);
     }
 }

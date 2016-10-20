@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by ipeli on 10/16/16.
  */
-public class AddonService implements IService<Addon> {
+public class AddonService implements IService<Addon, String> {
 
     @Autowired
     private AddonDao addonDao;
@@ -25,17 +25,17 @@ public class AddonService implements IService<Addon> {
     }
 
     @Override
-    public Boolean Insert(Addon obj) {
+    public Addon Create(Addon obj) {
         return null;
     }
 
     @Override
-    public Boolean Update(Addon pbj) {
+    public Addon Update(Addon pbj) {
         return null;
     }
 
     @Override
-    public Boolean Delete(Addon obj) {
+    public Addon Delete(String obj) {
         return null;
     }
 }

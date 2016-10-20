@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class IngredientController {
 
     @Autowired
-    IService<Ingredient> ingredientService;
+    IService<Ingredient, String> ingredientService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getIngredients() {
