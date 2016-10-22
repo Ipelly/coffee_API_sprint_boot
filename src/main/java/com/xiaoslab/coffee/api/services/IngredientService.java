@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by ipeli on 10/16/16.
  */
-public class IngredientService implements IService<Ingredient,String> {
+public class IngredientService implements IService<Ingredient> {
 
     @Autowired
     private IngredientDao ingredientDao;
@@ -21,22 +21,22 @@ public class IngredientService implements IService<Ingredient,String> {
     }
 
     @Override
-    public Ingredient get(String id) {
+    public Ingredient get(long id) {
         return null;
     }
 
     @Override
-    public Ingredient Create(Ingredient obj) {
+    public Ingredient create(Ingredient obj) {
         return null;
     }
 
     @Override
-    public Ingredient Update(Ingredient pbj) {
+    public Ingredient update(Ingredient pbj) {
         return null;
     }
 
     @Override
-    public Ingredient Delete(String obj) {
+    public Ingredient delete(long id) {
         return null;
     }
 }

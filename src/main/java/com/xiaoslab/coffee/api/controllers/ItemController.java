@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemController {
 
     @Autowired
-    IService<Item, String> itemService;
+    IService<Item> itemService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getItem() {

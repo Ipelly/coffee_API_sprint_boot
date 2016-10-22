@@ -21,19 +21,68 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ShopTest {
 
+    private long shopidfortest;
     Logger logger = Logger.getLogger(ShopTest.class);
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
-    private IService<Shop,String> shopService;
+    private IService<Shop> shopService;
     @Autowired
     private LoginUtils loginUtils;
+
 
     @Test
     public void checkDatabaseConnection() {
         Object verion = namedParameterJdbcTemplate.queryForList("SELECT VERSION()", new MapSqlParameterSource());
         logger.info(verion);
         assertNotNull(verion);
+    }
+
+    @Test
+    public void createUpdateDeleteShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+        shopidfortest = createdUser.getShopID();
+
+        // test-case: create new shop 2
+        Shop shop1 = new Shop();
+        shop1.setName("StarBuks1");
+        shop1.setAddress1("Midtown");
+        shop1.setAddress2("14th Street");
+        shop1.setCity("NYC");
+        shop1.setState("NY");
+        shop1.setZip("111.0");
+        shop1.setPhone("6414517510");
+        shop1.setLatitude(new BigDecimal(40.7426));
+        shop1.setLongitute(new BigDecimal(-74.0623));
+        shop1.setRating(5);
+        Shop createdUser1 = shopService.create(shop1);
+
+
+        // test-case: Update new user
+        createdUser1.setName("Starbuck Edit");
+        createdUser1.setAddress1("Midtown Edit");
+        Shop createdUseredit = shopService.update(createdUser1);
+
+
+        // test-case: Delete new user
+        long shopIDForDelete = createdUseredit.getShopID();
+        Shop deleteShopdel = shopService.delete(shopIDForDelete);
+
+        List<Shop> list = shopService.getAll();
+        assertEquals(1, list.size());
     }
 
     @Test
@@ -48,42 +97,9 @@ public class ShopTest {
     @Test
     public void getAShop() {
         loginUtils.loginWithUserRole();
-        Shop shop = shopService.get("2");
+        Shop shop = shopService.get(shopidfortest);
         logger.info(shop);
         assertNotNull(shop);
         assertEquals("DD", shop.getName());
     }
-
-    @Test
-    public void createUpdateDeleteShop() {
-
-        // test-case: create new user
-        Shop shop1 = new Shop();
-        shop1.setName("StarBuks1");
-        shop1.setAddress1("Midtown");
-        shop1.setAddress2("14th Street");
-        shop1.setCity("NYC");
-        shop1.setState("NY");
-        shop1.setZip("111.0");
-        shop1.setPhone("6414517510");
-        shop1.setLatitude(new BigDecimal(40.7426));
-        shop1.setLongitute(new BigDecimal(-74.0623));
-        shop1.setRating(5);
-        Shop createdUser1 = shopService.Create(shop1);
-
-
-        // test-case: Update new user
-        createdUser1.setName("Starbuck Edit");
-        createdUser1.setAddress1("Midtown Edit");
-        Shop createdUseredit = shopService.Update(createdUser1);
-
-
-        // test-case: Delete new user
-        int shopIDForDelete = createdUseredit.getShopID();
-        Shop deleteShopdel = shopService.Delete(Integer.toString(shopIDForDelete));
-
-        List<Shop> list = shopService.getAll();
-        assertEquals(2, list.size());
-    }
-
 }

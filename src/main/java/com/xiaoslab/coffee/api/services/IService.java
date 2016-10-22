@@ -8,16 +8,16 @@ import java.util.List;
  * Created by ipeli on 10/14/16.
  */
 @Service
-public interface IService<T,E>  {
+public interface IService<T>  {
 
     List<T> getAll();
 
-    T get(E obj);
+    T get(long id);
 
-    T Create(T obj);
+    T create(T obj);
 
 
-    T Update(T pbj);
+    T update(T obj);
 
-    T Delete(E obj);
+    T delete(long id);
 }

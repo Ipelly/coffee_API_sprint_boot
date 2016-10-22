@@ -19,7 +19,7 @@ public class Shop {
     @Id
     @GeneratedValue
     @Column(unique = true)
-    private int shopID;
+    private long shopID;
 
     @Column(nullable = false)
     private String name;
@@ -52,7 +52,7 @@ public class Shop {
     private int rating;
 
     @Column(columnDefinition="TINYINT(1) default true")
-    private boolean isactive;
+    private boolean status;
 
     @Override
     public String toString() {
@@ -113,11 +113,11 @@ public class Shop {
                 .isEquals();
     }
 
-    public int getShopID() {
+    public long getShopID() {
         return shopID;
     }
 
-    public void setShopID(int shopID) {
+    public void setShopID(long shopID) {
         this.shopID = shopID;
     }
 
@@ -201,11 +201,11 @@ public class Shop {
         this.rating = rating;
     }
 
-    public boolean isactive() {
-        return isactive;
+    public boolean getStatus() {
+        return status;
     }
 
-    public void setIsactive(boolean isactive) {
-        this.isactive = isactive;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

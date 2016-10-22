@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class ShopController {
 
     @Autowired
-    IService shopService;
+    IService<Shop> shopService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getShops() {
@@ -23,23 +23,22 @@ public class ShopController {
     }
 
     @RequestMapping(value = "/{shopId}", method = RequestMethod.GET)
-    public Object getShop(@PathVariable int shopId) {
-        return shopService.get(Integer.toString(shopId));
+    public Object getShop(@PathVariable long shopId) {
+        return shopService.get(shopId);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Object getShops(@RequestBody Shop shop) {
-        return shopService.Create(shop);
+        return shopService.create(shop);
     }
-
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public Object update(@RequestBody Shop shop) {
-        return shopService.Update(shop);
+        return shopService.update(shop);
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value="{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable long id) {
 
     }
 }

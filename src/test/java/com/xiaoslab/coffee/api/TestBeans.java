@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class TestBeans {
 
     @Bean
-    public IService<Shop, String> shopService() {
+    public IService<Shop> shopService() {
         return new ShopService();
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by ipeli on 10/16/16.
  */
-public class ItemService implements IService<Item, String> {
+public class ItemService implements IService<Item> {
 
     @Autowired
     private ItemDao itemDao;
@@ -20,22 +20,22 @@ public class ItemService implements IService<Item, String> {
     }
 
     @Override
-    public Item get(String id) {
+    public Item get(long id) {
         return null;
     }
 
     @Override
-    public Item Create(Item obj) {
+    public Item create(Item obj) {
         return null;
     }
 
     @Override
-    public Item Update(Item pbj) {
+    public Item update(Item pbj) {
         return null;
     }
 
     @Override
-    public Item Delete(String obj) {
+    public Item delete(long obj) {
         return null;
     }
 }

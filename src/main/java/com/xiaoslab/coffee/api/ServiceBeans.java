@@ -31,37 +31,37 @@ public class ServiceBeans {
 
 
     @Bean
-    public IService<Shop, String> shopService() {
+    public IService<Shop> shopService() {
         return new ShopService();
     }
 
     @Bean
-    public IService<Addon, String> addonService() {
+    public IService<Addon> addonService() {
         return new AddonService();
     }
 
     @Bean
-    public IService<Ingredient, String> ingredientService() {
+    public IService<Ingredient> ingredientService() {
         return new IngredientService();
     }
 
     @Bean
-    public IService<Item, String> itemService() {
+    public IService<Item> itemService() {
         return new ItemService();
     }
 
     @Bean
-    public IService<ItemOption, String> itemOptionService() {
+    public IService<ItemOption> itemOptionService() {
         return new ItemOptionService();
     }
 
     @Bean
-    public IService<ItemAddon, String> itemAddonService() {
+    public IService<ItemAddon> itemAddonService() {
         return new ItemAddonService();
     }
 
     @Bean
-    public IService<ItemIngredient, String> itemIngredientService() {
+    public IService<ItemIngredient> itemIngredientService() {
         return new ItemIngredientService();
     }
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemOptionController {
 
     @Autowired
-    IService<ItemOption,String> itemOptionService;
+    IService<ItemOption> itemOptionService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getItemoptions() {

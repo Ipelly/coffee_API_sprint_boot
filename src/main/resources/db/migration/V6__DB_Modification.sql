@@ -24,10 +24,5 @@ CHANGE COLUMN `Phone` `phone` VARCHAR(45) NOT NULL ,
 CHANGE COLUMN `Latitude` `latitude` DECIMAL(20,4) NULL DEFAULT NULL ,
 CHANGE COLUMN `Longitute` `longitute` DECIMAL(20,4) NULL DEFAULT NULL ,
 CHANGE COLUMN `Rating` `rating` INT(20) NULL DEFAULT NULL ,
-CHANGE COLUMN `Active` `isactive` TINYINT(1) NOT NULL DEFAULT '1' ;
+CHANGE COLUMN `Active` `status` TINYINT(1) NOT NULL DEFAULT '1' ;
 
-INSERT INTO `xipli`.`Shop` (name`, `address1`, `address2`, `city`, `state`, `zip`, `phone`, `latitude`, `longitute`, `rating`, `isactive`)
-                    VALUES (DD', '165 Liberty Ave', ', Jersey City', 'JC', 'NJ', '07306', '64145100', '40.7406', '73.9964', '5', '1');
-
-INSERT INTO `xipli`.`Shop` (name`, `address1`, `address2`, `city`, `state`, `zip`, `phone`, `latitude`, `longitute`, `rating`, `isactive`)
-                    VALUES (SB', '165 Liberty Ave', ', Jersey City', 'JC', 'NJ', '07306', '64145100', '40.7406', '73.9964', '5', '1');
