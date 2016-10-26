@@ -58,7 +58,7 @@ public class ShopTest {
 
         // test-case: create new shop 2
         Shop shop1 = new Shop();
-        shop1.setName("StarBuks1");
+        shop1.setName("DD1");
         shop1.setAddress1("Midtown");
         shop1.setAddress2("14th Street");
         shop1.setCity("NYC");
@@ -68,13 +68,13 @@ public class ShopTest {
         shop1.setLatitude(new BigDecimal(40.7426));
         shop1.setLongitute(new BigDecimal(-74.0623));
         shop1.setRating(5);
-        Shop createdUser1 = shopService.create(shop1);
+        Shop createdSHhop1 = shopService.create(shop1);
 
 
         // test-case: Update new user
-        createdUser1.setName("Starbuck Edit");
-        createdUser1.setAddress1("Midtown Edit");
-        Shop createdUseredit = shopService.update(createdUser1);
+        createdSHhop1.setName("DD1 Edit");
+        createdSHhop1.setAddress1("Midtown Edit");
+        Shop createdUseredit = shopService.update(createdSHhop1);
 
 
         // test-case: Delete new user
