@@ -31,6 +31,7 @@ public class ShopTest {
     private LoginUtils loginUtils;
 
 
+    
     @Test
     public void checkDatabaseConnection() {
         Object verion = namedParameterJdbcTemplate.queryForList("SELECT VERSION()", new MapSqlParameterSource());
