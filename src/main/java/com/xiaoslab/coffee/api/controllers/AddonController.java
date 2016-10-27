@@ -21,7 +21,7 @@ public class AddonController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getAddon() {
-        return addonService.getAll();
+        return addonService.list();
     }
 
     @RequestMapping(value = "/{addonsId}", method = RequestMethod.GET)

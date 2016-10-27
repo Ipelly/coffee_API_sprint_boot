@@ -13,6 +13,7 @@ public class ServiceBeans {
         return new UserService();
     }
 
+
     @Bean
     public MenuItemService menuItemService() {
         return new MenuItemService();
@@ -63,4 +64,7 @@ public class ServiceBeans {
     public IService<ItemIngredient> itemIngredientService() {
         return new ItemIngredientService();
     }
+
+
+
 }

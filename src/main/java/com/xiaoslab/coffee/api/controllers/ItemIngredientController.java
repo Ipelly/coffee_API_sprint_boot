@@ -21,7 +21,7 @@ public class ItemIngredientController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getItemIngredients() {
-        return itemIngredientService.getAll();
+        return itemIngredientService.list();
     }
 
     @RequestMapping(value = "/{itemingredientId}", method = RequestMethod.GET)

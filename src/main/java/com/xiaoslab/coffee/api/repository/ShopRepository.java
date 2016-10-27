@@ -1,11 +1,13 @@
 package com.xiaoslab.coffee.api.repository;
 
+import com.xiaoslab.coffee.api.objects.Shop;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by Iqbal ipel  on 10/12/16.
- */
-
-public interface ShopRepository {
-
+@Repository
+@Transactional
+public interface ShopRepository extends JpaRepository<Shop, Long>, JpaSpecificationExecutor<Shop> {
 
 }

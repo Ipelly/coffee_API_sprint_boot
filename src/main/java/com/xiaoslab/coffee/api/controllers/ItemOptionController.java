@@ -21,7 +21,7 @@ public class ItemOptionController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getItemoptions() {
-        return itemOptionService.getAll();
+        return itemOptionService.list();
     }
 
     @RequestMapping(value = "/{itemoptionsId}", method = RequestMethod.GET)

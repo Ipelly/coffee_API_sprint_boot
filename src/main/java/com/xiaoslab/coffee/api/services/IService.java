@@ -1,21 +1,27 @@
 package com.xiaoslab.coffee.api.services;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ipeli on 10/14/16.
  */
 @Service
-public interface IService<T> {
-    List<T> getAll();
+public interface IService<T>  {
 
-    T get(String id);
+    List<T> list();
 
-    Boolean Insert(T obj);
+    List<T> list(Optional<Specification<T>> spec, Optional<Pageable> pageable);
 
-    Boolean Update(T pbj);
+    T get(long id);
 
-    Boolean Delete(T obj);
+    T create(T obj);
+
+    T update(T obj);
+
+    T delete(long id);
 }

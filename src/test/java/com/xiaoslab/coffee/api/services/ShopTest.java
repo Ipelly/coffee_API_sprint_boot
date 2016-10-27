@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -18,8 +19,9 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShopTest {
+public class ShopTest extends _BaseServiceTest  {
 
+    private long shopidfortest;
     Logger logger = Logger.getLogger(ShopTest.class);
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -27,6 +29,8 @@ public class ShopTest {
     private IService<Shop> shopService;
     @Autowired
     private LoginUtils loginUtils;
+
+
 
     @Test
     public void checkDatabaseConnection() {
@@ -36,12 +40,98 @@ public class ShopTest {
     }
 
     @Test
-    public void shopService() {
-        loginUtils.loginWithUserRole();
-        List<Shop> items = shopService.getAll();
-        logger.info(items);
-        assertNotNull(items);
-        assertEquals(0, items.size());
+    public void createUpdateDeleteShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+        shopidfortest = createdUser.getShopID();
+
+        // test-case: create new shop 2
+        Shop shop1 = new Shop();
+        shop1.setName("DD1");
+        shop1.setAddress1("Midtown");
+        shop1.setAddress2("14th Street");
+        shop1.setCity("NYC");
+        shop1.setState("NY");
+        shop1.setZip("111.0");
+        shop1.setPhone("6414517510");
+        shop1.setLatitude(new BigDecimal(40.7426));
+        shop1.setLongitute(new BigDecimal(-74.0623));
+        shop1.setRating(5);
+        Shop createdSHhop1 = shopService.create(shop1);
+
+
+        // test-case: Update new user
+        createdSHhop1.setName("DD1 Edit");
+        createdSHhop1.setAddress1("Midtown Edit");
+        Shop createdShopEdit = shopService.update(createdSHhop1);
+
+
+        // test-case: Delete new user
+        long shopIDForDelete = createdShopEdit.getShopID();
+        Shop deleteShopdel = shopService.delete(shopIDForDelete);
+
+        List<Shop> list = shopService.list();
+        assertEquals(1, list.size());
     }
 
+    @Test
+    public void getAllShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+        shopidfortest = createdUser.getShopID();
+
+        loginUtils.loginWithUserRole();
+        List<Shop> items = shopService.list();
+        logger.info(items);
+        assertNotNull(items);
+        assertEquals(1, items.size());
+    }
+
+    @Test
+    public void getAShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+
+        loginUtils.loginWithUserRole();
+        Shop shopp = shopService.get(shopidfortest);
+        logger.info(shopp);
+        assertNotNull(shopp);
+        assertEquals("DD", shop.getName());
+    }
 }

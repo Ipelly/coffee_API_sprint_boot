@@ -9,26 +9,28 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class StatusAPITest extends _BaseAPITest {
+/**
+ * Created by ipeli on 10/19/16.
+ */
+public class ShopAPITest extends _BaseAPITest {
 
-    static final String STATUS_ENDPOINT = "/status";
+    static final String SHOP_ENDPOINT = "v1/shops";
 
     @Test
     public void statusAsJsonString() throws Exception {
-        ResponseEntity entity = get(STATUS_ENDPOINT, String.class);
+        ResponseEntity entity = get(SHOP_ENDPOINT, String.class);
         String response = (String) entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
-        assertEquals("{\"status\":\"running\"}", response);
-
+        assertEquals("\"{/shops:\"running\"}", response);
     }
 
     @Test
     public void statusAsHashMap() throws Exception {
-        ResponseEntity entity = get(STATUS_ENDPOINT, HashMap.class);
+        ResponseEntity entity = get(SHOP_ENDPOINT, HashMap.class);
         HashMap response = (HashMap) entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertTrue(response.containsKey("status"));
-        assertEquals(response.get("status"), "running");
+        assertEquals(response.get("v1/shops"), "running");
     }
 
 }
