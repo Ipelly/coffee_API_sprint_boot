@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShopTest {
+public class ShopTest extends _BaseServiceTest  {
 
     private long shopidfortest;
     Logger logger = Logger.getLogger(ShopTest.class);
@@ -88,6 +88,22 @@ public class ShopTest {
 
     @Test
     public void getAllShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+        shopidfortest = createdUser.getShopID();
+
         loginUtils.loginWithUserRole();
         List<Shop> items = shopService.list();
         logger.info(items);
@@ -97,10 +113,25 @@ public class ShopTest {
 
     @Test
     public void getAShop() {
+
+        // test-case: create new shop 1
+        Shop shop = new Shop();
+        shop.setName("DD");
+        shop.setAddress1("165 Liberty Ave");
+        shop.setAddress2(", Jersey City");
+        shop.setCity("JC");
+        shop.setState("NJ");
+        shop.setZip("07306");
+        shop.setPhone("6414517510");
+        shop.setLatitude(new BigDecimal(40.7426));
+        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setRating(5);
+        Shop createdUser = shopService.create(shop);
+
         loginUtils.loginWithUserRole();
-        Shop shop = shopService.get(shopidfortest);
-        logger.info(shop);
-        assertNotNull(shop);
+        Shop shopp = shopService.get(shopidfortest);
+        logger.info(shopp);
+        assertNotNull(shopp);
         assertEquals("DD", shop.getName());
     }
 }
