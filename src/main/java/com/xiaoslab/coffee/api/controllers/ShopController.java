@@ -19,7 +19,7 @@ public class ShopController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getShops() {
-        return shopService.getAll();
+        return shopService.list();
     }
 
     @RequestMapping(value = "/{shopId}", method = RequestMethod.GET)

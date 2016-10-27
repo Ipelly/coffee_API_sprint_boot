@@ -31,7 +31,7 @@ public class ShopTest {
     private LoginUtils loginUtils;
 
 
-    
+
     @Test
     public void checkDatabaseConnection() {
         Object verion = namedParameterJdbcTemplate.queryForList("SELECT VERSION()", new MapSqlParameterSource());
@@ -75,24 +75,24 @@ public class ShopTest {
         // test-case: Update new user
         createdSHhop1.setName("DD1 Edit");
         createdSHhop1.setAddress1("Midtown Edit");
-        Shop createdUseredit = shopService.update(createdSHhop1);
+        Shop createdShopEdit = shopService.update(createdSHhop1);
 
 
         // test-case: Delete new user
-        long shopIDForDelete = createdUseredit.getShopID();
+        long shopIDForDelete = createdShopEdit.getShopID();
         Shop deleteShopdel = shopService.delete(shopIDForDelete);
 
-        List<Shop> list = shopService.getAll();
+        List<Shop> list = shopService.list();
         assertEquals(1, list.size());
     }
 
     @Test
     public void getAllShop() {
         loginUtils.loginWithUserRole();
-        List<Shop> items = shopService.getAll();
+        List<Shop> items = shopService.list();
         logger.info(items);
         assertNotNull(items);
-        assertEquals(2, items.size());
+        assertEquals(1, items.size());
     }
 
     @Test

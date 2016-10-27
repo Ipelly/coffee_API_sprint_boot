@@ -3,8 +3,11 @@ package com.xiaoslab.coffee.api.services;
 import com.xiaoslab.coffee.api.dao.ItemOptionDao;
 import com.xiaoslab.coffee.api.objects.ItemOption;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ipeli on 10/16/16.
@@ -15,7 +18,7 @@ public class ItemOptionService implements IService<ItemOption> {
     private ItemOptionDao itemOptionDao;
 
     @Override
-    public List<ItemOption> getAll() {
+    public List<ItemOption> list() {
         return itemOptionDao.ItemOptions();
     }
 
@@ -36,6 +39,11 @@ public class ItemOptionService implements IService<ItemOption> {
 
     @Override
     public ItemOption delete(long obj) {
+        return null;
+    }
+
+    @Override
+    public List<ItemOption> list(Optional<Specification<ItemOption>> spec, Optional<Pageable> pageable) {
         return null;
     }
 }

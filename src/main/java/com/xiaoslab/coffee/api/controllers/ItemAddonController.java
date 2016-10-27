@@ -21,7 +21,7 @@ public class ItemAddonController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object getIitemAddons() {
-        return itemAddonService.getAll();
+        return itemAddonService.list();
     }
 
     @RequestMapping(value = "/{itemaddonId}", method = RequestMethod.GET)
