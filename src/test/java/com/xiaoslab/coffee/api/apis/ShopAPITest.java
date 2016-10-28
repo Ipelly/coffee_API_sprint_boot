@@ -14,14 +14,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class ShopAPITest extends _BaseAPITest {
 
-    static final String SHOP_ENDPOINT = "v1/shops";
+    static final String SHOP_ENDPOINT = "/shops";
 
     @Test
     public void statusAsJsonString() throws Exception {
         ResponseEntity entity = get(SHOP_ENDPOINT, String.class);
         String response = (String) entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
-        assertEquals("\"{/shops:\"running\"}", response);
+        assertEquals("{\"shops\":\"running\"}", response);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ShopAPITest extends _BaseAPITest {
         HashMap response = (HashMap) entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertTrue(response.containsKey("status"));
-        assertEquals(response.get("v1/shops"), "running");
+        assertEquals(response.get("shops"), "running");
     }
 
 }
