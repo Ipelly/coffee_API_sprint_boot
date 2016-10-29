@@ -2,12 +2,12 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -18,14 +18,11 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShopTest extends _BaseServiceTest  {
+public class ShopServiceTest extends _BaseServiceTest  {
 
     private long shopidfortest;
 
-    Logger logger = Logger.getLogger(ShopTest.class);
-
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    Logger logger = Logger.getLogger(ShopServiceTest.class);
 
     @Autowired
     private IService<Shop> shopService;
@@ -49,6 +46,7 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setLatitude(new BigDecimal(40.7426));
         shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
+        shop.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
@@ -64,6 +62,7 @@ public class ShopTest extends _BaseServiceTest  {
         shop1.setLatitude(new BigDecimal(40.7426));
         shop1.setLongitude(new BigDecimal(-74.0623));
         shop1.setRating(5);
+        shop1.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdSHhop1 = shopService.create(shop1);
 
 
@@ -96,6 +95,7 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setLatitude(new BigDecimal(40.7426));
         shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
+        shop.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
@@ -121,6 +121,7 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setLatitude(new BigDecimal(40.7426));
         shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
+        shop.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 

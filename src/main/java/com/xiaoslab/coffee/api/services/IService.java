@@ -15,7 +15,7 @@ public interface IService<T>  {
 
     List<T> list();
 
-    List<T> list(Optional<Specification<T>> spec, Optional<Pageable> pageable);
+    List<T> list(Optional<Specification<T>> specOptional, Optional<Pageable> pageableOptional);
 
     T get(long id);
 

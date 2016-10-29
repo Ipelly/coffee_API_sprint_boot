@@ -16,7 +16,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "Shop")
+@Table(name = "shop")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Shop implements Serializable {
 
@@ -56,7 +56,7 @@ public class Shop implements Serializable {
     private int rating;
 
     @Column(nullable = false)
-    private boolean status;
+    private Constants.StatusCodes status;
 
     @Override
     public String toString() {
@@ -175,11 +175,11 @@ public class Shop implements Serializable {
         this.rating = rating;
     }
 
-    public boolean getStatus() {
+    public Constants.StatusCodes getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(Constants.StatusCodes status) {
         this.status = status;
     }
 }

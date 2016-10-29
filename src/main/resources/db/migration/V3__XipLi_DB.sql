@@ -1,5 +1,5 @@
 
-CREATE TABLE xipli.User (
+CREATE TABLE xipli.user (
   user_id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   first_name varchar(255) NOT NULL,
   last_name varchar(255) DEFAULT NULL,
@@ -14,94 +14,96 @@ CREATE TABLE xipli.User (
 );
 
 
-CREATE TABLE xipli.Addon (
-  AddonID int(11) NOT NULL,
-  Name varchar(255) NOT NULL,
-  Price decimal(20,2) NOT NULL,
-  ShopID int(11) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (AddonID)
+CREATE TABLE xipli.addon (
+  addon_id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  price decimal(20,2) NOT NULL,
+  shop_id int(11) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (addon_id)
 );
 
 
-CREATE TABLE xipli.Ingredient (
-  IngredientID int(11) NOT NULL AUTO_INCREMENT,
-  Name varchar(255) NOT NULL,
-  Price decimal(20,2) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (IngredientID,Name)
-) ;
-
-
-CREATE TABLE xipli.Item (
-  ItemID int(11) NOT NULL AUTO_INCREMENT,
-  Name varchar(255) NOT NULL,
-  Description varchar(255) DEFAULT NULL,
-  ShopID int(11) NOT NULL,
-  Price decimal(20,2) DEFAULT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (ItemID)
-) ;
-
-CREATE TABLE xipli.ItemAddon (
-  ItemID int(11) NOT NULL,
-  AddonID int(11) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (ItemID,AddonID)
-) ;
-
-CREATE TABLE xipli.ItemIngredient (
-  ItemID int(11) NOT NULL,
-  IngredientID int(11) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (ItemID,IngredientID)
-) ;
-
-CREATE TABLE xipli.ItemOption (
-  itemOptionID int(11) NOT NULL AUTO_INCREMENT,
-  ItemOption varchar(45) NOT NULL,
-  Price decimal(20,2) NOT NULL,
-  ItemID int(11) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (itemOptionID)
+CREATE TABLE xipli.ingredient (
+  ingredient_id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (ingredient_id)
 );
 
-CREATE TABLE xipli.XipLiOrder (
-  XipLiOrderID int(11) NOT NULL AUTO_INCREMENT,
-  XipliXipliUserID int(11) NOT NULL,
-  ShopID int(11) NOT NULL,
-  TotalPrice decimal(20,2) NOT NULL,
-  Status varchar(45) NOT NULL,
-  OrderTime datetime NOT NULL,
-  AcknowledgeTime datetime DEFAULT NULL,
-  CompleteTIme datetime DEFAULT NULL,
-  PickupTIme datetime DEFAULT NULL,
-  OrderBarCode datetime DEFAULT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (XipLiOrderID)
-) ;
 
-CREATE TABLE xipli.OrderAddon (
-  OrderLineID int(11) NOT NULL,
-  AddOnID varchar(45) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (OrderLineID,AddOnID)
-) ;
+CREATE TABLE xipli.item (
+  item_id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  description varchar(255) DEFAULT NULL,
+  shop_id int(11) NOT NULL,
+  price decimal(20,2) DEFAULT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (item_id)
+);
 
-CREATE TABLE xipli.OrderLine (
-  OrderLineID int(11) NOT NULL AUTO_INCREMENT,
-  OrderID int(11) NOT NULL,
-  ItemID int(11) NOT NULL,
-  OptionID int(11) NOT NULL,
-  Price decimal(20,2) NOT NULL,
-  Status varchar(45) NOT NULL,
-  StartTime datetime DEFAULT NULL,
-  EndTime datetime DEFAULT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (OrderLineID)
-) ;
 
-CREATE TABLE xipli.Shop (
+CREATE TABLE xipli.item_addon (
+  item_id int(11) NOT NULL,
+  addon_id int(11) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (item_id,addon_id)
+);
+
+
+CREATE TABLE xipli.item_ingredient (
+  item_id int(11) NOT NULL,
+  ingredient_id int(11) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (item_id,ingredient_id)
+);
+
+
+CREATE TABLE xipli.item_option (
+  item_option_id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(45) NOT NULL,
+  price decimal(20,2) NOT NULL,
+  item_id int(11) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (item_option_id)
+);
+
+CREATE TABLE xipli.order (
+  order_id int(11) NOT NULL AUTO_INCREMENT,
+  user_id int(11) NOT NULL,
+  shop_id int(11) NOT NULL,
+  total_price decimal(20,2) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  order_time datetime NOT NULL,
+  acknowledge_time datetime DEFAULT NULL,
+  complete_time datetime DEFAULT NULL,
+  pickup_time datetime DEFAULT NULL,
+  bar_code blob DEFAULT NULL,
+  PRIMARY KEY (order_id)
+);
+
+
+CREATE TABLE xipli.order_line (
+  order_line_id int(11) NOT NULL AUTO_INCREMENT,
+  order_id int(11) NOT NULL,
+  item_id int(11) NOT NULL,
+  option_id int(11) NOT NULL,
+  price decimal(20,2) NOT NULL,
+  status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  process_start_time datetime DEFAULT NULL,
+  process_end_time datetime DEFAULT NULL,
+  PRIMARY KEY (order_line_id)
+);
+
+
+CREATE TABLE xipli.order_addon (
+  order_line_id int(11) NOT NULL,
+  addon_id int(11) NOT NULL,
+  PRIMARY KEY (order_line_id,addon_id)
+);
+
+
+CREATE TABLE xipli.shop (
   shop_id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
   address1 varchar(255) NOT NULL,
@@ -117,42 +119,17 @@ CREATE TABLE xipli.Shop (
   PRIMARY KEY (shop_id)
 );
 
-CREATE TABLE xipli.UserRole (
-  UserRoleID int(11) NOT NULL AUTO_INCREMENT,
-  XipliUserID int(11) NOT NULL,
-  Role varchar(45) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (UserRoleID)
+
+CREATE TABLE xipli.user_role (
+  user_id int(11) NOT NULL AUTO_INCREMENT,
+  role varchar(45) NOT NULL,
+  PRIMARY KEY (user_id,role)
 );
 
-CREATE TABLE xipli.ShopUser (
-  XipliUserID int(11) NOT NULL,
-  ShopID int(11) NOT NULL,
-  Active TINYINT(1) NULL DEFAULT '1',
-  PRIMARY KEY (XipliUserID,ShopID)
+
+CREATE TABLE xipli.shop_user (
+  shop_id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  PRIMARY KEY (shop_id,user_id)
 );
-
-ALTER TABLE `xipli`.`XipLiOrder`
-CHANGE COLUMN `XipLiOrderID` `OrderID` INT(11) NOT NULL AUTO_INCREMENT ,
-CHANGE COLUMN `XipliXipliUserID` `UserID` INT(11) NOT NULL ,
-CHANGE COLUMN `OrderBarCode` `OrderBarCode` VARCHAR(255) NULL DEFAULT NULL;
-
-ALTER TABLE `xipli`.`UserRole`
-DROP COLUMN `UserRoleID`,
-CHANGE COLUMN `XipliUserID` `UserID` INT(11) NOT NULL ,
-DROP PRIMARY KEY,
-ADD PRIMARY KEY (`UserID`, `Role`);
-
-ALTER TABLE `xipli`.`ShopUser`
-CHANGE COLUMN `XipliUserID` `UserID` INT(11) NOT NULL ;
-
-ALTER TABLE `xipli`.`ItemOption`
-CHANGE COLUMN `itemOptionID` `ItemOptionID` INT(11) NOT NULL AUTO_INCREMENT ;
-
-ALTER TABLE `xipli`.`ItemOption`
-CHANGE COLUMN `itemOptionID` `ItemOptionID` INT(11) NOT NULL AUTO_INCREMENT ;
-
-ALTER TABLE `xipli`.`Addon`
-CHANGE COLUMN `AddonID` `AddonID` INT(11) NOT NULL AUTO_INCREMENT ;
-
 

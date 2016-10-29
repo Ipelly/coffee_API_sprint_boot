@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class UserTest extends _BaseServiceTest {
+public class UserServiceTest extends _BaseServiceTest {
 
     @Autowired
     UserService userService;

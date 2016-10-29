@@ -1,2 +1,2 @@
 
-TRUNCATE xipli.Shop;
+TRUNCATE xipli.shop;

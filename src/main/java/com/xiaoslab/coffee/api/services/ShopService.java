@@ -2,13 +2,16 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.repository.ShopRepository;
+import com.xiaoslab.coffee.api.specifications.ShopSpecifications;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ShopService implements IService<Shop> {
 
@@ -23,7 +26,7 @@ public class ShopService implements IService<Shop> {
     // @RolesAllowed("USER")
     @Override
     public List<Shop> list() {
-        return shopRepository.findAll().stream().filter(p -> p.getStatus()  == true).collect(Collectors.toList());
+        return list(Optional.empty(), Optional.empty());
     }
 
     @Override
@@ -33,7 +36,9 @@ public class ShopService implements IService<Shop> {
 
     @Override
     public Shop create(Shop shop) {
-        shop.setStatus(true);
+        if (shop.getStatus() == null) {
+            shop.setStatus(Constants.StatusCodes.INACTIVE);
+        }
         return shopRepository.save(shop);
     }
 
@@ -45,12 +50,28 @@ public class ShopService implements IService<Shop> {
     @Override
     public Shop delete(long shopid) {
         Shop shop = shopRepository.findOne(shopid);
-        shop.setStatus(false);
+        shop.setStatus(Constants.StatusCodes.DELETED);
         return shopRepository.save(shop);
     }
 
     @Override
-    public List<Shop> list(Optional<Specification<Shop>> spec, Optional<Pageable> pageable) {
-        return null;
+    public List<Shop> list(Optional<Specification<Shop>> specOptional, Optional<Pageable> pageableOptional) {
+        List<Shop> list = new ArrayList<>();
+
+        Specification<Shop> specification;
+
+        if (specOptional.isPresent()) {
+            specification = Specifications.where(ShopSpecifications.notDeleted()).and(specOptional.get());
+        } else {
+            specification = Specifications.where(ShopSpecifications.notDeleted());
+        }
+
+        if (pageableOptional.isPresent()) {
+            shopRepository.findAll(specification, pageableOptional.get()).forEach(list::add);
+        } else {
+            shopRepository.findAll(specification).forEach(list::add);
+        }
+
+        return list;
     }
 }
