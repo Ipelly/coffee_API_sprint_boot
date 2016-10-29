@@ -16,7 +16,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "shop")
+@Table(name = "Shop")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Shop implements Serializable {
 

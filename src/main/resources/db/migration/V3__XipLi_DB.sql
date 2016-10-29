@@ -1,5 +1,5 @@
 
-CREATE TABLE xipli.user (
+CREATE TABLE xipli.User (
   user_id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   first_name varchar(255) NOT NULL,
   last_name varchar(255) DEFAULT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE xipli.OrderLine (
   PRIMARY KEY (OrderLineID)
 ) ;
 
-CREATE TABLE xipli.shop (
+CREATE TABLE xipli.Shop (
   shop_id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
   address1 varchar(255) NOT NULL,
