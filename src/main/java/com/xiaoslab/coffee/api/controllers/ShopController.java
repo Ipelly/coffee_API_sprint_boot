@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/v1/shops")
+@RequestMapping("/v1")
 public class ShopController {
 
     @Autowired
     IService<Shop> shopService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/shops", method = RequestMethod.GET)
     public Object getShops() {
         return shopService.list();
     }
