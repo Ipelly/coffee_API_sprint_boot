@@ -101,7 +101,7 @@ CREATE TABLE xipli.OrderLine (
   PRIMARY KEY (OrderLineID)
 ) ;
 
-CREATE TABLE xipli.Shop (
+CREATE TABLE xipli.shop (
   shop_id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
   address1 varchar(255) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE xipli.Shop (
   rating tinyint(3) UNSIGNED DEFAULT NULL,
   status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (shop_id)
-) ;
+);
 
 CREATE TABLE xipli.UserRole (
   UserRoleID int(11) NOT NULL AUTO_INCREMENT,
