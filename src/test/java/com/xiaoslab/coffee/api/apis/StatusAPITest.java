@@ -4,28 +4,27 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class StatusAPITest extends _BaseAPITest {
 
-    static final String STATUS_ENDPOINT = "/status";
+    static final String V1_STATUS_ENDPOINT = "/v1/status";
 
     @Test
     public void statusAsJsonString() throws Exception {
-        ResponseEntity entity = get(STATUS_ENDPOINT, String.class);
-        String response = (String) entity.getBody();
+        ResponseEntity<String> entity = GET(V1_STATUS_ENDPOINT, String.class);
+        String response = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals("{\"status\":\"running\"}", response);
-
     }
 
     @Test
     public void statusAsHashMap() throws Exception {
-        ResponseEntity entity = get(STATUS_ENDPOINT, HashMap.class);
-        HashMap response = (HashMap) entity.getBody();
+        ResponseEntity<Map> entity = GET(V1_STATUS_ENDPOINT, Map.class);
+        Map response = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertTrue(response.containsKey("status"));
         assertEquals(response.get("status"), "running");

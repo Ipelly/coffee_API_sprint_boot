@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserService {
+public class UserService implements IService<User> {
 
     @Autowired
     UserRepository userRepository;
@@ -28,6 +28,11 @@ public class UserService {
         user.setUserId(0l);
         user.setStatus(Constants.StatusCodes.ACTIVE);
         return userRepository.save(user);
+    }
+
+    // TODO: authorization
+    public List<User> list() {
+        return list(Optional.empty(), Optional.empty());
     }
 
     // TODO: authorization

@@ -60,6 +60,8 @@ repositories {
 }
 
 dependencies {
+
+    // spring
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
@@ -67,11 +69,22 @@ dependencies {
     compile "org.springframework.security.oauth:spring-security-oauth2:$springOAuthVersion"
     compile "org.springframework.social:spring-social-facebook"
     compile "org.springframework.social:spring-social-google:1.0.0.RC1"
+
+    // jersey
+    compile "org.glassfish.jersey.core:jersey-common:2.24"
+
+    // database
     compile "org.flywaydb:flyway-core:$flywayVersion"
-    compile "org.apache.commons:commons-lang3:3.4"
     compile "mysql:mysql-connector-java:5.1.39"
+
+    // apache utils
+    compile "org.apache.commons:commons-lang3:3.4"
+
     runtime fileTree (dir: 'config', include: '*.properties')
+
+    // test only
     testCompile "org.springframework.boot:spring-boot-starter-test"
+
 }
 
 task wrapper(type: Wrapper) {
@@ -85,6 +98,49 @@ task flyway {
     flyway.user=props.getProperty("spring.datasource.username")
     flyway.password=props.getProperty("spring.datasource.password")
     flyway.baselineOnMigrate=true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources','config']
+        }
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed" //, "standardOut", "standardError"
+        exceptionFormat = "full"
+    }
+
+    def stdout = new LinkedList<String>()
+    beforeTest { TestDescriptor td ->
+        stdout.clear()
+    }
+    onOutput { TestDescriptor td, TestOutputEvent toe ->
+        stdout.addAll(toe.getMessage().split('(?m)$'))
+    }
+    afterTest { TestDescriptor td, TestResult tr ->
+        if (tr.resultType == TestResult.ResultType.FAILURE && stdout.size() > 0) {
+            println()
+            println("${td.className}.${td.name} failed, output:")
+            stdout.each { print(it) }
+        }
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) { // will match the outermost suite
+            println "\nResults: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+        }
+    }
 }
 
 test.dependsOn flywayMigrate

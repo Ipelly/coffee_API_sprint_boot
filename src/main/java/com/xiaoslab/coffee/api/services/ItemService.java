@@ -1,8 +1,6 @@
 package com.xiaoslab.coffee.api.services;
 
-import com.xiaoslab.coffee.api.dao.ItemDao;
 import com.xiaoslab.coffee.api.objects.Item;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -14,12 +12,9 @@ import java.util.Optional;
  */
 public class ItemService implements IService<Item> {
 
-    @Autowired
-    private ItemDao itemDao;
-
     @Override
     public List<Item> list() {
-        return itemDao.Items();
+        return null;
     }
 
     @Override

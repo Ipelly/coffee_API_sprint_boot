@@ -1,6 +1,5 @@
 package com.xiaoslab.coffee.api.services;
 
-import com.xiaoslab.coffee.api.dao.ShopDao;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ShopService implements IService<Shop> {
-
-    @Autowired
-    private ShopDao shopDao;
 
     @Autowired
     ShopRepository shopRepository;

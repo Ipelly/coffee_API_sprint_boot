@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,22 +21,18 @@ import static org.junit.Assert.assertNotNull;
 public class ShopTest extends _BaseServiceTest  {
 
     private long shopidfortest;
+
     Logger logger = Logger.getLogger(ShopTest.class);
+
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     @Autowired
     private IService<Shop> shopService;
+
     @Autowired
     private LoginUtils loginUtils;
 
-
-
-    @Test
-    public void checkDatabaseConnection() {
-        Object verion = namedParameterJdbcTemplate.queryForList("SELECT VERSION()", new MapSqlParameterSource());
-        logger.info(verion);
-        assertNotNull(verion);
-    }
 
     @Test
     public void createUpdateDeleteShop() {
@@ -52,10 +47,10 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setZip("07306");
         shop.setPhone("6414517510");
         shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
-        Shop createdUser = shopService.create(shop);
-        shopidfortest = createdUser.getShopID();
+        Shop createdShop = shopService.create(shop);
+        shopidfortest = createdShop.getShopId();
 
         // test-case: create new shop 2
         Shop shop1 = new Shop();
@@ -67,19 +62,19 @@ public class ShopTest extends _BaseServiceTest  {
         shop1.setZip("111.0");
         shop1.setPhone("6414517510");
         shop1.setLatitude(new BigDecimal(40.7426));
-        shop1.setLongitute(new BigDecimal(-74.0623));
+        shop1.setLongitude(new BigDecimal(-74.0623));
         shop1.setRating(5);
         Shop createdSHhop1 = shopService.create(shop1);
 
 
-        // test-case: Update new user
+        // test-case: Update new shop
         createdSHhop1.setName("DD1 Edit");
         createdSHhop1.setAddress1("Midtown Edit");
         Shop createdShopEdit = shopService.update(createdSHhop1);
 
 
-        // test-case: Delete new user
-        long shopIDForDelete = createdShopEdit.getShopID();
+        // test-case: Delete new shop
+        long shopIDForDelete = createdShopEdit.getShopId();
         Shop deleteShopdel = shopService.delete(shopIDForDelete);
 
         List<Shop> list = shopService.list();
@@ -99,10 +94,10 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setZip("07306");
         shop.setPhone("6414517510");
         shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
-        Shop createdUser = shopService.create(shop);
-        shopidfortest = createdUser.getShopID();
+        Shop createdShop = shopService.create(shop);
+        shopidfortest = createdShop.getShopId();
 
         loginUtils.loginWithUserRole();
         List<Shop> items = shopService.list();
@@ -124,10 +119,10 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setZip("07306");
         shop.setPhone("6414517510");
         shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitute(new BigDecimal(-74.0623));
+        shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
-        Shop createdUser = shopService.create(shop);
-        shopidfortest = createdUser.getShopID();
+        Shop createdShop = shopService.create(shop);
+        shopidfortest = createdShop.getShopId();
 
         loginUtils.loginWithUserRole();
         Shop shopp = shopService.get(shopidfortest);

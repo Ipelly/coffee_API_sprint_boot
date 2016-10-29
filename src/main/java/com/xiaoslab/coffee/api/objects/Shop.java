@@ -1,12 +1,15 @@
 package com.xiaoslab.coffee.api.objects;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
+
 /**
  * Created by ipeli on 10/1/16.
  */
@@ -14,12 +17,13 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "shop")
-public class Shop {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Shop implements Serializable {
 
     @Id
     @GeneratedValue
     @Column(unique = true)
-    private long shopID;
+    private long shopId;
 
     @Column(nullable = false)
     private String name;
@@ -42,83 +46,53 @@ public class Shop {
     @Column(nullable = false)
     private String phone;
 
-    @Column
-    private BigDecimal longitute;
+    @Column(precision = Constants.LAT_LONG_PRECISION, scale = Constants.LAT_LONG_SCALE)
+    private BigDecimal longitude;
 
-    @Column
+    @Column(precision = Constants.LAT_LONG_PRECISION, scale = Constants.LAT_LONG_SCALE)
     private BigDecimal latitude;
 
     @Column
     private int rating;
 
-    @Column(columnDefinition="TINYINT(1) default true")
+    @Column(nullable = false)
     private boolean status;
 
     @Override
     public String toString() {
-//        return "Shop{" +
-//                "shopID=" + shopID +
-//                ", name='" + name + '\'' +
-//                ", address1='" + address1 + '\'' +
-//                ", address2='" + address2 + '\'' +
-//                ", city='" + city + '\'' +
-//                ", state='" + state + '\'' +
-//                ", zip='" + zip + '\'' +
-//                ", phone='" + phone + '\'' +
-//                ", longitute=" + longitute +
-//                ", latitude=" + latitude +
-//                ", rating=" + rating +
-//                '}';
-
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-                .append(shopID)
-                .append(name)
-                .append(address1)
-                .append(address2)
-                .append(phone)
-                .append(city)
-                .append(state)
-                .append(zip)
-                .append(rating)
-                .append(longitute)
-                .append(latitude).toHashCode();
+        return Objects.hash(shopId, name, address1, address2, city, state, zip, phone, longitude, latitude, rating, status);
     }
 
     @Override
-    public boolean equals(Object obj) {
-
-        if (this == obj) return true;
-
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        Shop shop = (Shop) obj;
-
-        return new EqualsBuilder()
-                .append(shopID, shop.shopID)
-                .append(name, shop.name)
-                .append(address1, shop.address1)
-                .append(address2, shop.address2)
-                .append(phone, shop.phone)
-                .append(city, shop.city)
-                .append(state, shop.state)
-                .append(zip, shop.zip)
-                .append(rating, shop.zip)
-                .append(longitute, shop.zip)
-                .append(latitude, shop.zip)
-                .isEquals();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shop shop = (Shop) o;
+        return shopId == shop.shopId &&
+                rating == shop.rating &&
+                status == shop.status &&
+                Objects.equals(name, shop.name) &&
+                Objects.equals(address1, shop.address1) &&
+                Objects.equals(address2, shop.address2) &&
+                Objects.equals(city, shop.city) &&
+                Objects.equals(state, shop.state) &&
+                Objects.equals(zip, shop.zip) &&
+                Objects.equals(phone, shop.phone) &&
+                Objects.equals(longitude, shop.longitude) &&
+                Objects.equals(latitude, shop.latitude);
     }
 
-    public long getShopID() {
-        return shopID;
+    public long getShopId() {
+        return shopId;
     }
 
-    public void setShopID(long shopID) {
-        this.shopID = shopID;
+    public void setShopId(long shopId) {
+        this.shopId = shopId;
     }
 
     public String getName() {
@@ -177,20 +151,20 @@ public class Shop {
         this.phone = phone;
     }
 
-    public BigDecimal getLongitute() {
-        return longitute;
+    public BigDecimal getLongitude() {
+        return longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
-    public void setLongitute(BigDecimal longitute) {
-        this.longitute = longitute;
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public BigDecimal getLatitude() {
-        return latitude;
+        return latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
+        this.latitude = latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public int getRating() {

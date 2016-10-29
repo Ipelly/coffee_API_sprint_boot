@@ -1,4 +1,4 @@
-package com.xiaoslab.coffee.api;
+package com.xiaoslab.coffee.api.beans;
 
 import com.xiaoslab.coffee.api.security.FacebookAuthenticationProvider;
 import com.xiaoslab.coffee.api.security.GoogleAuthenticationProvider;

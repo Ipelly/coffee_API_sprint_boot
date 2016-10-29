@@ -2,8 +2,13 @@ package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.services.IService;
+import com.xiaoslab.coffee.api.utility.AppUtility;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 /**
  * Created by ipeli on 10/14/16.
@@ -11,35 +16,41 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT)
 public class ShopController {
 
     @Autowired
-    IService<Shop> shopService;
+    private IService<Shop> shopService;
 
-    @RequestMapping(value = "/shops", method = RequestMethod.GET)
-    public Object getShops() {
-        return shopService.list();
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public ResponseEntity list() {
+        return ResponseEntity.ok(shopService.list());
     }
 
-    @RequestMapping(value = "/{shopId}", method = RequestMethod.GET)
-    public Object getShop(@PathVariable long shopId) {
-        return shopService.get(shopId);
+    @RequestMapping(path = "/{shopId}", method = RequestMethod.GET)
+    public ResponseEntity get(@PathVariable long shopId) {
+        Shop shop = AppUtility.notFoundOnNull(shopService.get(shopId));
+        return ResponseEntity.ok(shop);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Object getShops(@RequestBody Shop shop) {
-        return shopService.create(shop);
+    @RequestMapping(path = "/", method = RequestMethod.POST)
+    public ResponseEntity create(@RequestBody Shop shop) {
+        Shop createdShop = shopService.create(shop);
+        URI location = AppUtility.buildCreatedLocation(createdShop.getShopId());
+        return ResponseEntity.created(location).body(createdShop);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public Object update(@RequestBody Shop shop) {
-        return shopService.update(shop);
+    @RequestMapping(path = "/{shopId}", method = RequestMethod.PUT)
+    public ResponseEntity update(@PathVariable long shopId, @RequestBody Shop shop) {
+        AppUtility.notFoundOnNull(shopService.get(shopId));
+        return ResponseEntity.ok(shopService.update(shop));
     }
 
-    @RequestMapping(method=RequestMethod.DELETE, value="{id}")
-    public void delete(@PathVariable long id) {
-
+    @RequestMapping(path = "/{shopId}", method=RequestMethod.DELETE)
+    public ResponseEntity delete(@PathVariable long shopId) {
+        AppUtility.notFoundOnNull(shopService.get(shopId));
+        shopService.delete(shopId);
+        return ResponseEntity.noContent().build();
     }
 }
 
