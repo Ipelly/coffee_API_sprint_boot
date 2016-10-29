@@ -112,7 +112,7 @@ public class ShopTest extends _BaseServiceTest  {
     }
 
     @Test
-    public void getAShop() {
+    public void getShop() {
 
         // test-case: create new shop 1
         Shop shop = new Shop();
@@ -127,6 +127,7 @@ public class ShopTest extends _BaseServiceTest  {
         shop.setLongitute(new BigDecimal(-74.0623));
         shop.setRating(5);
         Shop createdUser = shopService.create(shop);
+        shopidfortest = createdUser.getShopID();
 
         loginUtils.loginWithUserRole();
         Shop shopp = shopService.get(shopidfortest);
