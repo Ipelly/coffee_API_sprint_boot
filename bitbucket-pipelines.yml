@@ -1,0 +1,9 @@
+# Check https://confluence.atlassian.com/x/VYk8Lw for more examples.
+# Only use spaces to indent your .yml configuration.
+image: rafaat/java-gradle-mysql:latest
+
+pipelines:
+  default:
+    - step:
+        script:
+          - ./gradlew clean flywayClean flywayMigrate test build rpm
