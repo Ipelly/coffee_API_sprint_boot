@@ -7,4 +7,6 @@ pipelines:
     - step:
         script:
           - export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+          - yum install initscripts -y
+          - service mariadb start
           - ./gradlew clean flywayClean flywayMigrate test build rpm
