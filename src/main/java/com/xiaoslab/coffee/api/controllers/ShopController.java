@@ -2,13 +2,20 @@ package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.services.IService;
+import com.xiaoslab.coffee.api.specifications.ShopSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Optional;
 
 /**
  * Created by ipeli on 10/14/16.
@@ -23,8 +30,22 @@ public class ShopController {
     private IService<Shop> shopService;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public ResponseEntity list() {
-        return ResponseEntity.ok(shopService.list());
+    public ResponseEntity list(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "20", required = false) int size,
+            @RequestParam(name = "search", defaultValue = "", required = false) String search,
+            @RequestParam(name = "rating", defaultValue = "0", required = false) int rating,
+            @RequestParam(name = "zip", defaultValue = "", required = false) String zip,
+            @RequestParam(name = "lat", defaultValue = "0", required = false) BigDecimal lat,
+            @RequestParam(name = "lon", defaultValue = "0", required = false) BigDecimal lon,
+            @RequestParam(name = "radius", defaultValue = "25000", required = false) BigDecimal radius) {
+
+        Pageable pageable = new PageRequest(page, size);
+        Specification<Shop> specification = Specifications
+                .where(ShopSpecifications.search(search))
+                .and(ShopSpecifications.minimumRating(rating))
+                .and(ShopSpecifications.withinRadius(lat, lon, radius));
+        return ResponseEntity.ok(shopService.list(Optional.of(specification), Optional.of(pageable)));
     }
 
     @RequestMapping(path = "/{shopId}", method = RequestMethod.GET)

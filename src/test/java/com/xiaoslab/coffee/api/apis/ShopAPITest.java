@@ -27,63 +27,77 @@ public class ShopAPITest extends _BaseAPITest {
         ResponseEntity<Shop> getResponse;
 
         // test-case: create new shop by POST
-        Shop shop = new Shop();
-        shop.setName("DD");
-        shop.setAddress1("165 Liberty Ave");
-        shop.setAddress2("Jersey City");
-        shop.setCity("JC");
-        shop.setState("NJ");
-        shop.setZip("07306");
-        shop.setPhone("6414517510");
-        shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitude(new BigDecimal(-74.0623));
-        shop.setRating(5);
-        createdResponse = POST(V1_SHOP_ROOT_PATH, shop, Shop.class);
+        Shop ddShop = new Shop();
+        ddShop.setName("DD");
+        ddShop.setAddress1("165 Liberty Ave");
+        ddShop.setAddress2("Jersey City");
+        ddShop.setCity("JC");
+        ddShop.setState("NJ");
+        ddShop.setZip("07306");
+        ddShop.setPhone("6414517510");
+        ddShop.setLatitude(new BigDecimal(40.7426));
+        ddShop.setLongitude(new BigDecimal(-74.0623));
+        ddShop.setRating(5);
+        createdResponse = POST(V1_SHOP_ROOT_PATH, ddShop, Shop.class);
         assertEquals(HttpStatus.CREATED, createdResponse.getStatusCode());
-        Shop createdShop = createdResponse.getBody();
-        assertNotNull(createdShop);
+        Shop createdDDShop = createdResponse.getBody();
+        assertNotNull(createdDDShop);
 
         // test-case: list shops by GET
         listResponse = LIST(V1_SHOP_ROOT_PATH, Shop.class);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         List<Shop> shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
-        assertEquals(createdShop, shopList.get(0));
+        assertEquals(createdDDShop, shopList.get(0));
 
         // test-case: create another shop by POST
-        Shop anotherShop = new Shop();
-        anotherShop.setName("My Coffee Shop");
-        anotherShop.setAddress1("16633 Hillside Ave");
-        anotherShop.setAddress2("Floor 1");
-        anotherShop.setCity("Jamaica");
-        anotherShop.setState("NY");
-        anotherShop.setZip("11435");
-        anotherShop.setPhone("987654321");
-        anotherShop.setLatitude(new BigDecimal(45.7426));
-        anotherShop.setLongitude(new BigDecimal(-70.0623));
-        anotherShop.setRating(4);
-        createdResponse = POST(V1_SHOP_ROOT_PATH, anotherShop, Shop.class);
+        Shop hillsideShop = new Shop();
+        hillsideShop.setName("My Coffee Shop");
+        hillsideShop.setAddress1("16633 Hillside Ave");
+        hillsideShop.setAddress2("Floor 1");
+        hillsideShop.setCity("Jamaica");
+        hillsideShop.setState("NY");
+        hillsideShop.setZip("11435");
+        hillsideShop.setPhone("987654321");
+        hillsideShop.setLatitude(new BigDecimal(45.7426));
+        hillsideShop.setLongitude(new BigDecimal(-70.0623));
+        hillsideShop.setRating(4);
+        createdResponse = POST(V1_SHOP_ROOT_PATH, hillsideShop, Shop.class);
         assertEquals(HttpStatus.CREATED, createdResponse.getStatusCode());
-        Shop createdShop2 = createdResponse.getBody();
-        assertNotNull(createdShop2);
+        Shop createdHillsideShop = createdResponse.getBody();
+        assertNotNull(createdHillsideShop);
 
         // test-case: list shops by GET
         listResponse = LIST(V1_SHOP_ROOT_PATH, Shop.class);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(2, shopList.size());
-        assertEquals(createdShop, shopList.get(0));
-        assertEquals(createdShop2, shopList.get(1));
+        assertEquals(createdDDShop, shopList.get(0));
+        assertEquals(createdHillsideShop, shopList.get(1));
 
         // test-case: get individual shops by GET
-        getResponse = GET(V1_SHOP_ROOT_PATH + createdShop.getShopId(), Shop.class);
+        getResponse = GET(V1_SHOP_ROOT_PATH + createdDDShop.getShopId(), Shop.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         Shop gottenShop1 = getResponse.getBody();
-        assertEquals(createdShop, gottenShop1);
-        getResponse = GET(V1_SHOP_ROOT_PATH + createdShop2.getShopId(), Shop.class);
+        assertEquals(createdDDShop, gottenShop1);
+        getResponse = GET(V1_SHOP_ROOT_PATH + createdHillsideShop.getShopId(), Shop.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         Shop gottenShop2 = getResponse.getBody();
-        assertEquals(createdShop2, gottenShop2);
+        assertEquals(createdHillsideShop, gottenShop2);
+
+        // test search hillside
+        listResponse = LIST(V1_SHOP_ROOT_PATH + "?search=Hillside", Shop.class);
+        assertEquals(HttpStatus.OK, listResponse.getStatusCode());
+        shopList = listResponse.getBody();
+        assertEquals(1, shopList.size());
+        assertEquals(createdHillsideShop, shopList.get(0));
+
+        // test search dd
+        listResponse = LIST(V1_SHOP_ROOT_PATH + "?search=Dd", Shop.class);
+        assertEquals(HttpStatus.OK, listResponse.getStatusCode());
+        shopList = listResponse.getBody();
+        assertEquals(1, shopList.size());
+        assertEquals(createdDDShop, shopList.get(0));
     }
 
     @Test
