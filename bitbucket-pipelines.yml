@@ -9,7 +9,7 @@ pipelines:
           - export JAVA_HOME=/usr/lib/jvm/java-1.8.0
           - mysql_install_db    --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/ &
           - sleep 30
-          - /usr/libexec/mysqld --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/ &
+          - /usr/libexec/mysqld --user=mysql --basedir=/usr/ &
           - sleep 30
           - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS xipli;'
           - ./gradlew clean flywayClean flywayMigrate test build rpm
