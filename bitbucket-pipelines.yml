@@ -6,7 +6,7 @@ pipelines:
   default:
     - step:
         script:
-          - mysqld_safe > /dev/null &
+          - /usr/libexec/mysqld --user=mysql &
           - sleep 10
           - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS xipli;'
           - gradle clean flywayClean flywayMigrate test build rpm
