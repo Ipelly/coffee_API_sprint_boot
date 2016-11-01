@@ -1,0 +1,12 @@
+# Check https://confluence.atlassian.com/x/VYk8Lw for more examples.
+# Only use spaces to indent .yml configuration.
+image: rafaat/java-gradle-mysql:latest
+
+pipelines:
+  default:
+    - step:
+        script:
+          - /usr/libexec/mysqld --user=mysql &
+          - sleep 10
+          - mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS xipli;'
+          - gradle clean flywayClean flywayMigrate test build rpm
