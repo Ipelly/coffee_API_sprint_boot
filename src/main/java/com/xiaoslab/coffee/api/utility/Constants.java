@@ -3,9 +3,17 @@ package com.xiaoslab.coffee.api.utility;
 public class Constants {
 
     public enum StatusCodes {
-        DELETED, // 0
-        ACTIVE,  // 1
-        INACTIVE // 2
+        DELETED,  // 0
+        ACTIVE,   // 1
+        INACTIVE, // 2
+        PENDING,  // 3
+    }
+
+    public enum SocialProviderType {
+        XIPLI,    // 0
+        FACEBOOK, // 1
+        GOOGLE,   // 2
+        TWITTER,  // 3
     }
 
     public static final int LAT_LONG_SCALE = 4;

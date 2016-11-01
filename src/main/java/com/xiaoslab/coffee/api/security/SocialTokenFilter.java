@@ -1,6 +1,6 @@
 package com.xiaoslab.coffee.api.security;
 
-import com.xiaoslab.coffee.api.objects.GlobalEnums;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -26,9 +26,9 @@ public class SocialTokenFilter extends GenericFilterBean {
 
                 if (social_token != null) {
                     String access_token = social_token[1];
-                    if (social_token[0].equalsIgnoreCase(GlobalEnums.ProviderType.FACEBOOK.getLabel())) {
+                    if (social_token[0].equalsIgnoreCase(Constants.SocialProviderType.FACEBOOK.name())) {
                         authentication = new FacebookToken(access_token);
-                    } else if (social_token[0].equalsIgnoreCase(GlobalEnums.ProviderType.GOOGLE.getLabel())) {
+                    } else if (social_token[0].equalsIgnoreCase(Constants.SocialProviderType.GOOGLE.name())) {
                         authentication = new GoogleToken(access_token);
                     }
                 }

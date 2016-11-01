@@ -1,6 +1,6 @@
 package com.xiaoslab.coffee.api.security;
 
-import com.xiaoslab.coffee.api.objects.UserInfo;
+import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.services.FacebookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.social.facebook.api.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -32,11 +31,11 @@ public class FacebookAuthenticationProvider implements AuthenticationProvider {
 
         try {
             // validate token
-            User facebookProfile = facebookService.getProfileFromToken(authentication.getCredentials().toString());
-            UserInfo userInfo = facebookService.getUserInfoFromFacebookProfile(facebookProfile);
+            org.springframework.social.facebook.api.User facebookProfile = facebookService.getProfileFromToken(authentication.getCredentials().toString());
+            User userInfo = facebookService.findOrCreateLocalUserFromFacebookProfile(facebookProfile);
 
             // put account into security context
-            return new FacebookToken(userInfo, authentication.getCredentials(), Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+            return new FacebookToken(userInfo, authentication.getCredentials(), Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_USER)));
 
         } catch (AuthenticationException e) {
             throw e;

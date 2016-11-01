@@ -22,6 +22,8 @@ public class ShopAPITest extends _BaseAPITest {
     @Test
     public void createAndGetAndListShop() throws Exception {
 
+        //FIXME: need oauth2 authentication
+
         ResponseEntity<List<Shop>> listResponse;
         ResponseEntity<Shop> createdResponse;
         ResponseEntity<Shop> getResponse;

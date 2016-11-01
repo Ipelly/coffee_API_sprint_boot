@@ -1,46 +1,84 @@
 package com.xiaoslab.coffee.api.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xiaoslab.coffee.api.utility.Constants;
-import org.apache.commons.lang3.builder.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "User")
-public class User {
+@Table(name = "user")
+public class User implements UserDetails, Serializable {
+
+    // Markers for Group Validations
+    public @interface XipliUser{}
+    public @interface ProviderUser{}
+    public @interface ShopUser{}
 
     @Id
     @GeneratedValue
-    @Column(unique = true)
+    @Column(unique = true, name = "user_id")
     private Long userId;
 
     @Column(nullable = false)
+    @NotEmpty
     private String firstName;
 
     @Column
     private String lastName;
 
+    @Transient
+    private String name;
+
     @Column
+    @NotEmpty(groups = XipliUser.class)
+    @Email
     private String emailAddress;
 
     @Column
     private String phone;
 
     @Column
-    private transient String password;
-
-    @Column
-    private transient String passwordSalt;
+    @NotEmpty(groups = XipliUser.class)
+    private String password;
 
     @Enumerated(EnumType.ORDINAL)
     @Column
+    @NotNull
     private Constants.StatusCodes status;
 
-    @Column
-    private String providerType;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "provider_type_id")
+    @NotNull(groups = ProviderUser.class)
+    private Constants.SocialProviderType providerType;
 
     @Column
+    @NotEmpty(groups = ProviderUser.class)
     private String providerUserId;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "role"))
+    private Collection<AppAuthority> roles;
+
+    @Column
+    @NotNull(groups = ShopUser.class)
+    private Long shopId;
 
     @Override
     public String toString() {
@@ -48,41 +86,26 @@ public class User {
     }
 
     @Override
-    public int hashCode(){
-        return new HashCodeBuilder()
-                .append(userId)
-                .append(firstName)
-                .append(lastName)
-                .append(emailAddress)
-                .append(phone)
-                .append(password)
-                .append(passwordSalt)
-                .append(status)
-                .append(providerType)
-                .append(providerUserId)
-                .toHashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(emailAddress, user.emailAddress) &&
+                Objects.equals(phone, user.phone) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(status, user.status) &&
+                Objects.equals(providerType, user.providerType) &&
+                Objects.equals(providerUserId, user.providerUserId) &&
+                Objects.equals(shopId, user.shopId);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        User user = (User) obj;
-
-        return new EqualsBuilder()
-                .append(status, user.status)
-                .append(userId, user.userId)
-                .append(firstName, user.firstName)
-                .append(lastName, user.lastName)
-                .append(emailAddress, user.emailAddress)
-                .append(phone, user.phone)
-                .append(password, user.password)
-                .append(passwordSalt, user.passwordSalt)
-                .append(providerType, user.providerType)
-                .append(providerUserId, user.providerUserId)
-                .isEquals();
+    public int hashCode() {
+        return Objects.hash(userId, firstName, lastName, name, emailAddress, phone, password, status, providerType, providerUserId, shopId);
     }
 
     public Long getUserId() {
@@ -109,6 +132,22 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getName() {
+        if (StringUtils.isBlank(this.name)) {
+            if (StringUtils.isBlank(this.firstName) && StringUtils.isBlank(this.lastName)) {
+                return null;
+            } else {
+                return (this.firstName == null ? "" : this.firstName) + (this.lastName == null ? "" : " " + this.lastName);
+            }
+        } else {
+            return this.name;
+        }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -117,20 +156,14 @@ public class User {
         this.emailAddress = emailAddress;
     }
 
+    @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPasswordSalt() {
-        return passwordSalt;
-    }
-
-    public void setPasswordSalt(String passwordSalt) {
-        this.passwordSalt = passwordSalt;
     }
 
     public String getPhone() {
@@ -149,14 +182,15 @@ public class User {
         this.status = status;
     }
 
-    public String getProviderType() {
+    public Constants.SocialProviderType getProviderType() {
         return providerType;
     }
 
-    public void setProviderType(String providerType) {
+    public void setProviderType(Constants.SocialProviderType providerType) {
         this.providerType = providerType;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getProviderUserId() {
         return providerUserId;
     }
@@ -165,4 +199,59 @@ public class User {
         this.providerUserId = providerUserId;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> simpleAuthorities = new HashSet<>();
+        getRoles().forEach(authority -> simpleAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
+        return simpleAuthorities;
+    }
+
+    @JsonIgnore
+    public Collection<AppAuthority> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<AppAuthority> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return getUserId() + "_" + getEmailAddress();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return isEnabled();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return status != Constants.StatusCodes.DELETED;
+    }
 }

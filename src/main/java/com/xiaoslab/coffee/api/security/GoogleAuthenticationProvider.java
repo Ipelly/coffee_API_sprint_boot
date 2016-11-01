@@ -1,6 +1,6 @@
 package com.xiaoslab.coffee.api.security;
 
-import com.xiaoslab.coffee.api.objects.UserInfo;
+import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.services.GoogleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,7 +33,7 @@ public class GoogleAuthenticationProvider implements AuthenticationProvider {
         try {
             // validate token
             GoogleUserInfo googleProfile = googleService.getProfileFromToken(authentication.getCredentials().toString());
-            UserInfo userInfo = googleService.getUserInfoFromGoogleProfile(googleProfile);
+            User userInfo = googleService.findOrCreateLocalUserFromGoogleProfile(googleProfile);
 
             // put account into security context
             return new GoogleToken(userInfo, authentication.getCredentials(), Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));

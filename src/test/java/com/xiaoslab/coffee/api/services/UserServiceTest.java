@@ -2,6 +2,8 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.specifications.UserSpecifications;
+import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.TestConstants;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class UserServiceTest extends _BaseServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    LoginUtils loginUtils;
+
     @Test
     public void createAndGetUsers() {
 
@@ -27,7 +32,8 @@ public class UserServiceTest extends _BaseServiceTest {
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
-        User createdUser1 = userService.create(user1);
+        user1.setPassword(TestConstants.DEFAULT_PASSWORD);
+        User createdUser1 = userService.registerNewUser(user1);
         getLogger().info(createdUser1);
 
         assertNotNull(createdUser1);
@@ -40,7 +46,8 @@ public class UserServiceTest extends _BaseServiceTest {
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
-        User createdUser2 = userService.create(user2);
+        user2.setPassword(TestConstants.DEFAULT_PASSWORD);
+        User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
 
         assertNotNull(createdUser2);
@@ -48,6 +55,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user2.setStatus(Constants.StatusCodes.ACTIVE);
         assertEquals(user2, createdUser2);
 
+        loginUtils.loginAsXAdmin();
         // test-case: list all user
         List<User> list = userService.list(Optional.empty(), Optional.empty());
         getLogger().info(list);
@@ -82,7 +90,8 @@ public class UserServiceTest extends _BaseServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setEmailAddress("johndoe@xiaoslab.com");
-        User createdUser = userService.create(user);
+        user.setPassword(TestConstants.DEFAULT_PASSWORD);
+        User createdUser = userService.registerNewUser(user);
         getLogger().info(createdUser);
 
         assertNotNull(createdUser);
@@ -90,6 +99,7 @@ public class UserServiceTest extends _BaseServiceTest {
         assertEquals(user, createdUser);
         assertEquals("John", createdUser.getFirstName());
 
+        loginUtils.loginAsXAdmin();
         user.setFirstName("Jane");
         User updatedUser = userService.update(user);
         assertEquals(user, updatedUser);
@@ -105,29 +115,32 @@ public class UserServiceTest extends _BaseServiceTest {
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
-        User createdUser1 = userService.create(user1);
+        user1.setPassword(TestConstants.DEFAULT_PASSWORD);
+        User createdUser1 = userService.registerNewUser(user1);
         getLogger().info(createdUser1);
         assertNotNull(createdUser1);
-        assertEquals(Constants.StatusCodes.ACTIVE, createdUser1.getStatus());
+        assertEquals(Constants.StatusCodes.PENDING, createdUser1.getStatus());
 
         // test-case: create another user
         User user2 = new User();
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
-        User createdUser2 = userService.create(user2);
+        user2.setPassword(TestConstants.DEFAULT_PASSWORD);
+        User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
         assertNotNull(createdUser2);
-        assertEquals(Constants.StatusCodes.ACTIVE, createdUser2.getStatus());
+        assertEquals(Constants.StatusCodes.PENDING, createdUser2.getStatus());
 
         User deletedUser = userService.delete(createdUser1.getUserId());
         assertEquals(Constants.StatusCodes.DELETED, deletedUser.getStatus());
 
         List<User> list;
         Specification<User> spec;
+        loginUtils.loginAsXAdmin();
 
-        // test-case: filter by active users
-        spec = UserSpecifications.isActive();
+        // test-case: filter by non-deleted users
+        spec = UserSpecifications.isNotDeleted();
         list = userService.list(Optional.of(spec), Optional.empty());
         assertEquals(1, list.size());
         assertEquals(createdUser2, list.get(0));
