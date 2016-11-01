@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -47,7 +47,12 @@ public abstract class _BaseAPITest {
     protected <T> ResponseEntity<T> GET(String path, Class<T> objectType) {
         getLogger().info("Base Path: " + getBaseApiUrl());
         getLogger().info("Request: GET " + path);
-        ResponseEntity<T> entity = template.getForEntity(getBaseApiUrl() + path, objectType);
+//        ResponseEntity<T> entity = template.getForEntity(getBaseApiUrl() + path, objectType);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<T> entity = template.exchange(path, HttpMethod.GET, requestEntity, objectType);
         getLogger().info("Response: " + entity);
         return entity;
     }
@@ -62,7 +67,12 @@ public abstract class _BaseAPITest {
         getLogger().info("Base Path: " + getBaseApiUrl());
         getLogger().info("Request: POST " + path);
         getLogger().info("Request Body: " + body);
-        ResponseEntity<T> entity = template.postForEntity(getBaseApiUrl() + path, body, objectType);
+//        ResponseEntity<T> entity = template.postForEntity(getBaseApiUrl() + path, body, objectType);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
+        headers.set(HttpHeaders.AUTHORIZATION, "foo");
+        HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<T> entity = template.exchange(path, HttpMethod.POST, requestEntity, objectType);
         getLogger().info("Response: " + entity);
         return entity;
     }

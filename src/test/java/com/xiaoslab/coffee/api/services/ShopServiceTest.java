@@ -34,6 +34,8 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Test
     public void createUpdateDeleteShop() {
 
+        loginUtils.loginAsXAdmin();
+
         // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
@@ -83,6 +85,8 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Test
     public void getAllShop() {
 
+        loginUtils.loginAsXAdmin();
+
         // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
@@ -99,7 +103,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginWithUserRole();
+        loginUtils.loginAsCustomerUser();
         List<Shop> items = shopService.list();
         logger.info(items);
         assertNotNull(items);
@@ -109,6 +113,8 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Test
     public void getShop() {
 
+        loginUtils.loginAsXAdmin();
+
         // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
@@ -125,7 +131,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginWithUserRole();
+        loginUtils.loginAsCustomerUser();
         Shop shopp = shopService.get(shopidfortest);
         logger.info(shopp);
         assertNotNull(shopp);

@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.utilities;
 
+import com.xiaoslab.coffee.api.security.Roles;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,9 +10,16 @@ import java.util.Arrays;
 
 public class LoginUtils {
 
-    public void loginWithUserRole() {
+    public void loginAsCustomerUser() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "testuser","testpassword", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+                "testuser","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_USER)));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
+    public void loginAsXAdmin() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                "X-Admin","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_X_ADMIN)));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
 }

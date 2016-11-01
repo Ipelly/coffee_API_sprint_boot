@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.security;
 
+import com.xiaoslab.coffee.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -51,7 +53,8 @@ public class SecurityConfig {
             http
                     .requestMatchers().and().authorizeRequests()
                     .antMatchers("/v1/status").permitAll()
-                    //  .antMatchers("/**").authenticated()
+                    .antMatchers("/v1/users/register").permitAll()
+                    .antMatchers("/**").authenticated()
                     .and()
                     .addFilterBefore(socialTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
                     .authenticationProvider(facebookAuthenticationProvider)
@@ -94,10 +97,16 @@ public class SecurityConfig {
     public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
+        private UserService userService;
+
+        @Autowired
+        private PasswordEncoder passwordEncoder;
+
+        @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
             auth
-                    .inMemoryAuthentication()
-                    .withUser("john@yahoo.com").password("password").roles("USER");
+                    .userDetailsService(userService)
+                    .passwordEncoder(passwordEncoder);
         }
 
     }

@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.repository.ShopRepository;
+import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.specifications.ShopSpecifications;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,11 +32,13 @@ public class ShopService implements IService<Shop> {
     }
 
     @Override
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
     public Shop get(long shopId) {
         return shopRepository.getOne(shopId);
     }
 
     @Override
+    @RolesAllowed(Roles.ROLE_X_ADMIN)
     public Shop create(Shop shop) {
         if (shop.getStatus() == null) {
             shop.setStatus(Constants.StatusCodes.INACTIVE);
@@ -43,11 +47,13 @@ public class ShopService implements IService<Shop> {
     }
 
     @Override
+    @RolesAllowed(Roles.ROLE_X_ADMIN)
     public Shop update(Shop shop) {
         return  shopRepository.save(shop);
     }
 
     @Override
+    @RolesAllowed(Roles.ROLE_X_ADMIN)
     public Shop delete(long shopid) {
         Shop shop = shopRepository.findOne(shopid);
         shop.setStatus(Constants.StatusCodes.DELETED);
@@ -55,6 +61,7 @@ public class ShopService implements IService<Shop> {
     }
 
     @Override
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
     public List<Shop> list(Optional<Specification<Shop>> specOptional, Optional<Pageable> pageableOptional) {
         List<Shop> list = new ArrayList<>();
 
