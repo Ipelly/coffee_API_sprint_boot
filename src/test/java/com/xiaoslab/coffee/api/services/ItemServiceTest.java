@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.services;
 
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.utilities.LoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
@@ -16,13 +17,22 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Created by islamma on 11/1/16.
+ */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShopServiceTest extends _BaseServiceTest  {
 
+public class ItemServiceTest extends _BaseServiceTest{
+
+    private long itemidfortest;
     private long shopidfortest;
 
-    Logger logger = Logger.getLogger(ShopServiceTest.class);
+    Logger logger = Logger.getLogger(ItemServiceTest.class);
+
+    @Autowired
+    private IService<Item> itemService;
 
     @Autowired
     private IService<Shop> shopService;
@@ -30,13 +40,11 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Autowired
     private LoginUtils loginUtils;
 
-
     @Test
-    public void createUpdateDeleteShop() {
+    public void createUpdateDeleteItem() {
 
+        // test-case: create new shop and add item 1 to it
         loginUtils.loginAsXAdmin();
-
-        // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -52,42 +60,43 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        // test-case: create new shop 2
-        Shop shop1 = new Shop();
-        shop1.setName("DD1");
-        shop1.setAddress1("Midtown");
-        shop1.setAddress2("14th Street");
-        shop1.setCity("NYC");
-        shop1.setState("NY");
-        shop1.setZip("111.0");
-        shop1.setPhone("6414517510");
-        shop1.setLatitude(new BigDecimal(40.7426));
-        shop1.setLongitude(new BigDecimal(-74.0623));
-        shop1.setRating(5);
-        shop1.setStatus(Constants.StatusCodes.ACTIVE);
-        Shop createdSHhop1 = shopService.create(shop1);
+        // Adding item to the shop
+        Item item = new Item();
+        item.setName("latte");
+        item.setDescription("Fresh brewed beans made with the milk of your choice");
+        item.setPrice(new BigDecimal(3.2));
+        item.setShop_id(shopidfortest);
+        item.setStatus(Constants.StatusCodes.ACTIVE);
+        Item createdItem = itemService.create(item);
+        itemidfortest = createdItem.getItem_id();
 
+        // test-case: adding item2
+        Item item2 = new Item();
+        item2.setName("Iced Venila Chai");
+        item2.setDescription("Excellent mix of east and the west");
+        item2.setPrice(new BigDecimal(5.49));
+        item.setShop_id(shopidfortest);
+        item2.setStatus(Constants.StatusCodes.INACTIVE);
+        Item createdItem2 = itemService.create(item);
 
-        // test-case: Update new shop
-        createdSHhop1.setName("DD1 Edit");
-        createdSHhop1.setAddress1("Midtown Edit");
-        Shop createdShopEdit = shopService.update(createdSHhop1);
+        // test-case: Update item2
+        createdItem2.setName("Hot Venila Chai");
+        createdItem2.setPrice(new BigDecimal(5.19));
+        Item createdItemEdit = itemService.update(createdItem2);
 
+        // test-case: Delete new item
+        long itemIDForDelete = createdItem.getItem_id();
+        Item deleteShopdel = itemService.delete(itemIDForDelete);
 
-        // test-case: Delete new shop
-        long shopIDForDelete = createdShopEdit.getShopId();
-        Shop deleteShopdel = shopService.delete(shopIDForDelete);
-
-        List<Shop> list = shopService.list();
+        List<Item> list = itemService.list();
         assertEquals(1, list.size());
-    }
+   }
 
     @Test
-    public void getAllShop() {
+    public void getAllItems() {
 
+        // test-case: create new shop and add item 1 to it
         loginUtils.loginAsXAdmin();
-
-        // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -102,19 +111,29 @@ public class ShopServiceTest extends _BaseServiceTest  {
         shop.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
+
+        // Adding item to the shop
+        Item item = new Item();
+        item.setName("latte");
+        item.setDescription("Fresh brewed beans made with the milk of your choice");
+        item.setPrice(new BigDecimal(3.2));
+        item.setShop_id(shopidfortest);
+        item.setStatus(Constants.StatusCodes.ACTIVE);
+        Item createdItem = itemService.create(item);
+        itemidfortest = createdItem.getItem_id();
 
         loginUtils.loginAsCustomerUser();
-        List<Shop> items = shopService.list();
+        List<Item> items = itemService.list();
         logger.info(items);
         assertNotNull(items);
         assertEquals(1, items.size());
     }
 
     @Test
-    public void getShop() {
+    public void getItem() {
 
+        // test-case: create new shop and add item 1 to it
         loginUtils.loginAsXAdmin();
-        // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -130,10 +149,20 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
+        // Adding item to the shop
+        Item item = new Item();
+        item.setName("latte");
+        item.setDescription("Fresh brewed beans made with the milk of your choice");
+        item.setPrice(new BigDecimal(3.2));
+        item.setShop_id(shopidfortest);
+        item.setStatus(Constants.StatusCodes.ACTIVE);
+        Item createdItem = itemService.create(item);
+        itemidfortest = createdItem.getItem_id();
+
         loginUtils.loginAsCustomerUser();
-        Shop shopp = shopService.get(shopidfortest);
-        logger.info(shopp);
-        assertNotNull(shopp);
-        assertEquals("DD", shop.getName());
+        Item itemm = itemService.get(itemidfortest);
+        logger.info(itemm);
+        assertNotNull(itemm);
+        assertEquals("latte", item.getName());
     }
 }

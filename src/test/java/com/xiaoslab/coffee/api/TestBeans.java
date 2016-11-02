@@ -1,7 +1,9 @@
 package com.xiaoslab.coffee.api;
 
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.services.IService;
+import com.xiaoslab.coffee.api.services.ItemService;
 import com.xiaoslab.coffee.api.services.ShopService;
 import com.xiaoslab.coffee.api.utilities.*;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,9 @@ public class TestBeans {
     public IService<Shop> shopService() {
         return new ShopService();
     }
+
+    @Bean
+    public IService<Item> itemIService(){ return new ItemService();}
 
     @Bean
     public LoginUtils loginUtils() {
