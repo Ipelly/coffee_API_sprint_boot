@@ -23,5 +23,6 @@ public class Constants {
     public static final String STATUS_ENDPOINT = "/status";
     public static final String USER_ENDPOINT = "/users";
     public static final String SHOP_ENDPOINT = "/shops";
+    public static final String ITEM_ENDPOINT = "/items";
 
 }
