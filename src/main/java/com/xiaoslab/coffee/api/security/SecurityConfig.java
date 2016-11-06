@@ -52,6 +52,7 @@ public class SecurityConfig {
         public void configure(HttpSecurity http) throws Exception {
             http
                     .requestMatchers().and().authorizeRequests()
+                    .antMatchers("/health").permitAll()
                     .antMatchers("/v1/status").permitAll()
                     .antMatchers("/v1/users/register").permitAll()
                     .antMatchers("/**").authenticated()

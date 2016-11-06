@@ -32,7 +32,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
-        user1.setPassword(TestConstants.DEFAULT_PASSWORD);
+        user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         User createdUser1 = userService.registerNewUser(user1);
         getLogger().info(createdUser1);
 
@@ -46,7 +46,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
-        user2.setPassword(TestConstants.DEFAULT_PASSWORD);
+        user2.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
 
@@ -90,7 +90,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setEmailAddress("johndoe@xiaoslab.com");
-        user.setPassword(TestConstants.DEFAULT_PASSWORD);
+        user.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         User createdUser = userService.registerNewUser(user);
         getLogger().info(createdUser);
 
@@ -115,7 +115,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
-        user1.setPassword(TestConstants.DEFAULT_PASSWORD);
+        user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         User createdUser1 = userService.registerNewUser(user1);
         getLogger().info(createdUser1);
         assertNotNull(createdUser1);
@@ -126,7 +126,7 @@ public class UserServiceTest extends _BaseServiceTest {
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
-        user2.setPassword(TestConstants.DEFAULT_PASSWORD);
+        user2.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
         assertNotNull(createdUser2);

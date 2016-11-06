@@ -9,7 +9,7 @@ public class Constants {
         PENDING,  // 3
     }
 
-    public enum SocialProviderType {
+    public enum LoginProviderType {
         XIPLI,    // 0
         FACEBOOK, // 1
         GOOGLE,   // 2
@@ -21,6 +21,7 @@ public class Constants {
 
     public static final String V1 = "/v1";
     public static final String STATUS_ENDPOINT = "/status";
+    public static final String TOKEN_ENDPOINT = "/oauth/token";
     public static final String USER_ENDPOINT = "/users";
     public static final String SHOP_ENDPOINT = "/shops";
 

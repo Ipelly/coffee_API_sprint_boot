@@ -152,19 +152,19 @@ public class Shop implements Serializable {
     }
 
     public BigDecimal getLongitude() {
-        return longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
+        return longitude == null ? null : longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
+        this.longitude = longitude == null ? null : longitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public BigDecimal getLatitude() {
-        return latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
+        return latitude == null ? null : latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
+        this.latitude = latitude == null ? null : latitude.setScale(Constants.LAT_LONG_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public int getRating() {
