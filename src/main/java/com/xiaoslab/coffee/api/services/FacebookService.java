@@ -26,7 +26,7 @@ public class FacebookService {
         user.setFirstName(facebookProfile.getFirstName());
         user.setLastName(facebookProfile.getLastName());
         user.setProviderUserId(facebookProfile.getId());
-        user.setProviderType(Constants.SocialProviderType.FACEBOOK);
+        user.setProviderType(Constants.LoginProviderType.FACEBOOK);
         return providerUserToLocalUserBridge.findOrCreateLocalUserFromProviderUser(user);
     }
 }

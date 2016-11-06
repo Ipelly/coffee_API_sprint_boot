@@ -26,7 +26,7 @@ public class UserSpecifications {
         return (root, query, criteria) -> criteria.notEqual(root.get("status"), notStatusFilter);
     }
 
-    public static Specification<User> hasProviderUserId(String providerUserId, Constants.SocialProviderType providerType) {
+    public static Specification<User> hasProviderUserId(String providerUserId, Constants.LoginProviderType providerType) {
         return (root, query, criteria) -> criteria.and(
                 criteria.equal(root.get("providerUserId"), providerUserId),
                 criteria.equal(root.get("providerType"), providerType)

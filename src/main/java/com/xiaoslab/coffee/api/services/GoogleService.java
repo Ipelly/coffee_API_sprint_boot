@@ -27,7 +27,7 @@ public class GoogleService {
         user.setFirstName(googleProfile.getFirstName());
         user.setLastName(googleProfile.getLastName());
         user.setProviderUserId(googleProfile.getId());
-        user.setProviderType(Constants.SocialProviderType.GOOGLE);
+        user.setProviderType(Constants.LoginProviderType.GOOGLE);
         return providerUserToLocalUserBridge.findOrCreateLocalUserFromProviderUser(user);
     }
 }

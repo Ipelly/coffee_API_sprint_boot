@@ -1,8 +1,16 @@
 package com.xiaoslab.coffee.api.apis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.NotImplementedException;
+import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.utilities.APITestUtils;
+import com.xiaoslab.coffee.api.utilities.TestConstants;
+import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,10 +19,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,13 +36,27 @@ import java.util.Map;
 public abstract class _BaseAPITest {
 
     @Value("${local.server.port}")
-    private int port;
+    protected int port;
 
     @Value("http://localhost")
-    private String host;
+    protected String host;
 
     @Autowired
-    private TestRestTemplate template;
+    protected TestRestTemplate template;
+
+    @Autowired
+    protected APITestUtils apiTestUtils;
+
+    protected HttpHeaders customHeaders = new HttpHeaders();
+
+    protected User CUSTOMER_USER;
+    protected User XIPLI_ADMIN;
+
+    @Before
+    public void setupUsers() {
+        if (CUSTOMER_USER == null) CUSTOMER_USER = apiTestUtils.createCustomerUser();
+        if (XIPLI_ADMIN == null) XIPLI_ADMIN = apiTestUtils.createXipliAdminUser();
+    }
 
     protected Logger getLogger() {
         return Logger.getLogger(this.getClass());
@@ -44,45 +66,44 @@ public abstract class _BaseAPITest {
         return host + ":" + port;
     }
 
-    protected <T> ResponseEntity<T> GET(String path, Class<T> objectType) {
-        getLogger().info("Base Path: " + getBaseApiUrl());
-        getLogger().info("Request: GET " + path);
-//        ResponseEntity<T> entity = template.getForEntity(getBaseApiUrl() + path, objectType);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
-        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<T> entity = template.exchange(path, HttpMethod.GET, requestEntity, objectType);
-        getLogger().info("Response: " + entity);
-        return entity;
+    protected <T> ResponseEntity<T> GET(String path, Class<T> responseType) {
+        return exchange(path, HttpMethod.GET, null, responseType);
     }
 
-    protected <T> ResponseEntity<List<T>> LIST(String path, Class<T> objectType) {
+    protected <T> ResponseEntity<List<T>> LIST(String path, Class<T> responseType) {
         ResponseEntity<List> entity = GET(path, List.class);
-        List<T> body = parseListFromResponseEntity(entity, objectType);
+        List<T> body = parseListFromResponseEntity(entity, responseType);
         return new ResponseEntity<>(body, entity.getHeaders(), entity.getStatusCode());
     }
 
-    protected <T> ResponseEntity<T> POST(String path, T body, Class<T> objectType) {
-        getLogger().info("Base Path: " + getBaseApiUrl());
-        getLogger().info("Request: POST " + path);
-        getLogger().info("Request Body: " + body);
-//        ResponseEntity<T> entity = template.postForEntity(getBaseApiUrl() + path, body, objectType);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
-        headers.set(HttpHeaders.AUTHORIZATION, "foo");
-        HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<T> entity = template.exchange(path, HttpMethod.POST, requestEntity, objectType);
-        getLogger().info("Response: " + entity);
-        return entity;
+    protected <T> ResponseEntity<T> POST(String path, Object requestBody, Class<T> responseType) {
+        return exchange(path, HttpMethod.POST, requestBody, responseType);
     }
 
-    protected <T> ResponseEntity<T> PUT(String path, T body, Class<T> objectType) {
-        throw new NotImplementedException("TODO"); //TODO
+    protected <T> ResponseEntity<T> PUT(String path, Object requestBody, Class<T> responseType) {
+        return exchange(path, HttpMethod.PUT, requestBody, responseType);
     }
 
     protected <T> ResponseEntity<T> DELETE(String path, Class<T> objectType) {
-        throw new NotImplementedException("TODO"); //TODO
+        return exchange(path, HttpMethod.DELETE, null, objectType);
+    }
+
+    private <T> ResponseEntity<T> exchange(String path, HttpMethod method, Object requestBody, Class<T> objectType) {
+        getLogger().info("Request: " + method.name() + " " + getBaseApiUrl() + path);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
+        headers.setAll (customHeaders.toSingleValueMap());
+
+        if (requestBody != null) getLogger().info("Request Body: " + requestBody);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<T> responseEntity = template.exchange(path, method, requestEntity, objectType);
+
+        getLogger().info("Response Code: " + responseEntity.getStatusCode());
+        getLogger().info("Response Body: " + responseEntity.getBody());
+
+        return responseEntity;
     }
 
     private static <T> List<T> parseListFromResponseEntity(ResponseEntity entity, Class<T> objectType) {
@@ -96,4 +117,85 @@ public abstract class _BaseAPITest {
         final ObjectMapper mapper = new ObjectMapper();
         return mapper.convertValue(map, objectType);
     }
+
+    protected void setAuthorizationHeader(String authorization) {
+        customHeaders.set(HttpHeaders.AUTHORIZATION, authorization);
+    }
+
+    protected void logoutFromOAuth2() {
+        customHeaders.remove(HttpHeaders.AUTHORIZATION);
+    }
+
+    protected ResponseEntity loginWithOAuth2(User user) {
+        return loginWithOAuth2(user.getEmailAddress());
+    }
+
+    protected ResponseEntity loginWithOAuth2(String username) {
+        return loginWithOAuth2(username, TestConstants.TEST_DEFAULT_PASSWORD);
+    }
+
+    protected ResponseEntity loginWithOAuth2(String username, String password) {
+        return loginWithOAuth2(TestConstants.TEST_OAUTH_CLIENT_ID, TestConstants.TEST_OAUTH_CLIENT_SECRET, username, password);
+    }
+
+    protected ResponseEntity loginWithOAuth2(String clientId, String clientSecret, String username, String password) {
+        customHeaders.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.getEncoder().encode((clientId + ":" + clientSecret).getBytes())));
+        customHeaders.set(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
+        MultiValueMap<String, String> tokenRequest = new LinkedMultiValueMap<>();
+        tokenRequest.put("grant_type", Arrays.asList("password"));
+        tokenRequest.put("username", Arrays.asList(username));
+        tokenRequest.put("password", Arrays.asList(password));
+        ResponseEntity<TokenResponse> responseEntity = POST(Constants.TOKEN_ENDPOINT, tokenRequest, TokenResponse.class);
+        customHeaders.set(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType());
+        String access_token = responseEntity.getBody().getAccess_token();
+        Assert.assertNotNull("access_token is null", access_token);
+        setAuthorizationHeader("Bearer " + access_token);
+        return responseEntity;
+    }
+
+    protected static class TokenResponse {
+
+        private String access_token;
+        private String refresh_token;
+        private String token_type;
+        private Long expires_in;
+
+        public String getAccess_token() {
+            return access_token;
+        }
+
+        public void setAccess_token(String access_token) {
+            this.access_token = access_token;
+        }
+
+        public String getRefresh_token() {
+            return refresh_token;
+        }
+
+        public void setRefresh_token(String refresh_token) {
+            this.refresh_token = refresh_token;
+        }
+
+        public String getToken_type() {
+            return token_type;
+        }
+
+        public void setToken_type(String token_type) {
+            this.token_type = token_type;
+        }
+
+        public Long getExpires_in() {
+            return expires_in;
+        }
+
+        public void setExpires_in(Long expires_in) {
+            this.expires_in = expires_in;
+        }
+
+        @Override
+        public String toString() {
+            return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+        }
+    }
+
 }
