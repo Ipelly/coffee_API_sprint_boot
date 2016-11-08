@@ -26,9 +26,9 @@ public class SocialTokenFilter extends GenericFilterBean {
 
                 if (social_token != null) {
                     String access_token = social_token[1];
-                    if (social_token[0].equalsIgnoreCase(Constants.SocialProviderType.FACEBOOK.name())) {
+                    if (social_token[0].equalsIgnoreCase(Constants.LoginProviderType.FACEBOOK.name())) {
                         authentication = new FacebookToken(access_token);
-                    } else if (social_token[0].equalsIgnoreCase(Constants.SocialProviderType.GOOGLE.name())) {
+                    } else if (social_token[0].equalsIgnoreCase(Constants.LoginProviderType.GOOGLE.name())) {
                         authentication = new GoogleToken(access_token);
                     }
                 }

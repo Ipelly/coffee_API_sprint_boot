@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -26,6 +27,12 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorEntity(exception.getClass(), 
                 parseConstraintViolationExceptionMessages((ConstraintViolationException)exception))
         );
+    }
+
+    @ResponseBody
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity entityNotFound(HttpServletRequest request, Exception exception) {
+        return ResponseEntity.notFound().build();
     }
 
     private static List<String> parseConstraintViolationExceptionMessages(ConstraintViolationException exception) {

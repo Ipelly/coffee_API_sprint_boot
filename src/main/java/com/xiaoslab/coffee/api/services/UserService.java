@@ -110,7 +110,7 @@ public class UserService implements IService<User>, UserDetailsService {
         GroupValidator.validate(newUser, User.XipliUser.class);
         newUser.setUserId(null);
         newUser.setStatus(Constants.StatusCodes.PENDING);
-        newUser.setProviderType(Constants.SocialProviderType.XIPLI);
+        newUser.setProviderType(Constants.LoginProviderType.XIPLI);
         newUser.setProviderUserId(null);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setRoles(new ArrayList<>(Arrays.asList(new AppAuthority(Roles.ROLE_USER))));

@@ -24,4 +24,10 @@ public class TestBeans {
     public LoginUtils loginUtils() {
         return new LoginUtils();
     }
+
+    @Bean
+    public APITestUtils apiTestUtils() {
+        return new APITestUtils();
+    }
+
 }

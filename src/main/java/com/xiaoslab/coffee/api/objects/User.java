@@ -64,7 +64,7 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "provider_type_id")
     @NotNull(groups = ProviderUser.class)
-    private Constants.SocialProviderType providerType;
+    private Constants.LoginProviderType providerType;
 
     @Column
     @NotEmpty(groups = ProviderUser.class)
@@ -182,11 +182,11 @@ public class User implements UserDetails, Serializable {
         this.status = status;
     }
 
-    public Constants.SocialProviderType getProviderType() {
+    public Constants.LoginProviderType getProviderType() {
         return providerType;
     }
 
-    public void setProviderType(Constants.SocialProviderType providerType) {
+    public void setProviderType(Constants.LoginProviderType providerType) {
         this.providerType = providerType;
     }
 
