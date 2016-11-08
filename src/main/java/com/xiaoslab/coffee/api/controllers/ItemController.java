@@ -30,17 +30,17 @@ public class ItemController {
     @Autowired
     IService<Item> itemService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity list(
-           @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-           @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-           @RequestParam(name = "search", defaultValue = "", required = false) String search) {
-
-        Pageable pageable = new PageRequest(page, size);
-        Specification<Item> specification = Specifications
-                .where(ItemSpecifications.search(search));
-        return ResponseEntity.ok(itemService.list(Optional.of(specification), Optional.of(pageable)));
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+//    public ResponseEntity list(
+//           @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+//           @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+//           @RequestParam(name = "search", defaultValue = "", required = false) String search) {
+//
+//        Pageable pageable = new PageRequest(page, size);
+//        Specification<Item> specification = Specifications
+//                .where(ItemSpecifications.search(search));
+//        return ResponseEntity.ok(itemService.list(Optional.of(specification), Optional.of(pageable)));
+//    }
 
     @RequestMapping(value = "/{itemId}", method = RequestMethod.GET)
     public ResponseEntity get(@PathVariable long itemId) {
