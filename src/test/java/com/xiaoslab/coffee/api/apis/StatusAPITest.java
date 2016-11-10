@@ -11,11 +11,9 @@ import static org.junit.Assert.assertTrue;
 
 public class StatusAPITest extends _BaseAPITest {
 
-    static final String V1_STATUS_ENDPOINT = "/v1/status";
-
     @Test
     public void statusAsJsonString() throws Exception {
-        ResponseEntity<String> entity = GET(V1_STATUS_ENDPOINT, String.class);
+        ResponseEntity<String> entity = api.getStatusJson();
         String response = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals("{\"status\":\"running\"}", response);
@@ -23,7 +21,7 @@ public class StatusAPITest extends _BaseAPITest {
 
     @Test
     public void statusAsHashMap() throws Exception {
-        ResponseEntity<Map> entity = GET(V1_STATUS_ENDPOINT, Map.class);
+        ResponseEntity<Map> entity = api.getStatusMap();
         Map response = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertTrue(response.containsKey("status"));

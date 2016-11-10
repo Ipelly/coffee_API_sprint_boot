@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -26,24 +27,30 @@ public class Shop implements Serializable {
     private long shopId;
 
     @Column(nullable = false)
+    @NotNull
     private String name;
 
     @Column(nullable = false)
+    @NotNull
     private String address1;
 
     @Column
     private String address2;
 
     @Column(nullable = false)
+    @NotNull
     private String city;
 
     @Column(nullable = false)
+    @NotNull
     private String state;
 
     @Column(nullable = false)
+    @NotNull
     private String zip;
 
     @Column(nullable = false)
+    @NotNull
     private String phone;
 
     @Column(precision = Constants.LAT_LONG_PRECISION, scale = Constants.LAT_LONG_SCALE)
@@ -56,6 +63,7 @@ public class Shop implements Serializable {
     private int rating;
 
     @Column(nullable = false)
+    @NotNull
     private Constants.StatusCodes status;
 
     @Override
