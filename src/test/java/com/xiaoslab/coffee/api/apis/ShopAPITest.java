@@ -16,19 +16,17 @@ import static org.hamcrest.Matchers.*;
  */
 public class ShopAPITest extends _BaseAPITest {
 
-    static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
-
     @Test
     public void createAndGetAndListShop() throws Exception {
 
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
 
         ResponseEntity<List<Shop>> listResponse;
         ResponseEntity<Shop> response;
 
         // test-case: create new shop by POST
         Shop shop1 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        response = api.createShop(shop1);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop1 = response.getBody();
         assertNotNull(createdShop1);
@@ -38,19 +36,19 @@ public class ShopAPITest extends _BaseAPITest {
         assertEquals(shop1, createdShop1);
 
         // test-case: list shops by GET
-        loginWithOAuth2(CUSTOMER_USER);
+        api.login(CUSTOMER_USER);
 
-        listResponse = LIST(V1_SHOP_ROOT_PATH, Shop.class);
+        listResponse = api.listShop();
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         List<Shop> shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
         assertEquals(createdShop1, shopList.get(0));
 
         // test-case: create another shop by POST
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
 
         Shop shop2 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop2, Shop.class);
+        response = api.createShop(shop2);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop2 = response.getBody();
         assertNotNull(createdShop2);
@@ -60,9 +58,9 @@ public class ShopAPITest extends _BaseAPITest {
         assertEquals(shop2, createdShop2);
 
         // test-case: list shops by GET
-        loginWithOAuth2(CUSTOMER_USER);
+        api.login(CUSTOMER_USER);
 
-        listResponse = LIST(V1_SHOP_ROOT_PATH, Shop.class);
+        listResponse = api.listShop();
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(2, shopList.size());
@@ -70,24 +68,24 @@ public class ShopAPITest extends _BaseAPITest {
         assertEquals(createdShop2, shopList.get(1));
 
         // test-case: get individual shops by GET
-        response = GET(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        response = api.getShop(createdShop1.getShopId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Shop gottenShop1 = response.getBody();
         assertEquals(createdShop1, gottenShop1);
-        response = GET(V1_SHOP_ROOT_PATH + createdShop2.getShopId(), Shop.class);
+        response = api.getShop(createdShop2.getShopId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Shop gottenShop2 = response.getBody();
         assertEquals(createdShop2, gottenShop2);
 
         // test search shop1 by address
-        listResponse = LIST(V1_SHOP_ROOT_PATH + "?search=" + shop1.getAddress1(), Shop.class);
+        listResponse = api.listShop("?search=" + shop1.getAddress1());
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
         assertEquals(createdShop1, shopList.get(0));
 
         // test search shop2 by name
-        listResponse = LIST(V1_SHOP_ROOT_PATH + "?search=" + shop2.getName(), Shop.class);
+        listResponse = api.listShop("?search=" + shop2.getName());
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
@@ -100,11 +98,11 @@ public class ShopAPITest extends _BaseAPITest {
         ResponseEntity<Shop> response;
 
         Shop shop1 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        response = api.createShop(shop1);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
-        loginWithOAuth2(CUSTOMER_USER);
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        api.login(CUSTOMER_USER);
+        response = api.createShop(shop1);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
     }
@@ -113,9 +111,9 @@ public class ShopAPITest extends _BaseAPITest {
     public void updateShopWithoutAuthorization() throws Exception {
         ResponseEntity<Shop> response;
 
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
         Shop shop1 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        response = api.createShop(shop1);
         Shop createdShop1 = response.getBody();
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
@@ -123,16 +121,16 @@ public class ShopAPITest extends _BaseAPITest {
         shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
-        logoutFromOAuth2();
-        response = PUT(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), createdShop1, Shop.class);
+        api.logout();
+        response = api.updateShop(createdShop1.getShopId(), createdShop1);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
-        loginWithOAuth2(CUSTOMER_USER);
-        response = PUT(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), createdShop1, Shop.class);
+        api.login(CUSTOMER_USER);
+        response = api.updateShop(createdShop1.getShopId(), createdShop1);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
-        loginWithOAuth2(XIPLI_ADMIN);
-        response = PUT(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), createdShop1, Shop.class);
+        api.login(XIPLI_ADMIN);
+        response = api.updateShop(createdShop1.getShopId(), createdShop1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
     }
@@ -141,9 +139,9 @@ public class ShopAPITest extends _BaseAPITest {
     public void deleteShopWithoutAuthorization() throws Exception {
         ResponseEntity<Shop> response;
 
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
         Shop shop1 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        response = api.createShop(shop1);
         Shop createdShop1 = response.getBody();
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
@@ -151,29 +149,29 @@ public class ShopAPITest extends _BaseAPITest {
         shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
-        logoutFromOAuth2();
-        response = DELETE(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        api.logout();
+        response = api.deleteShop(createdShop1.getShopId());
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
-        loginWithOAuth2(CUSTOMER_USER);
-        response = DELETE(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        api.login(CUSTOMER_USER);
+        response = api.deleteShop(createdShop1.getShopId());
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
-        loginWithOAuth2(XIPLI_ADMIN);
-        response = DELETE(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        api.login(XIPLI_ADMIN);
+        response = api.deleteShop(createdShop1.getShopId());
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     public void createAndUpdateAndDeleteShop() throws Exception {
 
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
 
         ResponseEntity<Shop> response;
 
         // test-case: create new shop by POST
         Shop shop1 = apiTestUtils.setupShopObject();
-        response = POST(V1_SHOP_ROOT_PATH, shop1, Shop.class);
+        response = api.createShop(shop1);
         Shop createdShop1 = response.getBody();
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
@@ -183,7 +181,7 @@ public class ShopAPITest extends _BaseAPITest {
 
         // test-case: update shop by PUT
         createdShop1.setName("Test Shop Updated Name");
-        response = PUT(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), createdShop1, Shop.class);
+        response = api.updateShop(createdShop1.getShopId(), createdShop1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Shop updatedShop1 = response.getBody();
         assertNotNull(updatedShop1);
@@ -191,11 +189,11 @@ public class ShopAPITest extends _BaseAPITest {
         assertThat(updatedShop1.getName(), is(equalTo("Test Shop Updated Name")));
 
         // test-case: delete shop by DELETE
-        response = DELETE(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        response = api.deleteShop(createdShop1.getShopId());
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
         // test-case: verify shop is not returned new shop by POST
-        response = GET(V1_SHOP_ROOT_PATH + createdShop1.getShopId(), Shop.class);
+        response = api.getShop(createdShop1.getShopId());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -203,20 +201,20 @@ public class ShopAPITest extends _BaseAPITest {
     @Test
     public void notFoundShopId() throws Exception {
 
-        loginWithOAuth2(XIPLI_ADMIN);
+        api.login(XIPLI_ADMIN);
 
         ResponseEntity<Shop> response;
 
         // test-case: GET
-        response = GET(V1_SHOP_ROOT_PATH + Integer.MAX_VALUE, Shop.class);
+        response = api.getShop(Integer.MAX_VALUE);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         // test-case: PUT
-        response = PUT(V1_SHOP_ROOT_PATH + Integer.MAX_VALUE, new Shop(), Shop.class);
+        response = api.updateShop(Integer.MAX_VALUE, new Shop());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         // test-case: DELETE
-        response = DELETE(V1_SHOP_ROOT_PATH + Integer.MAX_VALUE, Shop.class);
+        response = api.deleteShop(Integer.MAX_VALUE);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
