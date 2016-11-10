@@ -5,6 +5,7 @@ import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.specifications.ShopSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,18 +35,25 @@ public class ShopController {
     public ResponseEntity list(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "20", required = false) int size,
-            @RequestParam(name = "search", defaultValue = "", required = false) String search,
-            @RequestParam(name = "rating", defaultValue = "0", required = false) int rating,
-            @RequestParam(name = "zip", defaultValue = "", required = false) String zip,
-            @RequestParam(name = "lat", defaultValue = "0", required = false) BigDecimal lat,
-            @RequestParam(name = "lon", defaultValue = "0", required = false) BigDecimal lon,
-            @RequestParam(name = "radius", defaultValue = "25000", required = false) BigDecimal radius) {
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "rating", required = false) Integer rating,
+            @RequestParam(name = "zip", required = false) String zip,
+            @RequestParam(name = "lat", required = false) BigDecimal lat,
+            @RequestParam(name = "lon", required = false) BigDecimal lon,
+            @RequestParam(name = "radius", required = false) BigDecimal radius) {
 
         Pageable pageable = new PageRequest(page, size);
-        Specification<Shop> specification = Specifications
-                .where(ShopSpecifications.search(search))
-                .and(ShopSpecifications.minimumRating(rating))
-                .and(ShopSpecifications.withinRadius(lat, lon, radius));
+
+        Specification<Shop> specification = ShopSpecifications.notDeleted();
+        if (StringUtils.isNotBlank(search)) {
+            specification = Specifications.where(specification).and(ShopSpecifications.search(search));
+        }
+        if (!Objects.isNull(rating)) {
+            specification = Specifications.where(specification).and(ShopSpecifications.minimumRating(rating));
+        }
+        if (!Objects.isNull(lat) && !Objects.isNull(lon) && !Objects.isNull(radius)) {
+            specification = Specifications.where(specification).and(ShopSpecifications.withinRadius(lat, lon, radius));
+        }
         return ResponseEntity.ok(shopService.list(Optional.of(specification), Optional.of(pageable)));
     }
 

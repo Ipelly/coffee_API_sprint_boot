@@ -35,9 +35,10 @@ public class FilterBeans {
     @Bean
     public Filter logFilter() {
         RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
-        requestLoggingFilter.setBeforeMessagePrefix("Request by ".concat(parseNameFromSecurityContext()).concat(" ["));
+        requestLoggingFilter.setBeforeMessagePrefix("Request [");
         requestLoggingFilter.setBeforeMessageSuffix("]");
         requestLoggingFilter.setIncludeQueryString(true);
+        requestLoggingFilter.setIncludeClientInfo(true);
         requestLoggingFilter.setIncludePayload(false);
         requestLoggingFilter.setMaxPayloadLength(5120);
         return requestLoggingFilter;
