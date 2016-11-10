@@ -7,6 +7,7 @@ import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,13 @@ public class UserController {
     public ResponseEntity register(User newUser) {
         User createdUser = userService.registerNewUser(newUser);
         URI location = AppUtility.buildCreatedLocation(AppUtility.getCurrentRequest().getServletPath().replace("/register", ""), createdUser.getUserId());
+        return ResponseEntity.created(location).body(createdUser);
+    }
+
+    @RequestMapping(path = "/", method = RequestMethod.POST)
+    public ResponseEntity create(@RequestBody User user) {
+        User createdUser = userService.create(user);
+        URI location = AppUtility.buildCreatedLocation(createdUser.getUserId());
         return ResponseEntity.created(location).body(createdUser);
     }
 

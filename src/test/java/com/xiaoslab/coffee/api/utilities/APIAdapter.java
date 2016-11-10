@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.utilities;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
@@ -34,8 +35,9 @@ public class APIAdapter {
     private String host;
     private TestRestTemplate template;
     private HttpHeaders customHeaders = new HttpHeaders();
-    private static RequestEntity lastRequest;
-    private static ResponseEntity lastResponse;
+    private static RequestEntity<Object> lastRequest;
+    private static ResponseEntity<Object> lastResponse;
+    private static final ObjectMapper jsonMapper = new ObjectMapper();
 
 
     // Default constructor
@@ -60,8 +62,9 @@ public class APIAdapter {
         return lastResponse;
     }
 
-    public static void setLastResponse(ResponseEntity lastResponse) {
-        APIAdapter.lastResponse = lastResponse;
+    private static void clearLastRequestAndResponse() {
+        lastRequest = null;
+        lastResponse = null;
     }
 
     public String getBaseApiUrl() {
@@ -105,6 +108,8 @@ public class APIAdapter {
     private <T> ResponseEntity<T> exchange(String path, HttpMethod method, Object requestBody, Class<T> objectType) {
         LOGGER.info("Request: " + method.name() + " " + getBaseApiUrl() + path);
 
+        clearLastRequestAndResponse();
+
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON.toString());
         headers.setAll (customHeaders.toSingleValueMap());
@@ -113,7 +118,12 @@ public class APIAdapter {
 
         URI uri = null;
         try {
-            uri = new URI(new URLCodec().encode(getBaseApiUrl() + path));
+            String[] splitPath = path.split("\\?", 2);
+            String fullPath = getBaseApiUrl() + splitPath[0];
+            if (splitPath.length > 1) {
+                fullPath += new URLCodec().encode(splitPath[1]);
+            }
+            uri = new URI(fullPath);
         } catch (URISyntaxException|EncoderException syntaxErr) {
             Assert.fail("<" + getBaseApiUrl() + path + "> is not a valid URI");
         }
@@ -121,13 +131,20 @@ public class APIAdapter {
         RequestEntity<Object> requestEntity = new RequestEntity<>(requestBody, headers, method, uri);
         lastRequest = requestEntity;
 
-        ResponseEntity<T> responseEntity = template.exchange(path, method, requestEntity, objectType);
-        lastResponse = responseEntity;
+        ResponseEntity<Object> responseEntity = template.exchange(path, method, requestEntity, Object.class);
+        lastResponse = new ResponseEntity<>(convertObjectToJson(responseEntity.getBody()), responseEntity.getHeaders(), responseEntity.getStatusCode());
 
-        LOGGER.info("Response Code: " + responseEntity.getStatusCode());
-        LOGGER.info("Response Body: " + responseEntity.getBody());
+        LOGGER.info("Response Code: " + lastResponse.getStatusCode());
+        LOGGER.info("Response Body: " + lastResponse.getBody());
 
-        return responseEntity;
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (responseEntity.getBody() instanceof Map) {
+                return new ResponseEntity<>(convertMapToObject((Map)responseEntity.getBody(), objectType), responseEntity.getHeaders(), responseEntity.getStatusCode());
+            } else if (responseEntity.getBody() instanceof List) {
+                return new ResponseEntity(responseEntity.getBody(), responseEntity.getHeaders(), responseEntity.getStatusCode());
+            }
+        }
+        return new ResponseEntity<>(null, responseEntity.getHeaders(), responseEntity.getStatusCode());
     }
 
     private static <T> List<T> parseListFromResponseEntity(ResponseEntity entity, Class<T> objectType) {
@@ -138,8 +155,19 @@ public class APIAdapter {
     }
 
     private static <T> T convertMapToObject(Map map, Class<T> objectType) {
-        final ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(map, objectType);
+        if (objectType.equals(String.class)) {
+            return (T) convertObjectToJson(map);
+        }
+        return jsonMapper.convertValue(map, objectType);
+    }
+
+    public static String convertObjectToJson(Object object) {
+        try {
+            return jsonMapper.writeValueAsString(object);
+        } catch (JsonProcessingException ex) {
+            Assert.fail(ex.getMessage());
+            return null;
+        }
     }
 
     private void setAuthorizationHeader(String authorization) {
@@ -183,6 +211,7 @@ public class APIAdapter {
         private String refresh_token;
         private String token_type;
         private Long expires_in;
+        private String scope;
 
         public String getAccess_token() {
             return access_token;
@@ -216,6 +245,14 @@ public class APIAdapter {
             this.expires_in = expires_in;
         }
 
+        public String getScope() {
+            return scope;
+        }
+
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
+
         @Override
         public String toString() {
             return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
@@ -230,6 +267,30 @@ public class APIAdapter {
 
     public ResponseEntity<Map> getStatusMap() {
         return GET(V1_STATUS_ENDPOINT, Map.class);
+    }
+
+    public ResponseEntity<User> getUser(long shopId) {
+        return GET(V1_USER_ROOT_PATH + shopId, User.class);
+    }
+
+    public ResponseEntity<List<User>> listUsers() {
+        return LIST(V1_USER_ROOT_PATH, User.class);
+    }
+
+    public ResponseEntity<List<User>> listUsers(String queryParams) {
+        return LIST(V1_USER_ROOT_PATH + queryParams, User.class);
+    }
+
+    public ResponseEntity<User> createUser(User shop) {
+        return POST(V1_USER_ROOT_PATH, shop, User.class);
+    }
+
+    public ResponseEntity<User> updateUser(long shopId, User shop) {
+        return PUT(V1_USER_ROOT_PATH + shopId, shop, User.class);
+    }
+
+    public ResponseEntity<User> deleteUser(long shopId) {
+        return DELETE(V1_USER_ROOT_PATH + shopId, User.class);
     }
 
     public ResponseEntity<Shop> getShop(long shopId) {
