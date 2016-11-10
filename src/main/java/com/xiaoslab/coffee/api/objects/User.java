@@ -22,6 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements UserDetails, Serializable {
 
     // Markers for Group Validations
@@ -190,7 +191,6 @@ public class User implements UserDetails, Serializable {
         this.providerType = providerType;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getProviderUserId() {
         return providerUserId;
     }
@@ -199,7 +199,6 @@ public class User implements UserDetails, Serializable {
         this.providerUserId = providerUserId;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Long getShopId() {
         return shopId;
     }

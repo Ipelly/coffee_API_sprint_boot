@@ -15,37 +15,6 @@ import java.net.URI;
  */
 public class AppUtility {
 
-//    public static Hashtable<String, Object> getFields(Object object){
-//        Class theClass = object.getClass();
-//        Hashtable<String, Object> privateFields = new Hashtable<String, Object>();
-//
-//        Field[] fields = theClass.getDeclaredFields();
-//
-//        for (Field field : fields) {
-//            Object value = new Object();
-//            String fieldName = field.getName().substring(0,1).toUpperCase().toString() + field.getName().substring(1,field.getName().length());
-//            try {
-//                Method m = object.getClass().getMethod("get" + fieldName, new Class[] {});
-//                if(!m.invoke(object).equals(null)) {
-//                    value = m.invoke(object);
-//                }
-//            }
-//            catch (NoSuchMethodException e){
-//                continue;
-//            }
-//            catch (InvocationTargetException e){
-//
-//                continue;
-//            }
-//            catch (IllegalAccessException e){
-//                continue;
-//            }
-//
-//            privateFields.put(fieldName, value);
-//        }
-//        return privateFields;
-//    }
-
     public static HttpServletRequest getCurrentRequest() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         Assert.notNull(requestAttributes, "Could not find current request via RequestContextHolder");

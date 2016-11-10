@@ -40,6 +40,7 @@ public abstract class _BaseAPITest {
     @Autowired
     protected APITestUtils apiTestUtils;
 
+    @Autowired
     protected APIAdapter api;
 
     protected User CUSTOMER_USER;
@@ -47,9 +48,10 @@ public abstract class _BaseAPITest {
 
     @Before
     public void setupApiAdapter() {
-        if (api == null) {
-            api = new APIAdapter(template, host, port);
-        }
+        api.setTemplate(template);
+        api.setHost(host);
+        api.setPort(port);
+        api.logout();
     }
 
     @Before
@@ -67,17 +69,22 @@ public abstract class _BaseAPITest {
 
         @Override
         protected void failed(Throwable throwable, Description description) {
-            String originalMessage = throwable.getMessage();
-
-            String newMessage = originalMessage + "\nLast API Call: " +
-                    "\nRequest URL: " + APIAdapter.getLastRequest().getMethod() + " " + APIAdapter.getLastRequest().getUrl() +
-                    "\nRequest Body: " + APIAdapter.getLastRequest().getBody() +
-                    "\nRequest Headers: " + APIAdapter.getLastRequest().getHeaders() +
-                    "\nResponse Code: " + APIAdapter.getLastResponse().getStatusCode() +
-                    "\nResponse Body: " + APIAdapter.getLastResponse().getBody();
+            String errorMessage = throwable.getMessage();
+            if (APIAdapter.getLastRequest() != null) {
+                errorMessage = errorMessage +
+                        "\nLast API Call: " +
+                        "\nRequest URL: " + APIAdapter.getLastRequest().getMethod() + " " + APIAdapter.getLastRequest().getUrl() +
+                        "\nRequest Body: " + APIAdapter.getLastRequest().getBody() +
+                        "\nRequest Headers: " + APIAdapter.getLastRequest().getHeaders();
+            }
+            if (APIAdapter.getLastResponse() != null) {
+                errorMessage = errorMessage +
+                        "\nResponse Code: " + APIAdapter.getLastResponse().getStatusCode() +
+                        "\nResponse Body: " + APIAdapter.getLastResponse().getBody();
+            }
 
             try {
-                FieldUtils.writeField(throwable, "detailMessage", newMessage, true);
+                FieldUtils.writeField(throwable, "detailMessage", errorMessage, true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

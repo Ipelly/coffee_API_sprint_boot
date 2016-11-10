@@ -7,6 +7,7 @@ import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.specifications.UserSpecifications;
 import com.xiaoslab.coffee.api.utility.Constants;
 import com.xiaoslab.coffee.api.utility.GroupValidator;
+import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,16 @@ import java.util.*;
 public class UserService implements IService<User>, UserDetailsService {
 
     @Autowired
+    ShopService shopService;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserUtility userUtility;
 
     private static final Logger logger = Logger.getLogger(UserService.class);
 
@@ -38,19 +45,17 @@ public class UserService implements IService<User>, UserDetailsService {
         return userRepository.getOne(userId);
     }
 
-    // this method should not be called. use either registerNewUser() or createShopUser() or createXAdmin()
-    public User create(User user) {
-        throw new UnsupportedOperationException("cannot create user through this service method");
-    }
-
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})
-    public User createShopUser(User user) {
-        return userRepository.save(user);
-    }
+    public User create(User user) {
 
-    @RolesAllowed(Roles.ROLE_X_ADMIN)
-    public User createXAdmin(User user) {
-        user.setRoles(Arrays.asList(new AppAuthority(Roles.ROLE_X_ADMIN)));
+        userUtility.checkUserCanAccessShop(user.getShopId());
+        userUtility.checkUserCanGrantRoles(user);
+
+        // make sure the shop is valid and current user can access it
+        if (user.getShopId() != 0) {
+            shopService.get(user.getShopId());
+        }
+        user.setUserId(null);
         return userRepository.save(user);
     }
 

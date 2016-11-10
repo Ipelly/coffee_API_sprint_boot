@@ -30,4 +30,9 @@ public class TestBeans {
         return new APITestUtils();
     }
 
+    @Bean
+    public APIAdapter apiAdapter() {
+        return new APIAdapter();
+    }
+
 }
