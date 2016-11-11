@@ -71,6 +71,10 @@ dependencies {
     compile "org.springframework.social:spring-social-facebook"
     compile "org.springframework.social:spring-social-google:1.0.0.RC1"
 
+    // swagger
+    compile "io.springfox:springfox-swagger2:2.6.0"
+    compile "io.springfox:springfox-swagger-ui:2.6.0"
+
     // jersey
     compile "org.glassfish.jersey.core:jersey-common:2.24"
 
