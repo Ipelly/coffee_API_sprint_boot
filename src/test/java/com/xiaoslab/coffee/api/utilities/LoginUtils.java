@@ -22,4 +22,10 @@ public class LoginUtils {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    public void loginAsShopAdmin() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                "X-Admin","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_SHOP_ADMIN)));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
 }

@@ -25,7 +25,7 @@ public class ShopAPITest extends _BaseAPITest {
         ResponseEntity<Shop> response;
 
         // test-case: create new shop by POST
-        Shop shop1 = apiTestUtils.createShop();
+        Shop shop1 = apiTestUtils.setupShopObject();
         response = api.createShop(shop1);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop1 = response.getBody();
@@ -105,12 +105,6 @@ public class ShopAPITest extends _BaseAPITest {
         response = api.createShop(shop1);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
-        api.login(XIPLI_ADMIN);
-        Shop newShop = apiTestUtils.createShop();
-        api.login(apiTestUtils.createShopAdminUser(newShop.getShopId()));
-        response = api.createShop(shop1);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-
     }
 
     @Test
@@ -118,7 +112,14 @@ public class ShopAPITest extends _BaseAPITest {
         ResponseEntity<Shop> response;
 
         api.login(XIPLI_ADMIN);
-        Shop createdShop1 = apiTestUtils.createShop();
+        Shop shop1 = apiTestUtils.setupShopObject();
+        response = api.createShop(shop1);
+        Shop createdShop1 = response.getBody();
+        assertNotNull(createdShop1);
+        assertTrue(createdShop1.getShopId() > 0);
+        shop1.setShopId(createdShop1.getShopId());
+        shop1.setStatus(Constants.StatusCodes.INACTIVE);
+        assertEquals(shop1, createdShop1);
 
         api.logout();
         response = api.updateShop(createdShop1.getShopId(), createdShop1);

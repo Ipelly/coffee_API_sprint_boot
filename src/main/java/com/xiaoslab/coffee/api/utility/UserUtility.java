@@ -25,6 +25,10 @@ public class UserUtility {
         return getLoggedInUser() != null && hasRole(Roles.ROLE_X_ADMIN);
     }
 
+    public boolean isShopAdmin() {
+        return getLoggedInUser() != null && hasRole(Roles.ROLE_SHOP_ADMIN);
+    }
+
     public boolean hasRole(String role) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
@@ -50,6 +54,8 @@ public class UserUtility {
         }
         // make sure user can access the shop if user is not xipli admin
         if (!isXipliAdmin() && shopId != getLoggedInUser().getShopId()) {
+            throw new AccessDeniedException("User not allowed to access shop with ID: " + shopId);
+        } else if (!isShopAdmin() && shopId != getLoggedInUser().getShopId()) {
             throw new AccessDeniedException("User not allowed to access shop with ID: " + shopId);
         }
     }

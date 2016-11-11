@@ -48,11 +48,11 @@ public class Item {
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
-    public long getItem_id() {
+    public long getItemId() {
         return item_id;
     }
 
-    public void setItem_id(long item_id) {
+    public void setItemId(long item_id) {
         this.item_id = item_id;
     }
 
@@ -80,11 +80,11 @@ public class Item {
         this.price = price;
     }
 
-    public long getShop_id() {
+    public long getShopId() {
         return shop_id;
     }
 
-    public void setShop_id(long shop_id) {
+    public void setShopId(long shop_id) {
         this.shop_id = shop_id;
     }
 

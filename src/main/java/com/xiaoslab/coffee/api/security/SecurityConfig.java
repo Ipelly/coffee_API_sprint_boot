@@ -55,7 +55,7 @@ public class SecurityConfig {
                     .antMatchers("/health").permitAll()
                     .antMatchers("/v1/status").permitAll()
                     .antMatchers("/v1/users/register").permitAll()
-                    .antMatchers("/**").authenticated()
+                    //.antMatchers("/**").authenticated()
                     .and()
                     .addFilterBefore(socialTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
                     .authenticationProvider(facebookAuthenticationProvider)

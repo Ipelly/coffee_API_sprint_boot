@@ -60,24 +60,25 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
+        loginUtils.loginAsShopAdmin();
         // Adding item to the shop
         Item item = new Item();
         item.setName("latte");
         item.setDescription("Fresh brewed beans made with the milk of your choice");
         item.setPrice(new BigDecimal(3.2));
-        item.setShop_id(shopidfortest);
+        item.setShopId(shopidfortest);
         item.setStatus(Constants.StatusCodes.ACTIVE);
         Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItem_id();
+        itemidfortest = createdItem.getItemId();
 
         // test-case: adding item2
         Item item2 = new Item();
         item2.setName("Iced Venila Chai");
         item2.setDescription("Excellent mix of east and the west");
         item2.setPrice(new BigDecimal(5.49));
-        item.setShop_id(shopidfortest);
+        item2.setShopId(shopidfortest);
         item2.setStatus(Constants.StatusCodes.INACTIVE);
-        Item createdItem2 = itemService.create(item);
+        Item createdItem2 = itemService.create(item2);
 
         // test-case: Update item2
         createdItem2.setName("Hot Venila Chai");
@@ -85,7 +86,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         Item createdItemEdit = itemService.update(createdItem2);
 
         // test-case: Delete new item
-        long itemIDForDelete = createdItem.getItem_id();
+        long itemIDForDelete = createdItem.getItemId();
         Item deleteShopdel = itemService.delete(itemIDForDelete);
 
         List<Item> list = itemService.list();
@@ -112,21 +113,31 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        // Adding item to the shop
+        // Adding item1 to the shop
+        loginUtils.loginAsShopAdmin();
         Item item = new Item();
         item.setName("latte");
         item.setDescription("Fresh brewed beans made with the milk of your choice");
         item.setPrice(new BigDecimal(3.2));
-        item.setShop_id(shopidfortest);
+        item.setShopId(shopidfortest);
         item.setStatus(Constants.StatusCodes.ACTIVE);
         Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItem_id();
+        itemidfortest = createdItem.getItemId();
+
+        // Adding item2 to the shop
+        Item item2 = new Item();
+        item2.setName("Iced Venila Chai");
+        item2.setDescription("Excellent mix of east and the west");
+        item2.setPrice(new BigDecimal(5.49));
+        item2.setShopId(shopidfortest);
+        item2.setStatus(Constants.StatusCodes.INACTIVE);
+        Item createdItem2 = itemService.create(item2);
 
         loginUtils.loginAsCustomerUser();
         List<Item> items = itemService.list();
         logger.info(items);
         assertNotNull(items);
-        assertEquals(1, items.size());
+        assertEquals(2, items.size());
     }
 
     @Test
@@ -149,15 +160,24 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        // Adding item to the shop
+        // Adding item1 to the shop
         Item item = new Item();
         item.setName("latte");
         item.setDescription("Fresh brewed beans made with the milk of your choice");
         item.setPrice(new BigDecimal(3.2));
-        item.setShop_id(shopidfortest);
+        item.setShopId(shopidfortest);
         item.setStatus(Constants.StatusCodes.ACTIVE);
         Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItem_id();
+        itemidfortest = createdItem.getItemId();
+
+        // Adding item2 to the shop
+        Item item2 = new Item();
+        item2.setName("Iced Venila Chai");
+        item2.setDescription("Excellent mix of east and the west");
+        item2.setPrice(new BigDecimal(5.49));
+        item2.setShopId(shopidfortest);
+        item2.setStatus(Constants.StatusCodes.INACTIVE);
+        Item createdItem2 = itemService.create(item2);
 
         loginUtils.loginAsCustomerUser();
         Item itemm = itemService.get(itemidfortest);

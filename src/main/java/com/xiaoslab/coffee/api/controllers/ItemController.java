@@ -1,7 +1,6 @@
 package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.specifications.ItemSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
 
@@ -31,14 +29,14 @@ public class ItemController {
     IService<Item> itemService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity list(
+    public ResponseEntity list(@PathVariable long shopId,
            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
            @RequestParam(name = "search", defaultValue = "", required = false) String search) {
 
         Pageable pageable = new PageRequest(page, size);
         Specification<Item> specification = Specifications
-                .where(ItemSpecifications.search(search));
+                .where(ItemSpecifications.itemListForShop(shopId));
         return ResponseEntity.ok(itemService.list(Optional.of(specification), Optional.of(pageable)));
     }
 
@@ -51,7 +49,7 @@ public class ItemController {
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Item item) {
         Item createdItem = itemService.create(item);
-        URI location = AppUtility.buildCreatedLocation(createdItem.getItem_id());
+        URI location = AppUtility.buildCreatedLocation(createdItem.getItemId());
         return ResponseEntity.created(location).body(createdItem);
     }
 

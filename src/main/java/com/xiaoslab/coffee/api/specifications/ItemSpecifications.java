@@ -34,4 +34,9 @@ public class ItemSpecifications {
                 .where(searchName(search));
     }
 
+    public static Specification<Item> itemListForShop(long shopID) {
+        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopID);
+        //return Specifications.where(searchName(search));
+    }
+
 }

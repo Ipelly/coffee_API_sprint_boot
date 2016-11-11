@@ -1,6 +1,7 @@
 package com.xiaoslab.coffee.api.utilities;
 
 import com.xiaoslab.coffee.api.objects.AppAuthority;
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.repository.UserRepository;
@@ -91,6 +92,16 @@ public class APITestUtils {
         shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
         return shop;
+    }
+
+    public Item setupItemObject(long shopId) {
+        Item item = new Item();
+        item.setName("latte");
+        item.setDescription("Fresh brewed beans made with the milk of your choice");
+        item.setPrice(new BigDecimal(3.2));
+        item.setShopId(shopId);
+        item.setStatus(Constants.StatusCodes.ACTIVE);
+        return item;
     }
 
 }

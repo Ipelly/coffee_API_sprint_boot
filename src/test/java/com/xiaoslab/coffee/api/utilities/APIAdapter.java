@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.utilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.utility.Constants;
@@ -27,6 +28,7 @@ public class APIAdapter {
     // API Endpoints. Add new ones here as static final String
     private static final String V1_STATUS_ENDPOINT = Constants.V1 + Constants.STATUS_ENDPOINT;
     private static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
+    private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
 
 
@@ -317,4 +319,26 @@ public class APIAdapter {
         return DELETE(V1_SHOP_ROOT_PATH + shopId, Shop.class);
     }
 
+
+    public ResponseEntity<Item> getItem(Item item, long itemId){return GET(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);}
+
+    public ResponseEntity<List<Item>> listItem() {
+        return LIST(V1_ITEM_ROOT_PATH, Item.class);
+    }
+
+    public ResponseEntity<List<Item>> listItem(String queryParams) {
+        return LIST(V1_ITEM_ROOT_PATH + queryParams, Item.class);
+    }
+
+    public ResponseEntity<Item> createItem(Item item) {
+        return POST(String.format(V1_ITEM_ROOT_PATH, item.getShopId()), item, Item.class);
+    }
+
+    public ResponseEntity<Item> updateItem(Item item, long itemId) {
+        return PUT(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, item, Item.class);
+    }
+
+    public ResponseEntity<Item> deleteItem(Item item, long itemId) {
+        return DELETE(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
+    }
 }
