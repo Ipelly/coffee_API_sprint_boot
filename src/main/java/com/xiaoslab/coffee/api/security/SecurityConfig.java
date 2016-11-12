@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.security;
 
 import com.xiaoslab.coffee.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -101,6 +102,7 @@ public class SecurityConfig {
     public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
+        @Qualifier("userService")
         private UserService userService;
 
         @Autowired
