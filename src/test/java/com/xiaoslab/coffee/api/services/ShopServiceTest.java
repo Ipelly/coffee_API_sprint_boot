@@ -114,7 +114,6 @@ public class ShopServiceTest extends _BaseServiceTest  {
     public void getShop() {
 
         loginUtils.loginAsXAdmin();
-
         // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
