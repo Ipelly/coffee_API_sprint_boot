@@ -59,8 +59,8 @@ public class ItemService implements IService<Item> {
 
     @Override
     @RolesAllowed({Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public Item delete(long item_id) {
-        Item item = itemRepository.findOne(item_id);
+    public Item delete(long itemId) {
+        Item item = itemRepository.findOne(itemId);
         item.setStatus(Constants.StatusCodes.DELETED);
         return itemRepository.save(item);
     }

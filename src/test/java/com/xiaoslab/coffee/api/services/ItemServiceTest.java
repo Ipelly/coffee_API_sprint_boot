@@ -86,11 +86,11 @@ public class ItemServiceTest extends _BaseServiceTest{
         Item createdItemEdit = itemService.update(createdItem2);
 
         // test-case: Delete new item
-        long itemIDForDelete = createdItem.getItemId();
+        long itemIDForDelete = createdItem2.getItemId();
         Item deleteShopdel = itemService.delete(itemIDForDelete);
 
         List<Item> list = itemService.list();
-        assertEquals(1, list.size());
+        assertEquals(2, list.size());
    }
 
     @Test
