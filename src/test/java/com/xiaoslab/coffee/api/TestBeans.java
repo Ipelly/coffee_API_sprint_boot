@@ -31,6 +31,11 @@ public class TestBeans {
     }
 
     @Bean
+    public TestUtils TestUtils() {
+        return new TestUtils();
+    }
+
+    @Bean
     public APIAdapter apiAdapter() {
         return new APIAdapter();
     }

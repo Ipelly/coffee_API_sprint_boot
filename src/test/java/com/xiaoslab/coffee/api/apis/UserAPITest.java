@@ -13,14 +13,14 @@ public class UserAPITest extends _BaseAPITest {
     public void createShopAdmin() throws Exception {
         api.login(XIPLI_ADMIN);
         Shop shop = apiTestUtils.createShop();
-        User shopAdmin = apiTestUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
+        User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
         shopAdmin.setShopId(shop.getShopId());
         ResponseEntity<User> response = api.createUser(shopAdmin);
         User createdUser = response.getBody();
         Assert.assertEquals(shop.getShopId(), createdUser.getShopId().longValue());
 
         // make sure the new user can login
-        apiTestUtils.resetPassword(createdUser.getUserId());
+        testUtils.resetPassword(createdUser.getUserId());
         api.login(createdUser);
     }
 

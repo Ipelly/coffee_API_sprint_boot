@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Objects;
+
 public class UserUtility {
 
     public User getLoggedInUser() {
@@ -53,9 +55,8 @@ public class UserUtility {
             throw new IllegalArgumentException("Shop ID must be specified");
         }
         // make sure user can access the shop if user is not xipli admin
-        if (!isXipliAdmin() && shopId != getLoggedInUser().getShopId()) {
-            throw new AccessDeniedException("User not allowed to access shop with ID: " + shopId);
-        } else if (!isShopAdmin() && shopId != getLoggedInUser().getShopId()) {
+        if (!isXipliAdmin() && 
+                (!isShopAdmin() || !Objects.equals(shopId, getLoggedInUser().getShopId()))) {
             throw new AccessDeniedException("User not allowed to access shop with ID: " + shopId);
         }
     }

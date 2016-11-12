@@ -1,13 +1,14 @@
 package com.xiaoslab.coffee.api.objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by islamma on 10/31/16.
@@ -73,11 +74,11 @@ public class Item {
     }
 
     public BigDecimal getPrice() {
-        return price;
+        return price == null ? null : price.setScale(Constants.ITEM_PRICE_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public void setPrice(BigDecimal price) {
-        this.price = price;
+        this.price = price == null ? null : price.setScale(Constants.ITEM_PRICE_SCALE, BigDecimal.ROUND_HALF_DOWN);;
     }
 
     public long getShopId() {
@@ -94,5 +95,30 @@ public class Item {
 
     public void setStatus(Constants.StatusCodes status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return item_id == item.item_id &&
+                shop_id == item.shop_id &&
+                Objects.equals(name, item.name) &&
+                Objects.equals(description, item.description) &&
+                Objects.equals(price, item.price) &&
+                Objects.equals(shop, item.shop) &&
+                Objects.equals(itemAddonList, item.itemAddonList) &&
+                status == item.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item_id, name, description, price, shop_id, shop, itemAddonList, status);
     }
 }

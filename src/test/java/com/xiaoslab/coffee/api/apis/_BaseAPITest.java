@@ -3,6 +3,7 @@ package com.xiaoslab.coffee.api.apis;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.utilities.APIAdapter;
 import com.xiaoslab.coffee.api.utilities.APITestUtils;
+import com.xiaoslab.coffee.api.utilities.TestUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -38,6 +39,9 @@ public abstract class _BaseAPITest {
     protected TestRestTemplate template;
 
     @Autowired
+    protected TestUtils testUtils;
+
+    @Autowired
     protected APITestUtils apiTestUtils;
 
     @Autowired
@@ -56,8 +60,8 @@ public abstract class _BaseAPITest {
 
     @Before
     public void setupUsers() {
-        if (CUSTOMER_USER == null) CUSTOMER_USER = apiTestUtils.createCustomerUser();
-        if (XIPLI_ADMIN == null) XIPLI_ADMIN = apiTestUtils.createXipliAdminUser();
+        if (CUSTOMER_USER == null) CUSTOMER_USER = testUtils.createCustomerUser();
+        if (XIPLI_ADMIN == null) XIPLI_ADMIN = testUtils.createXipliAdminUser();
     }
 
     public Logger getLogger() {

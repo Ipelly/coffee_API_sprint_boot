@@ -1,30 +1,33 @@
 package com.xiaoslab.coffee.api.utilities;
 
+import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.security.Roles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Arrays;
 
 public class LoginUtils {
 
+    @Autowired
+    TestUtils testUtils;
+
     public void loginAsCustomerUser() {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "testuser","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_USER)));
+        User user = testUtils.setupBasicUserObject(Roles.ROLE_USER);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     public void loginAsXAdmin() {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "X-Admin","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_X_ADMIN)));
+        User user = testUtils.setupBasicUserObject(Roles.ROLE_X_ADMIN);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    public void loginAsShopAdmin() {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "X-Admin","testpassword", Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_SHOP_ADMIN)));
+    public void loginAsShopAdmin(long shopId) {
+        User user = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
+        user.setShopId(shopId);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

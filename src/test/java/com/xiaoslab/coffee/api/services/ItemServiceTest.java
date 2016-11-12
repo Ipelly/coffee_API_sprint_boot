@@ -60,7 +60,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginAsShopAdmin();
+        loginUtils.loginAsShopAdmin(shopidfortest);
         // Adding item to the shop
         Item item = new Item();
         item.setName("latte");
@@ -114,7 +114,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         shopidfortest = createdShop.getShopId();
 
         // Adding item1 to the shop
-        loginUtils.loginAsShopAdmin();
+        loginUtils.loginAsShopAdmin(shopidfortest);
         Item item = new Item();
         item.setName("latte");
         item.setDescription("Fresh brewed beans made with the milk of your choice");
@@ -159,6 +159,8 @@ public class ItemServiceTest extends _BaseServiceTest{
         shop.setStatus(Constants.StatusCodes.ACTIVE);
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
+
+        loginUtils.loginAsShopAdmin(shopidfortest);
 
         // Adding item1 to the shop
         Item item = new Item();

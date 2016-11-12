@@ -3,7 +3,6 @@ package com.xiaoslab.coffee.api.apis;
 import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
-import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 
 /**
  * Created by ipeli on 10/19/16.
@@ -28,7 +26,7 @@ public class ItemAPITest extends _BaseAPITest {
         ResponseEntity<Shop> response;
 
         // test-case: create new shop by POST
-        Shop shop1 = apiTestUtils.setupShopObject();
+        Shop shop1 = testUtils.setupShopObject();
         response = api.createShop(shop1);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop1 = response.getBody();
@@ -38,38 +36,39 @@ public class ItemAPITest extends _BaseAPITest {
         shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
+        User shopAdmin = testUtils.createShopAdminUser(createdShop1.getShopId());
+        api.login(shopAdmin);
+
         // test-case: create new item by POST
         ResponseEntity<List<Item>> itemListResponse;
         ResponseEntity<Item> itemResponse;
 
-        Item item1 = apiTestUtils.setupItemObject(createdShop1.getShopId());
+        Item item1 = testUtils.setupItemObject(createdShop1.getShopId());
         itemResponse = api.createItem(item1);
         assertEquals(HttpStatus.CREATED, itemResponse.getStatusCode());
         Item createItem1 = itemResponse.getBody();
         assertNotNull(createItem1);
         assertTrue(createItem1.getItemId() > 0);
         item1.setItemId(createItem1.getItemId());
-        item1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(item1, createItem1);
 
         // test-case: create another new item by POST
         ResponseEntity<Item> itemResponse2;
 
-        Item item2 = apiTestUtils.setupItemObject(createdShop1.getShopId());
+        Item item2 = testUtils.setupItemObject(createdShop1.getShopId());
         itemResponse2 = api.createItem(item2);
         assertEquals(HttpStatus.CREATED, itemResponse2.getStatusCode());
         Item createItem2 = itemResponse2.getBody();
         assertNotNull(createItem2);
         assertTrue(createItem2.getItemId() > 0);
         item2.setItemId(createItem2.getItemId());
-        item2.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(item2, createItem2);
 
 
         // test-case: list items by GET
         api.login(CUSTOMER_USER);
 
-        itemListResponse = api.listItem();
+        itemListResponse = api.listItem(createdShop1.getShopId());
         assertEquals(HttpStatus.OK, itemListResponse.getStatusCode());
         List<Item> itemList = itemListResponse.getBody();
         assertEquals(2, itemList.size());
@@ -98,9 +97,9 @@ public class ItemAPITest extends _BaseAPITest {
         api.login(XIPLI_ADMIN);
         Shop newShop = apiTestUtils.createShop();
         Shop anotherShop = apiTestUtils.createShop();
-        User anotherAdmin = apiTestUtils.createShopAdminUser(anotherShop.getShopId());
+        User anotherAdmin = testUtils.createShopAdminUser(anotherShop.getShopId());
 
-        Item item1 = apiTestUtils.setupItemObject(newShop.getShopId());
+        Item item1 = testUtils.setupItemObject(newShop.getShopId());
         response = api.createItem(item1);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
@@ -129,11 +128,11 @@ public class ItemAPITest extends _BaseAPITest {
         api.login(XIPLI_ADMIN);
         Shop newShop = apiTestUtils.createShop();
         Shop anotherShop = apiTestUtils.createShop();
-        User anotherAdmin = apiTestUtils.createShopAdminUser(anotherShop.getShopId());
-        User shopAdmin = apiTestUtils.createShopAdminUser(newShop.getShopId());
+        User anotherAdmin = testUtils.createShopAdminUser(anotherShop.getShopId());
+        User shopAdmin = testUtils.createShopAdminUser(newShop.getShopId());
 
         api.login(shopAdmin);
-        Item item1 = apiTestUtils.setupItemObject(newShop.getShopId());
+        Item item1 = testUtils.setupItemObject(newShop.getShopId());
         response = api.createItem(item1);
 
         api.logout();
@@ -160,7 +159,7 @@ public class ItemAPITest extends _BaseAPITest {
 //        ResponseEntity<Item> response;
 //
 //        api.login(XIPLI_ADMIN);
-//        Item item1 = apiTestUtils.setupItemObject();
+//        Item item1 = testUtils.setupItemObject();
 //        response = api.createItem(item1);
 //        Item createdItem1 = response.getBody();
 //        assertNotNull(createdItem1);
@@ -190,7 +189,7 @@ public class ItemAPITest extends _BaseAPITest {
 //        ResponseEntity<Item> response;
 //
 //        // test-case: create new shop by POST
-//        Item item1 = apiTestUtils.setupItemObject();
+//        Item item1 = testUtils.setupItemObject();
 //        response = api.createItem(item1);
 //        Item createdItem1 = response.getBody();
 //        assertNotNull(createdItem1);

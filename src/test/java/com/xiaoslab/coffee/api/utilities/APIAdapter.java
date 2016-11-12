@@ -322,12 +322,12 @@ public class APIAdapter {
 
     public ResponseEntity<Item> getItem(Item item, long itemId){return GET(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);}
 
-    public ResponseEntity<List<Item>> listItem() {
-        return LIST(V1_ITEM_ROOT_PATH, Item.class);
+    public ResponseEntity<List<Item>> listItem(long shopId) {
+        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId), Item.class);
     }
 
-    public ResponseEntity<List<Item>> listItem(String queryParams) {
-        return LIST(V1_ITEM_ROOT_PATH + queryParams, Item.class);
+    public ResponseEntity<List<Item>> listItem(long shopId, String queryParams) {
+        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId) + queryParams, Item.class);
     }
 
     public ResponseEntity<Item> createItem(Item item) {
