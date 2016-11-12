@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.security;
 
 import com.xiaoslab.coffee.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -55,7 +56,10 @@ public class SecurityConfig {
                     .antMatchers("/health").permitAll()
                     .antMatchers("/v1/status").permitAll()
                     .antMatchers("/v1/users/register").permitAll()
-                    //.antMatchers("/**").authenticated()
+                    .antMatchers("/swagger**").permitAll()
+                    .antMatchers("/swagger-resources/**").permitAll()
+                    .antMatchers("/v2/api-docs").permitAll()
+                    .antMatchers("/**").authenticated()
                     .and()
                     .addFilterBefore(socialTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
                     .authenticationProvider(facebookAuthenticationProvider)
@@ -98,6 +102,7 @@ public class SecurityConfig {
     public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
+        @Qualifier("userService")
         private UserService userService;
 
         @Autowired

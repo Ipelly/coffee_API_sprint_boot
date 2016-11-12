@@ -1,6 +1,7 @@
 package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.AppAuthority;
+import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.repository.UserRepository;
 import com.xiaoslab.coffee.api.security.Roles;
@@ -26,7 +27,7 @@ import java.util.*;
 public class UserService implements IService<User>, UserDetailsService {
 
     @Autowired
-    ShopService shopService;
+    IService<Shop> shopService;
 
     @Autowired
     UserRepository userRepository;
