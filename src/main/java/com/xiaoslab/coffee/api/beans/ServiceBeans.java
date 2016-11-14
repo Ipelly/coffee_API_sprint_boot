@@ -33,4 +33,8 @@ public class ServiceBeans {
         return new ItemService();
     }
 
+    @Bean
+    public IService<ItemOption> itemOptionService() {
+        return new ItemOptionService();
+    }
 }
