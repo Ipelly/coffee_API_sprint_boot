@@ -7,10 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 public class FacebookAuthenticationProvider implements AuthenticationProvider {
@@ -35,7 +32,7 @@ public class FacebookAuthenticationProvider implements AuthenticationProvider {
             User userInfo = facebookService.findOrCreateLocalUserFromFacebookProfile(facebookProfile);
 
             // put account into security context
-            return new FacebookToken(userInfo, authentication.getCredentials(), Arrays.asList(new SimpleGrantedAuthority(Roles.ROLE_USER)));
+            return new FacebookToken(userInfo, authentication.getCredentials(), userInfo.getAuthorities());
 
         } catch (AuthenticationException e) {
             throw e;

@@ -7,11 +7,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.social.google.api.userinfo.GoogleUserInfo;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 public class GoogleAuthenticationProvider implements AuthenticationProvider {
@@ -36,7 +33,7 @@ public class GoogleAuthenticationProvider implements AuthenticationProvider {
             User userInfo = googleService.findOrCreateLocalUserFromGoogleProfile(googleProfile);
 
             // put account into security context
-            return new GoogleToken(userInfo, authentication.getCredentials(), Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+            return new GoogleToken(userInfo, authentication.getCredentials(), userInfo.getAuthorities());
 
         } catch (AuthenticationException e) {
             throw e;
