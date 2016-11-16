@@ -5,6 +5,7 @@ import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.specifications.ItemOptionSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,14 +35,27 @@ public class ItemOptionController {
     public ResponseEntity list(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "20", required = false) int size,
-            @RequestParam(name = "search", defaultValue = "", required = false) String search,
-            @RequestParam(name = "maxPrice", defaultValue = "500.00", required = false) BigDecimal maxPrice,
-            @RequestParam(name = "minPrice",  defaultValue = "0.00",required = false) BigDecimal minPrice ) {
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(name = "minPrice", required = false) BigDecimal minPrice ) {
 
         Pageable pageable = new PageRequest(page, size);
-        Specification<ItemOption> specification = Specifications.where(ItemOptionSpecifications.search(search))
-                                                                .and(ItemOptionSpecifications.maxPrice(maxPrice))
-                                                                .and(ItemOptionSpecifications.minPrice(minPrice));
+
+
+        Specification<ItemOption> specification = ItemOptionSpecifications.notDeleted();
+        if (StringUtils.isNotBlank(search)) {
+            specification = Specifications.where(specification).and(ItemOptionSpecifications.search(search));
+        }
+        if (!Objects.isNull(maxPrice)) {
+            specification = Specifications.where(specification).and(ItemOptionSpecifications.maxPrice(maxPrice));
+        }
+        if (!Objects.isNull(minPrice)) {
+            specification = Specifications.where(specification).and(ItemOptionSpecifications.minPrice(minPrice));
+        }
+//
+//        Specification<ItemOption> specification = Specifications.where(ItemOptionSpecifications.search(search))
+//                                                                .and(ItemOptionSpecifications.maxPrice(maxPrice))
+//                                                                .and(ItemOptionSpecifications.minPrice(minPrice));
 
         return ResponseEntity.ok(itemOptionService.list(Optional.of(specification), Optional.of(pageable)));
     }

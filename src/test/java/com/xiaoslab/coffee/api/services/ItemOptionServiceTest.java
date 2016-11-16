@@ -49,14 +49,14 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
     @Test
     public void createItemOption() {
         // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-        ItemOption createdItemOption = ctaForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
+        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
         assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
     }
 
     @Test
     public void updateItemOption() {
         // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-        ItemOption createdItemOption = ctaForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
+        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
         // test-case: Update item option by name ("Name : Small in Size") and price  for a item which associate with a shop named "DD"
         createdItemOption.setName("Small in size");
@@ -70,7 +70,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
     public void deleteItemOption() {
 
         // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-        ItemOption createdItemOption = ctaForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
+        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
         // test-case: delete item option
         ItemOption deletedItemOption = itemOptionService.delete(createdItemOption.getItemOptionId());
@@ -81,7 +81,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
     public void getAllItemOption() {
 
         // test-case: create new item option for a item which associate with a shop named "DD"
-        ItemOption createdItemOption = ctaForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
+        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
         loginUtils.loginAsCustomerUser();
         assertNoOfItemOption(1);
@@ -90,7 +90,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
     @Test
     public void getItemOption() {
         // test-case: create new item option for a item which associate with a shop named "DD"
-        ItemOption createdItemOption = ctaForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
+        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
         loginUtils.loginAsCustomerUser();
         assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
@@ -107,7 +107,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         assertNotNull(itemOptions);
         assertEquals(noOfItemOption, itemOptions.size());
     }
-    private ItemOption ctaForItemOption(ItemOption itemOption){
+    private ItemOption preRequisiteTestScenarioForItemOption(ItemOption itemOption){
 
         // test-case: create new shop and add item 1 to it
         loginUtils.loginAsXAdmin();
