@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.services;
 
+import com.xiaoslab.coffee.api.utilities.TestUtils;
 import org.apache.log4j.Logger;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public abstract class _BaseServiceTest {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    protected TestUtils testUtils;
+
 
     protected Logger getLogger() {
         return Logger.getLogger(this.getClass());

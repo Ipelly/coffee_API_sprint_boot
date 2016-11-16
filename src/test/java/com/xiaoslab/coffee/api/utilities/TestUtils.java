@@ -1,9 +1,6 @@
 package com.xiaoslab.coffee.api.utilities;
 
-import com.xiaoslab.coffee.api.objects.AppAuthority;
-import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.*;
 import com.xiaoslab.coffee.api.repository.UserRepository;
 import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.utility.Constants;
@@ -84,5 +81,14 @@ public class TestUtils {
         item.setShopId(shopId);
         item.setStatus(Constants.StatusCodes.ACTIVE);
         return item;
+    }
+
+    public ItemOption setupItemOptionObject(long itemId) {
+        ItemOption itemOption = new ItemOption();
+        itemOption.setName("Small");
+        itemOption.setPrice(new BigDecimal(5.2));
+        itemOption.setItemId (itemId);
+        itemOption.setStatus(Constants.StatusCodes.ACTIVE);
+        return itemOption;
     }
 }
