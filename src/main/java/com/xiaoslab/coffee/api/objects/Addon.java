@@ -1,22 +1,55 @@
 package com.xiaoslab.coffee.api.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.xiaoslab.coffee.api.utility.Constants;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
  * Created by ipeli on 10/15/16.
  */
+
+
+@Entity
+@Table(name = "addon")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Addon {
-    private int addonID;
+
+    @Id
+    @GeneratedValue
+    @Column(unique = true)
+    private long addon_id;
+
+
+    @Column(nullable = false)
     private String name;
+
+
+    @Column(nullable = false)
     private BigDecimal price;
+
+
+    @Column(nullable = false)
+    private long shop_id;
+
+    @Transient
     private Shop shop;
 
-    public int getAddonID() {
-        return addonID;
+
+    @Column(nullable = false)
+    private Constants.StatusCodes status;
+
+    
+
+    //------------------- Getter and Setter
+
+    public long getAddon_id() {
+        return addon_id;
     }
 
-    public void setAddonID(int addonID) {
-        this.addonID = addonID;
+    public void setAddon_id(long addon_id) {
+        this.addon_id = addon_id;
     }
 
     public String getName() {
@@ -28,11 +61,19 @@ public class Addon {
     }
 
     public BigDecimal getPrice() {
-        return price;
+        return price == null ? null : price.setScale(Constants.ITEM_PRICE_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public void setPrice(BigDecimal price) {
-        this.price = price;
+        this.price = price == null ? null : price.setScale(Constants.ITEM_PRICE_SCALE, BigDecimal.ROUND_HALF_DOWN);
+    }
+
+    public long getShop_id() {
+        return shop_id;
+    }
+
+    public void setShop_id(long shop_id) {
+        this.shop_id = shop_id;
     }
 
     public Shop getShop() {
@@ -41,5 +82,13 @@ public class Addon {
 
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+
+    public Constants.StatusCodes getStatus() {
+        return status;
+    }
+
+    public void setStatus(Constants.StatusCodes status) {
+        this.status = status;
     }
 }
