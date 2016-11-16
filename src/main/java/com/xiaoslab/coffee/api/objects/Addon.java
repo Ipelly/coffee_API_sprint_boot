@@ -40,7 +40,7 @@ public class Addon {
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
-    
+
 
     //------------------- Getter and Setter
 
