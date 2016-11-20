@@ -40,6 +40,17 @@ public class Addon {
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
+    //--------------------------Constructor
+
+
+    public Addon() {
+    }
+
+    public Addon(String name, BigDecimal price, Constants.StatusCodes status) {
+        this.name = name;
+        this.price = price;
+        this.status = status;
+    }
 
 
     //------------------- Getter and Setter

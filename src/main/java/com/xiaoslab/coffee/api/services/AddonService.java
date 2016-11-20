@@ -30,19 +30,24 @@ public class AddonService implements IService<Addon> {
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
     public List<Addon> list() {
-        return addonRepository.findAll();
+        return list(Optional.empty(), Optional.empty());
     }
 
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public Addon get(long itemId) {
-        return addonRepository.getOne(itemId);
+    public Addon get(long addonId) {
+        Addon addon = addonRepository.getOne(addonId);
+        if (addon == null || addon.getStatus() == Constants.StatusCodes.DELETED) {
+            return null;
+        } else {
+            return addon;
+        }
     }
 
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Addon create(Addon addon) {
-        userUtility.checkUserCanAccessShop(addon.getShop_id ());
+        userUtility.checkUserCanAccessShop(addon.getShop_id());
         if (addon.getStatus() == null) {
             addon.setStatus(Constants.StatusCodes.INACTIVE);
         }
@@ -56,11 +61,11 @@ public class AddonService implements IService<Addon> {
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public Addon delete(long itemId) {
-        Addon item = addonRepository.findOne(itemId);
-        item.setStatus(Constants.StatusCodes.DELETED);
-        return addonRepository.save(item);
+    @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
+    public Addon delete(long addonId) {
+        Addon addon = addonRepository.findOne(addonId);
+        addon.setStatus(Constants.StatusCodes.DELETED);
+        return addonRepository.save(addon);
     }
 
     @Override

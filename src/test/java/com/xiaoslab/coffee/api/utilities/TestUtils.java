@@ -91,4 +91,12 @@ public class TestUtils {
         itemOption.setStatus(Constants.StatusCodes.ACTIVE);
         return itemOption;
     }
+    public Addon setupAddonObject(long shopId) {
+        Addon addon = new Addon();
+        addon.setName("Extra Large");
+        addon.setPrice(new BigDecimal(3.5));
+        addon.setShop_id ( shopId );
+        addon.setStatus(Constants.StatusCodes.ACTIVE);
+        return addon;
+    }
 }

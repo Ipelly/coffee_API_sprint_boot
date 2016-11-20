@@ -36,7 +36,7 @@ public class AddonSpecifications {
         return (root, query, criteria) -> criteria.lessThanOrEqualTo (root.get("price"), max);
     }
 
-    public static Specification<Addon> addonByShopId(long shopId) {
+    public static Specification<Addon> addonListForShop(long shopId) {
         return (root, query, criteria) -> criteria.equal(root.get("shop_id"), shopId);
     }
 }
