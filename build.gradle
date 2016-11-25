@@ -1,30 +1,24 @@
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "com.netflix.nebula:gradle-ospackage-plugin:4.0.0"
-    }
-}
-
 plugins {
     id "org.flywaydb.flyway" version "4.0.3"
+    id "nebula.ospackage" version "4.1.0"
+    id "org.springframework.boot" version "1.4.2.RELEASE"
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
 apply plugin: 'application'
-apply plugin: 'nebula.rpm'
 
 ext.java_version = '1.8'
 
-sourceCompatibility = java_version
-targetCompatibility = java_version
 mainClassName = 'com.xiaoslab.coffee.api.Application'
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = java_version
+    targetCompatibility = java_version
+    options.encoding = 'UTF-8'
+}
 
 project.ext {
     majorVersion = 0
@@ -90,19 +84,20 @@ dependencies {
     // test only
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.apache.httpcomponents:httpclient"
+    testCompile "junit:junit:+"
 
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '3.2.1'
 }
 
 task flyway {
     Properties props = new Properties()
     props.load(new FileInputStream("config/application.properties"))
-    flyway.url=props.getProperty("spring.datasource.url")
-    flyway.user=props.getProperty("spring.datasource.username")
-    flyway.password=props.getProperty("spring.datasource.password")
+    flyway.url=props.getProperty("database.config.url")
+    flyway.user=props.getProperty("database.config.username")
+    flyway.password=props.getProperty("database.config.password")
     flyway.baselineOnMigrate=true
 }
 
@@ -128,6 +123,9 @@ test {
         exceptionFormat = "full"
     }
 
+    dependsOn flywayMigrate
+    systemProperties System.properties
+
     def stdout = new LinkedList<String>()
     beforeTest { TestDescriptor td ->
         stdout.clear()
@@ -148,8 +146,6 @@ test {
         }
     }
 }
-
-test.dependsOn flywayMigrate
 
 task rpm(type: Rpm) {
 

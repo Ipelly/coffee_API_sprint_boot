@@ -19,14 +19,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
-//Rollback does not work for integration tests, because spring runs the 
-//web application on a different thread than the test. As an alternative,
-//we are removing test data by using @Sql annotation with a cleanup script.
-//@Transactional
-//@Rollback(true)
 @Sql("classpath:database/ClearDatabaseForTest.sql")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class _BaseAPITest {
 
     @Value("${local.server.port}")
