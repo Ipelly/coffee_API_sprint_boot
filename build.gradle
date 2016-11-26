@@ -24,7 +24,7 @@ project.ext {
     majorVersion = 0
     minorVersion = 0
     patchVersion = System.getenv('BUILD_NUMBER')
-    
+
     if (patchVersion == null || patchVersion.isEmpty()) {
         patchVersion = getTimestamp()
     }
@@ -123,7 +123,7 @@ test {
         exceptionFormat = "full"
     }
 
-    dependsOn flywayMigrate
+    //dependsOn flywayMigrate
     systemProperties System.properties
 
     def stdout = new LinkedList<String>()
