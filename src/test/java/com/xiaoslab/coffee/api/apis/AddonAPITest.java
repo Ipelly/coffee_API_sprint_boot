@@ -36,6 +36,8 @@ public class AddonAPITest extends _BaseAPITest {
         // test-case: create new addon for the shop by POST
         Addon createAddon = addonCreateWithAssertion();
 
+        api.logout ();
+
         // test-case: list of Addon by GET
         api.login(CUSTOMER_USER);
 
@@ -82,20 +84,19 @@ public class AddonAPITest extends _BaseAPITest {
         api.logout();
 
 
-        createAddon.setName("Extra Large X");
-        response = api.updateAddon(createAddon,createAddon.getAddon_id());
+        createAddon.setName("Sugar X");
+        response = api.updateAddon(createAddon,createAddon.getAddonId());
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        response = api.updateAddon(createAddon,createAddon.getAddon_id() );
+        response = api.updateAddon(createAddon,createAddon.getAddonId() );
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        response = api.updateAddon(createAddon,createAddon.getAddon_id() );
+        response = api.updateAddon(createAddon,createAddon.getAddonId() );
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
     }
-
 
     @Test
     public void deleteAddonWithoutAuthorization() throws Exception {
@@ -115,15 +116,15 @@ public class AddonAPITest extends _BaseAPITest {
 
 
         //createItemOption1.setName("Samll in Size");
-        response = api.deleteAddon(createdAddon,createdAddon.getAddon_id ());
+        response = api.deleteAddon(createdAddon,createdAddon.getAddonId ());
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        response = api.deleteAddon(createdAddon,createdAddon.getAddon_id ());
+        response = api.deleteAddon(createdAddon,createdAddon.getAddonId ());
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        response = api.deleteAddon(createdAddon,createdAddon.getAddon_id ());
+        response = api.deleteAddon(createdAddon,createdAddon.getAddonId ());
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
     }
@@ -144,28 +145,28 @@ public class AddonAPITest extends _BaseAPITest {
         Addon createdAddon = addonCreateWithAssertion();
 
         // test-case: update item option by PUT
-        createdAddon.setName("Extra Large X");
-        response = api.updateAddon(createdAddon,createdAddon.getAddon_id());
+        createdAddon.setName("Sugar X");
+        response = api.updateAddon(createdAddon,createdAddon.getAddonId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Addon updatedAddon = response.getBody();
         assertNotNull(updatedAddon);
         //assertEquals(createdAddon, updatedAddon);
-        assertThat(updatedAddon.getName(), is(equalTo("Extra Large X")));
+        assertThat(updatedAddon.getName(), is(equalTo("Sugar X")));
 
         // test-case: Delete item option by PUT
-        response = api.deleteAddon(createdAddon,createdAddon.getAddon_id ());
+        response = api.deleteAddon(createdAddon,createdAddon.getAddonId ());
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
         // test-case: verify shop is not returned new shop by POST
-        response = api.getAddon(shopIdForTest,createdAddon.getAddon_id ());
+        response = api.getAddon(shopIdForTest,createdAddon.getAddonId ());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     public void notFoundAddonId() throws Exception {
 
-        api.login(XIPLI_ADMIN);
-
+        //api.login(XIPLI_ADMIN);
+        api.login(CUSTOMER_USER);
         ResponseEntity<Addon> response;
 
         // test-case: GET
@@ -198,6 +199,7 @@ public class AddonAPITest extends _BaseAPITest {
         api.logout ();
 
     }
+
     private Addon addonCreateWithAssertion(){
         ResponseEntity<List<Addon>> addonListResponse;
         ResponseEntity<Addon> addonResponse;
@@ -207,8 +209,8 @@ public class AddonAPITest extends _BaseAPITest {
         assertEquals(HttpStatus.CREATED, addonResponse.getStatusCode());
         Addon createdAddon = addonResponse.getBody();
         assertNotNull(createdAddon);
-        assertTrue(createdAddon.getAddon_id () > 0);
-        addon.setAddon_id(createdAddon.getAddon_id());
+        assertTrue(createdAddon.getAddonId () > 0);
+        addon.setAddonId(createdAddon.getAddonId());
         //assertEquals(addon, createdAddon);
         return createdAddon;
     }

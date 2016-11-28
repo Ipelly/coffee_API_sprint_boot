@@ -44,40 +44,40 @@ public class AddonServiceTest extends _BaseServiceTest {
 
     @Test
     public void createAddon() {
-        // test-case: create new Addon ("Name : Extra Sugar") for a item which associate with a shop named "DD"
-        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Extra Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
-        assertAddonName(addonService.get(createdAddon.getAddon_id()),"Extra Sugar");
+        // test-case: create new Addon ("Name : Sugar") for a item which associate with a shop named "DD"
+        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
+        assertAddonName(addonService.get(createdAddon.getAddonId()),"Sugar");
     }
 
     @Test
     public void updateAddon() {
-        // test-case: create new Addon ("Name : Extra Sugar") for a item which associate with a shop named "DD"
-        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Extra Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
+        // test-case: create new Addon ("Name : Sugar") for a item which associate with a shop named "DD"
+        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
-        // test-case: Update Addon by name ("Name : Extra Sugar X") and price  for a item which associate with a shop named "DD"
-        createdAddon.setName("Extra Sugar X");
+        // test-case: Update Addon by name ("Name : Sugar X") and price  for a item which associate with a shop named "DD"
+        createdAddon.setName("Sugar X");
         createdAddon.setPrice(BigDecimal.valueOf(1.00));
         Addon updatedAddon = addonService.update(createdAddon);
 
-        assertAddonName(addonService.get(updatedAddon.getAddon_id ()),"Extra Sugar X");
+        assertAddonName(addonService.get(updatedAddon.getAddonId ()),"Sugar X");
     }
 
     @Test
     public void deleteAddon() {
 
-        // test-case: create new Addon ("Name : Extra Sugar") for a item which associate with a shop named "DD"
-        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Extra Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
+        // test-case: create new Addon ("Name : Sugar") for a item which associate with a shop named "DD"
+        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
         // test-case: delete item option
-        Addon deletedAddon = addonService.delete(createdAddon.getAddon_id());
+        Addon deletedAddon = addonService.delete(createdAddon.getAddonId());
         assertNoOfAddon(0);
     }
 
     @Test
     public void getAllAddon() {
 
-        // test-case: create new Addon ("Name : Extra Sugar") for a item which associate with a shop named "DD"
-        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Extra Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
+        // test-case: create new Addon ("Name : Sugar") for a item which associate with a shop named "DD"
+        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
         loginUtils.loginAsCustomerUser();
         assertNoOfAddon(1);
@@ -86,10 +86,10 @@ public class AddonServiceTest extends _BaseServiceTest {
     @Test
     public void getAddon() {
         // test-case: create new item option for a item which associate with a shop named "DD"
-        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Extra Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
+        Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
         loginUtils.loginAsCustomerUser();
-        assertAddonName(addonService.get(createdAddon.getAddon_id ()),"Extra Sugar");
+        assertAddonName(addonService.get(createdAddon.getAddonId ()),"Sugar");
     }
 
     private void assertAddonName(Addon addon,String addonName){
@@ -112,7 +112,7 @@ public class AddonServiceTest extends _BaseServiceTest {
 
         // test-case: create new Addon for Latte
         loginUtils.loginAsShopAdmin(createdShop.getShopId());
-        addon.setShop_id(createdShop.getShopId ());
+        addon.setShopId(createdShop.getShopId ());
         return addonService.create(addon);
     }
 }

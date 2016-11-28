@@ -375,19 +375,19 @@ public class APIAdapter {
         return LIST(String.format(V1_ADDON_ROOT_PATH, shopId), Addon.class);
     }
 
-    public ResponseEntity<List<Addon>> listAddon(long shopId, String queryParams) {
+    public ResponseEntity<List<Addon>> listOfAddon(long shopId, String queryParams) {
         return LIST(String.format(V1_ADDON_ROOT_PATH, shopId) + queryParams, Addon.class);
     }
 
     public ResponseEntity<Addon> createAddon(Addon addon) {
-        return POST(String.format(V1_ADDON_ROOT_PATH, addon.getShop_id ()), addon, Addon.class);
+        return POST(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()), addon, Addon.class);
     }
 
     public ResponseEntity<Addon> updateAddon(Addon addon, long addonId) {
-        return PUT(String.format(V1_ADDON_ROOT_PATH, addon.getShop_id ()) + addonId, addon, Addon.class);
+        return PUT(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, addon, Addon.class);
     }
 
     public ResponseEntity<Addon> deleteAddon(Addon addon, long addonId) {
-        return DELETE(String.format(V1_ADDON_ROOT_PATH, addon.getShop_id ()) + addonId, Addon.class);
+        return DELETE(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, Addon.class);
     }
 }

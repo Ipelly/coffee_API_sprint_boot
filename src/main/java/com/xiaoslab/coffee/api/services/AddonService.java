@@ -28,13 +28,13 @@ public class AddonService implements IService<Addon> {
     UserUtility userUtility;
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public List<Addon> list() {
         return list(Optional.empty(), Optional.empty());
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public Addon get(long addonId) {
         Addon addon = addonRepository.getOne(addonId);
         if (addon == null || addon.getStatus() == Constants.StatusCodes.DELETED) {
@@ -47,7 +47,7 @@ public class AddonService implements IService<Addon> {
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Addon create(Addon addon) {
-        userUtility.checkUserCanAccessShop(addon.getShop_id());
+        userUtility.checkUserCanAccessShop(addon.getShopId ());
         if (addon.getStatus() == null) {
             addon.setStatus(Constants.StatusCodes.INACTIVE);
         }
@@ -69,7 +69,7 @@ public class AddonService implements IService<Addon> {
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public List<Addon> list(Optional<Specification<Addon>> specOptional, Optional<Pageable> pageableOptional) {
         List<Addon> list = new ArrayList<>();
 

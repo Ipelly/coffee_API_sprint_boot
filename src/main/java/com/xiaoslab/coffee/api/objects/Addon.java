@@ -2,9 +2,12 @@ package com.xiaoslab.coffee.api.objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by ipeli on 10/15/16.
@@ -18,8 +21,8 @@ public class Addon {
 
     @Id
     @GeneratedValue
-    @Column(unique = true)
-    private long addon_id;
+    @Column(unique = true, name = "addon_id")
+    private long addonId;
 
 
     @Column(nullable = false)
@@ -30,8 +33,8 @@ public class Addon {
     private BigDecimal price;
 
 
-    @Column(nullable = false)
-    private long shop_id;
+    @Column(nullable = false, name = "shop_id")
+    private long shopId;
 
     @Transient
     private Shop shop;
@@ -52,15 +55,39 @@ public class Addon {
         this.status = status;
     }
 
+    //------------------------- Equals, HasCode and toString
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Addon addon = (Addon) o;
+        return addonId == addon.addonId &&
+                shopId == addon.shopId &&
+                Objects.equals(name, addon.name) &&
+                Objects.equals(price, addon.price) &&
+                Objects.equals(shop, addon.shop) &&
+                status == addon.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(addonId, name, price, shopId, shop, status);
+    }
 
     //------------------- Getter and Setter
 
-    public long getAddon_id() {
-        return addon_id;
+    public long getAddonId() {
+        return addonId;
     }
 
-    public void setAddon_id(long addon_id) {
-        this.addon_id = addon_id;
+    public void setAddonId(long addon_id) {
+        this.addonId = addon_id;
     }
 
     public String getName() {
@@ -79,12 +106,12 @@ public class Addon {
         this.price = price == null ? null : price.setScale(Constants.ITEM_PRICE_SCALE, BigDecimal.ROUND_HALF_DOWN);
     }
 
-    public long getShop_id() {
-        return shop_id;
+    public long getShopId() {
+        return shopId;
     }
 
-    public void setShop_id(long shop_id) {
-        this.shop_id = shop_id;
+    public void setShopId(long shop_id) {
+        this.shopId = shop_id;
     }
 
     public Shop getShop() {

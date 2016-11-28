@@ -37,6 +37,6 @@ public class AddonSpecifications {
     }
 
     public static Specification<Addon> addonListForShop(long shopId) {
-        return (root, query, criteria) -> criteria.equal(root.get("shop_id"), shopId);
+        return (root, query, criteria) -> criteria.equal(root.get("shopId"), shopId);
     }
 }
