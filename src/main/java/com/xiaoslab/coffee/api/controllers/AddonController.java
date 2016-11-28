@@ -53,7 +53,7 @@ public class AddonController {
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Addon addon) {
         Addon createdAddon = addonService.create(addon);
-        URI location = AppUtility.buildCreatedLocation(createdAddon.getAddon_id());
+        URI location = AppUtility.buildCreatedLocation(createdAddon.getAddonId ());
         return ResponseEntity.created(location).body(createdAddon);
     }
 
