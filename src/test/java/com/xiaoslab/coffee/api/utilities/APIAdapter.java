@@ -2,10 +2,7 @@ package com.xiaoslab.coffee.api.utilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.ItemOption;
-import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.*;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
@@ -30,6 +27,7 @@ public class APIAdapter {
     private static final String V1_STATUS_ENDPOINT = Constants.V1 + Constants.STATUS_ENDPOINT;
     private static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
     private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
+    private static final String V1_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
     private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ITEMOPTION_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
 
@@ -344,6 +342,7 @@ public class APIAdapter {
         return DELETE(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
     }
 
+
     public ResponseEntity<ItemOption> createItemOption(ItemOption itemOption,long shopId) {
         return POST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemOption.getItemId()), itemOption, ItemOption.class );
     }
@@ -363,5 +362,32 @@ public class APIAdapter {
     public ResponseEntity<List<ItemOption>> listItemOption(long shopId, long itemId) {
         //String path = V1_SHOP_ROOT_PATH + "/"+ String.valueOf(shopId) + "/" + Constants.ITEM_ENDPOINT + "/" + String.valueOf(itemId) + "/" + Constants.ITEMOPTION_ENDPOINT + "/";
         return LIST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId,itemId), ItemOption.class);
+    }
+
+
+    // Addon
+
+    public ResponseEntity<Addon> getAddon(long shopid, long addonId){
+        return GET(String.format(V1_ADDON_ROOT_PATH, shopid) + addonId, Addon.class);
+    }
+
+    public ResponseEntity<List<Addon>> listOfAddon(long shopId) {
+        return LIST(String.format(V1_ADDON_ROOT_PATH, shopId), Addon.class);
+    }
+
+    public ResponseEntity<List<Addon>> listOfAddon(long shopId, String queryParams) {
+        return LIST(String.format(V1_ADDON_ROOT_PATH, shopId) + queryParams, Addon.class);
+    }
+
+    public ResponseEntity<Addon> createAddon(Addon addon) {
+        return POST(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()), addon, Addon.class);
+    }
+
+    public ResponseEntity<Addon> updateAddon(Addon addon, long addonId) {
+        return PUT(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, addon, Addon.class);
+    }
+
+    public ResponseEntity<Addon> deleteAddon(Addon addon, long addonId) {
+        return DELETE(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, Addon.class);
     }
 }
