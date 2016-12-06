@@ -112,6 +112,13 @@ public class UserService implements IService<User>, UserDetailsService {
         }
     }
 
+    public User getUserByEmailAddress(String emailAddress) throws UsernameNotFoundException {
+        return userRepository.findOne(Specifications
+                .where(UserSpecifications.hasEmailAddress(emailAddress))
+                .and(UserSpecifications.isNotDeleted())
+        );
+    }
+
     public User registerNewUser(User newUser) {
         GroupValidator.validate(newUser, User.XipliUser.class);
         newUser.setUserId(null);

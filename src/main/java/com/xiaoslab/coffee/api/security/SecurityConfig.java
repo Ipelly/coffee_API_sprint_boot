@@ -56,6 +56,8 @@ public class SecurityConfig {
                     .antMatchers("/health").permitAll()
                     .antMatchers("/v1/status").permitAll()
                     .antMatchers("/v1/users/register").permitAll()
+                    .antMatchers("/v1/users/password/reset").permitAll()
+                    .antMatchers("/v1/users/password/update").permitAll()
                     .antMatchers("/swagger**").permitAll()
                     .antMatchers("/swagger-resources/**").permitAll()
                     .antMatchers("/v2/api-docs").permitAll()

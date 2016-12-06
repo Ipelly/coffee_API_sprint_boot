@@ -2,10 +2,7 @@ package com.xiaoslab.coffee.api.utilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.ItemOption;
-import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.*;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
@@ -295,6 +292,14 @@ public class APIAdapter {
 
     public ResponseEntity<User> deleteUser(long shopId) {
         return DELETE(V1_USER_ROOT_PATH + shopId, User.class);
+    }
+
+    public ResponseEntity passwordReset(PasswordUpdateRequest passwordUpdateRequest) {
+        return POST(V1_USER_ROOT_PATH + "password/reset", passwordUpdateRequest, PasswordUpdateRequest.class);
+    }
+
+    public ResponseEntity passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
+        return POST(V1_USER_ROOT_PATH + "password/update", passwordUpdateRequest, PasswordUpdateRequest.class);
     }
 
     public ResponseEntity<Shop> getShop(long shopId) {

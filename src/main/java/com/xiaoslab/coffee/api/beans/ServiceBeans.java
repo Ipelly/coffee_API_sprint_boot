@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceBeans {
 
     @Bean
+    public PasswordResetService passwordResetService() {
+        return new PasswordResetService();
+    }
+
+    @Bean
     public UserService userService() {
         return new UserService();
     }

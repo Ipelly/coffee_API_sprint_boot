@@ -55,7 +55,7 @@ public class User implements UserDetails, Serializable {
 
     @Column
     @NotEmpty(groups = XipliUser.class)
-    private String password;
+    protected String password;
 
     @Enumerated(EnumType.ORDINAL)
     @Column
@@ -215,7 +215,6 @@ public class User implements UserDetails, Serializable {
         return simpleAuthorities;
     }
 
-    @JsonIgnore
     public Collection<AppAuthority> getRoles() {
         return roles;
     }

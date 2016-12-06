@@ -1,5 +1,7 @@
 package com.xiaoslab.coffee.api.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "role")
+@JsonSerialize(using = ToStringSerializer.class)
 public class AppAuthority implements GrantedAuthority {
 
     @Id

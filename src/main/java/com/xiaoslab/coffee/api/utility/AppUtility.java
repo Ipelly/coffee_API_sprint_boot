@@ -24,11 +24,11 @@ public class AppUtility {
         return servletRequest;
     }
 
-    public static URI buildCreatedLocation(long createdId) {
+    public static URI buildCreatedLocation(Object createdId) {
         return buildCreatedLocation(getCurrentRequest().getServletPath(), createdId);
     }
 
-    public static URI buildCreatedLocation(String rootPath, long createdId) {
+    public static URI buildCreatedLocation(String rootPath, Object createdId) {
         while (rootPath.endsWith("/")) {
             rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
         }
