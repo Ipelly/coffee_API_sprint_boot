@@ -42,4 +42,8 @@ public class ServiceBeans {
     public IService<ItemOption> itemOptionService() {
         return new ItemOptionService();
     }
+
+    @Bean
+    public IService<Addon> addonService() { return new AddonService ();
+    }
 }

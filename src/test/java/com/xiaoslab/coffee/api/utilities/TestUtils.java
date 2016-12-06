@@ -91,4 +91,13 @@ public class TestUtils {
         itemOption.setStatus(Constants.StatusCodes.ACTIVE);
         return itemOption;
     }
+
+    public Addon setupAddonObject(long shopId) {
+        Addon addon = new Addon();
+        addon.setName("Sugar");
+        addon.setPrice(new BigDecimal(3.5));
+        addon.setShopId (shopId);
+        addon.setStatus(Constants.StatusCodes.ACTIVE);
+        return addon;
+    }
 }
