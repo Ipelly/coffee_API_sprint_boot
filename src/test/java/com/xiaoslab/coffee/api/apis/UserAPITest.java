@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.apis;
 
+import com.xiaoslab.coffee.api.objects.User.NewUserRequest;
 import com.xiaoslab.coffee.api.objects.PasswordUpdateRequest;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
@@ -16,18 +17,12 @@ import static org.junit.Assert.assertNotNull;
 
 public class UserAPITest extends _BaseAPITest {
 
-    public static class NewUserRequest {
-        public String name;
-        public String emailAddress;
-        public String password;
-    }
-
     @Test
     public void registerNewUserAndLogin() throws Exception {
         NewUserRequest user = new NewUserRequest();
-        user.name = "Hero Alam";
-        user.emailAddress = "heroalam@xipli.com";
-        user.password = TestConstants.TEST_DEFAULT_PASSWORD;
+        user.setName("Hero Alam");
+        user.setEmailAddress("heroalam@xipli.com");
+        user.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
         ResponseEntity<User> response = api.registerUser(user);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -44,24 +39,56 @@ public class UserAPITest extends _BaseAPITest {
         assertEquals(Roles.ROLE_USER, newUser.getRoles().stream().findFirst().get().getAuthority());
 
         // login as new user
-        ResponseEntity loginResponse = api.login(user.emailAddress, user.password);
+        ResponseEntity loginResponse = api.login(user);
         assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
         assertNotNull(loginResponse.getBody());
     }
 
     @Test
-    public void createShopAdmin() throws Exception {
+    public void createShopUserByCallingUserEndpoint() throws Exception {
+        api.login(XIPLI_ADMIN);
+        User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
+        ResponseEntity<User> response = api.createUser(shopAdmin);
+        Assert.assertEquals(HttpStatus.METHOD_NOT_ALLOWED, response.getStatusCode());
+    }
+
+    @Test
+    public void createShopAdminAndLogin() throws Exception {
         api.login(XIPLI_ADMIN);
         Shop shop = apiTestUtils.createShop();
         User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
         shopAdmin.setShopId(shop.getShopId());
-        ResponseEntity<User> response = api.createUser(shopAdmin);
+        ResponseEntity<User> response = api.createShopUser(shop.getShopId(), shopAdmin);
+        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         User createdUser = response.getBody();
         Assert.assertEquals(shop.getShopId(), createdUser.getShopId().longValue());
 
         // make sure the new user can login
         testUtils.resetPassword(createdUser.getUserId());
-        api.login(createdUser);
+        ResponseEntity loginResponse = api.login(createdUser);
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        assertNotNull(loginResponse.getBody());
+    }
+
+    @Test
+    public void createShopAdminWithPassword() throws Exception {
+        api.login(XIPLI_ADMIN);
+        Shop shop = apiTestUtils.createShop();
+        NewUserRequest shopAdmin = new NewUserRequest();
+        shopAdmin.setFirstName("Shop");
+        shopAdmin.setLastName("Admin");
+        shopAdmin.setEmailAddress("admin@xiplishop.com");
+        shopAdmin.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
+
+        ResponseEntity<User> response = api.createShopUser(shop.getShopId(), shopAdmin);
+        Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        User createdUser = response.getBody();
+        Assert.assertEquals(shop.getShopId(), createdUser.getShopId().longValue());
+
+        // make sure the new user can login
+        ResponseEntity loginResponse = api.login(createdUser);
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        assertNotNull(loginResponse.getBody());
     }
 
     @Test
@@ -69,8 +96,7 @@ public class UserAPITest extends _BaseAPITest {
         api.login(XIPLI_ADMIN);
         Shop shop = apiTestUtils.createShop();
         User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
-        shopAdmin.setShopId(shop.getShopId());
-        ResponseEntity<User> userResponse = api.createUser(shopAdmin);
+        ResponseEntity<User> userResponse = api.createShopUser(shop.getShopId(), shopAdmin);
         User createdUser = userResponse.getBody();
         Assert.assertEquals(shop.getShopId(), createdUser.getShopId().longValue());
 

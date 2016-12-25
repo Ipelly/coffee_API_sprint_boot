@@ -1,8 +1,8 @@
 package com.xiaoslab.coffee.api.controllers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xiaoslab.coffee.api.objects.PasswordUpdateRequest;
 import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.User.NewUserRequest;
 import com.xiaoslab.coffee.api.services.PasswordResetService;
 import com.xiaoslab.coffee.api.services.UserService;
 import com.xiaoslab.coffee.api.utility.AppUtility;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.ws.rs.NotAllowedException;
 import java.net.URI;
 
 
@@ -28,14 +29,6 @@ public class UserController {
     @Autowired
     private PasswordResetService passwordResetService;
 
-    public static class NewUserRequest extends User {
-
-        @Override
-        @JsonProperty
-        public String getPassword() {
-            return this.password;
-        }
-    }
 
     @RequestMapping(path = "/self", method = RequestMethod.GET)
     public ResponseEntity getSelf() {
@@ -44,12 +37,7 @@ public class UserController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity register(@RequestBody NewUserRequest newUserRequest) {
-        User newUser = new User();
-        newUser.setPassword(newUserRequest.getPassword());
-        newUser.setEmailAddress(newUserRequest.getEmailAddress());
-        newUser.setFirstName(newUserRequest.getFirstName());
-        newUser.setLastName(newUserRequest.getLastName());
-        newUser.setName(newUserRequest.getName());
+        User newUser = User.copyFromNewUserRequest(newUserRequest);
         User createdUser = userService.registerNewUser(newUser);
         URI location = AppUtility.buildCreatedLocation(AppUtility.getCurrentRequest().getServletPath().replace("/register", ""), createdUser.getUserId());
         return ResponseEntity.created(location).body(createdUser);
@@ -57,9 +45,7 @@ public class UserController {
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody User user) {
-        User createdUser = userService.create(user);
-        URI location = AppUtility.buildCreatedLocation(createdUser.getUserId());
-        return ResponseEntity.created(location).body(createdUser);
+        throw new NotAllowedException("Not Allowed");
     }
 
     @RequestMapping(path = "/password/reset", method = RequestMethod.POST)

@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -75,6 +76,7 @@ public class User implements UserDetails, Serializable {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "role"))
+    @NotEmpty(groups = ShopUser.class)
     private Collection<AppAuthority> roles;
 
     @Column
@@ -107,6 +109,31 @@ public class User implements UserDetails, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userId, firstName, lastName, name, emailAddress, phone, password, status, providerType, providerUserId, shopId);
+    }
+
+    public static class NewUserRequest extends User {
+        @Override
+        @JsonProperty(access = JsonProperty.Access.READ_WRITE)
+        public String getPassword() {
+            return super.password;
+        }
+        @Override
+        @JsonProperty(access = JsonProperty.Access.READ_WRITE)
+        public void setPassword(String password) {
+            super.password = password;
+        }
+    }
+
+    @JsonIgnore
+    public static User copyFromNewUserRequest(NewUserRequest newUserRequest) {
+        User newUser = new User();
+        newUser.setPassword(newUserRequest.getPassword());
+        newUser.setEmailAddress(newUserRequest.getEmailAddress());
+        newUser.setFirstName(newUserRequest.getFirstName());
+        newUser.setLastName(newUserRequest.getLastName());
+        newUser.setName(newUserRequest.getName());
+        newUser.setRoles(newUserRequest.getRoles());
+        return newUser;
     }
 
     public Long getUserId() {

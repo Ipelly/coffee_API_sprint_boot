@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.security.RolesAllowed;
@@ -36,6 +37,9 @@ public class UserService implements IService<User>, UserDetailsService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    PasswordResetService passwordResetService;
+
+    @Autowired
     UserUtility userUtility;
 
     private static final Logger logger = Logger.getLogger(UserService.class);
@@ -47,10 +51,20 @@ public class UserService implements IService<User>, UserDetailsService {
     }
 
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})
+    @Transactional
     public User create(User user) {
 
+        if (StringUtils.isNotBlank(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            //TODO, FIXME: set random password and send email link
+            user.setPassword(passwordEncoder.encode(passwordResetService.nextCode(16)));
+        }
+
+        GroupValidator.validate(user, User.XipliUser.class);
         userUtility.checkUserCanManageShop(user.getShopId());
         userUtility.checkUserCanGrantRoles(user);
+        checkIfEmailAddressIsUnique(user.getEmailAddress());
 
         // make sure the shop is valid and current user can access it
         if (user.getShopId() != 0) {

@@ -111,7 +111,7 @@ public class PasswordResetService {
         return userRepository.findOne(resetCode.getUserId());
     }
 
-    private String nextCode(int len) {
+    public String nextCode(int len) {
         if (len < 1) return "";
         if (len > 100) throw new IllegalArgumentException("Length too long");
         return new BigInteger(5 * len, SECURE_RANDOM).toString(32);

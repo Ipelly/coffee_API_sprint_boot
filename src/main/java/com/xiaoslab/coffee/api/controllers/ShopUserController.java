@@ -2,9 +2,9 @@ package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.User.NewUserRequest;
 import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.services.UserService;
-import com.xiaoslab.coffee.api.specifications.ShopSpecifications;
 import com.xiaoslab.coffee.api.specifications.UserSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
@@ -18,9 +18,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -54,13 +52,17 @@ public class ShopUserController {
 
     @RequestMapping(path = "/{userId}", method = RequestMethod.GET)
     public ResponseEntity get(@PathVariable long shopId, @PathVariable long userId) {
-        Shop shop = AppUtility.notFoundOnNull(shopService.get(shopId));
-        return ResponseEntity.ok(shop);
+        throw new NotImplementedException("not implemented");
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@PathVariable long shopId, @RequestBody User user) {
-        throw new NotImplementedException("not implemented");
+    public ResponseEntity create(@PathVariable long shopId, @RequestBody NewUserRequest newUserRequest) {
+        AppUtility.notFoundOnNull(shopService.get(shopId));
+        User newUser = User.copyFromNewUserRequest(newUserRequest);
+        newUser.setShopId(shopId);
+        User createdUser = userService.create(newUser);
+        URI location = AppUtility.buildCreatedLocation(createdUser.getUserId());
+        return ResponseEntity.created(location).body(createdUser);
     }
 
     @RequestMapping(path = "/{userId}", method = RequestMethod.PUT)

@@ -30,6 +30,7 @@ public class APIAdapter {
     private static final String V1_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
     private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ITEMOPTION_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
+    private static final String V1_SHOP_USER_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.USER_ENDPOINT + "/";
 
 
     // REST template values
@@ -108,6 +109,7 @@ public class APIAdapter {
     }
 
     private <T> ResponseEntity<T> exchange(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
+        LOGGER.info("");
         LOGGER.info("Request: " + method.name() + " " + getBaseApiUrl() + path);
 
         clearLastRequestAndResponse();
@@ -307,6 +309,12 @@ public class APIAdapter {
 
     public ResponseEntity passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
         return POST(V1_USER_ROOT_PATH + "password/update", passwordUpdateRequest, PasswordUpdateRequest.class);
+    }
+
+    // Shop User -----------------------
+
+    public ResponseEntity<User> createShopUser(long shopId, User user) {
+        return POST(String.format(V1_SHOP_USER_ROOT_PATH, shopId), user, User.class);
     }
 
     // Shops -----------------------
