@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class LoginUtils {
+public class ServiceLoginUtils {
 
     @Autowired
     TestUtils testUtils;
@@ -31,4 +31,7 @@ public class LoginUtils {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    public void logout() {
+        SecurityContextHolder.clearContext();
+    }
 }

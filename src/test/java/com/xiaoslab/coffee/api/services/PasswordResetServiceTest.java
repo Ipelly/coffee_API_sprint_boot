@@ -1,6 +1,6 @@
 package com.xiaoslab.coffee.api.services;
 
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +13,7 @@ public class PasswordResetServiceTest extends _BaseServiceTest {
     PasswordResetService passwordResetService;
 
     @Autowired
-    LoginUtils loginUtils;
+    ServiceLoginUtils serviceLoginUtils;
 
     @Test
     public void createResetCode() {

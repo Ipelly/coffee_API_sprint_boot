@@ -47,4 +47,9 @@ public class UserSpecifications {
                 criteria.isNull(root.get("shopId"))
         );
     }
+
+    public static Specification<User> belongsToShopId(long shopId) {
+        return (root, query, criteria) -> criteria.equal(root.get("shopId"), shopId);
+    }
+
 }

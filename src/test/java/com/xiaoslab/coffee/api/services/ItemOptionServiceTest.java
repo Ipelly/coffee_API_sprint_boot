@@ -3,7 +3,7 @@ package com.xiaoslab.coffee.api.services;
 import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.ItemOption;
 import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
 
 
     @Autowired
-    private LoginUtils loginUtils;
+    private ServiceLoginUtils serviceLoginUtils;
 
 
     @Test
@@ -83,7 +83,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         // test-case: create new item option for a item which associate with a shop named "DD"
         ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         assertNoOfItemOption(1);
     }
 
@@ -92,7 +92,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         // test-case: create new item option for a item which associate with a shop named "DD"
         ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
     }
 
@@ -110,10 +110,10 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
     private ItemOption preRequisiteTestScenarioForItemOption(ItemOption itemOption){
 
         // test-case: create new shop and add item 1 to it
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         Shop createdShop = shopService.create(testUtils.setupShopObject());
 
-        loginUtils.loginAsShopAdmin(createdShop.getShopId());
+        serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
         Item createdItem = itemService.create(testUtils.setupItemObject(createdShop.getShopId()));
 
         // test-case: create new item option(Small) for Latte

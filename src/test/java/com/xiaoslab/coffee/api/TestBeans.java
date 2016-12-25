@@ -26,8 +26,8 @@ public class TestBeans {
     public IService<ItemOption> itemOptionService(){ return new ItemOptionService();}
 
     @Bean
-    public LoginUtils loginUtils() {
-        return new LoginUtils();
+    public ServiceLoginUtils loginUtils() {
+        return new ServiceLoginUtils();
     }
 
     @Bean

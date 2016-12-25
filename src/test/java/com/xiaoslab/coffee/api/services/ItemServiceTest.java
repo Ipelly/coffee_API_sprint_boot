@@ -2,7 +2,7 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -38,13 +38,13 @@ public class ItemServiceTest extends _BaseServiceTest{
     private IService<Shop> shopService;
 
     @Autowired
-    private LoginUtils loginUtils;
+    private ServiceLoginUtils serviceLoginUtils;
 
     @Test
     public void createUpdateDeleteItem() {
 
         // test-case: create new shop and add item 1 to it
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -60,7 +60,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginAsShopAdmin(shopidfortest);
+        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
         // Adding item to the shop
         Item item = new Item();
         item.setName("latte");
@@ -97,7 +97,7 @@ public class ItemServiceTest extends _BaseServiceTest{
     public void getAllItems() {
 
         // test-case: create new shop and add item 1 to it
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -114,7 +114,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         shopidfortest = createdShop.getShopId();
 
         // Adding item1 to the shop
-        loginUtils.loginAsShopAdmin(shopidfortest);
+        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
         Item item = new Item();
         item.setName("latte");
         item.setDescription("Fresh brewed beans made with the milk of your choice");
@@ -133,7 +133,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         item2.setStatus(Constants.StatusCodes.INACTIVE);
         Item createdItem2 = itemService.create(item2);
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         List<Item> items = itemService.list();
         logger.info(items);
         assertNotNull(items);
@@ -144,7 +144,7 @@ public class ItemServiceTest extends _BaseServiceTest{
     public void getItem() {
 
         // test-case: create new shop and add item 1 to it
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         Shop shop = new Shop();
         shop.setName("DD");
         shop.setAddress1("165 Liberty Ave");
@@ -160,7 +160,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginAsShopAdmin(shopidfortest);
+        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
 
         // Adding item1 to the shop
         Item item = new Item();
@@ -181,7 +181,7 @@ public class ItemServiceTest extends _BaseServiceTest{
         item2.setStatus(Constants.StatusCodes.INACTIVE);
         Item createdItem2 = itemService.create(item2);
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         Item itemm = itemService.get(itemidfortest);
         logger.info(itemm);
         assertNotNull(itemm);

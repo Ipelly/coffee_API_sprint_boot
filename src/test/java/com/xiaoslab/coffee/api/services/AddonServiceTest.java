@@ -2,7 +2,7 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Addon;
 import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class AddonServiceTest extends _BaseServiceTest {
 
 
     @Autowired
-    private LoginUtils loginUtils;
+    private ServiceLoginUtils serviceLoginUtils;
 
 
     @Test
@@ -79,7 +79,7 @@ public class AddonServiceTest extends _BaseServiceTest {
         // test-case: create new Addon ("Name : Sugar") for a item which associate with a shop named "DD"
         Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         assertNoOfAddon(1);
     }
 
@@ -88,7 +88,7 @@ public class AddonServiceTest extends _BaseServiceTest {
         // test-case: create new item option for a item which associate with a shop named "DD"
         Addon createdAddon = preRequisiteTestScenarioForAddon(new Addon("Sugar",BigDecimal.valueOf(1.00),Constants.StatusCodes.ACTIVE));
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         assertAddonName(addonService.get(createdAddon.getAddonId ()),"Sugar");
     }
 
@@ -107,11 +107,11 @@ public class AddonServiceTest extends _BaseServiceTest {
     private Addon preRequisiteTestScenarioForAddon(Addon addon){
 
         // test-case: create new shop and add item 1 to it
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         Shop createdShop = shopService.create(testUtils.setupShopObject());
 
         // test-case: create new Addon for Latte
-        loginUtils.loginAsShopAdmin(createdShop.getShopId());
+        serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
         addon.setShopId(createdShop.getShopId ());
         return addonService.create(addon);
     }

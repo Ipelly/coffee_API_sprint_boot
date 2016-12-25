@@ -49,14 +49,18 @@ public class UserService implements IService<User>, UserDetailsService {
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})
     public User create(User user) {
 
-        userUtility.checkUserCanAccessShop(user.getShopId());
+        userUtility.checkUserCanManageShop(user.getShopId());
         userUtility.checkUserCanGrantRoles(user);
 
         // make sure the shop is valid and current user can access it
         if (user.getShopId() != 0) {
             shopService.get(user.getShopId());
         }
+        if (user.getStatus() == null) {
+            user.setStatus(Constants.StatusCodes.PENDING);
+        }
         user.setUserId(null);
+        user.setProviderType(Constants.LoginProviderType.XIPLI);
         return userRepository.save(user);
     }
 
@@ -81,7 +85,13 @@ public class UserService implements IService<User>, UserDetailsService {
             userRepository.findAll().forEach(list::add);
         }
 
-        return list;
+        List<User> filteredList = new ArrayList<>();
+        list.forEach(user -> {
+            if (userUtility.canUserManageShop(user.getShopId())) {
+                filteredList.add(user);
+            }
+        });
+        return filteredList;
     }
 
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})

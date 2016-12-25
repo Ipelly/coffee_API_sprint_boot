@@ -50,13 +50,19 @@ public class UserUtility {
         return false;
     }
 
-    public void checkUserCanAccessShop(Long shopId) {
+    public boolean canUserManageShop(Long shopId) {
         if (shopId == null) {
-            throw new IllegalArgumentException("Shop ID must be specified");
-        }
-        // make sure user can access the shop if user is not xipli admin
-        if (!isXipliAdmin() && 
+            return false;
+        } else if (!isXipliAdmin() &&
                 (!isShopAdmin() || !Objects.equals(shopId, getLoggedInUser().getShopId()))) {
+            return false;
+        }
+        return true;
+    }
+
+    public void checkUserCanManageShop(Long shopId) {
+        // make sure user can access the shop if user is not xipli admin
+        if (!canUserManageShop(shopId)) {
             throw new AccessDeniedException("User not allowed to access shop with ID: " + shopId);
         }
     }

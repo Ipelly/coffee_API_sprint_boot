@@ -1,7 +1,7 @@
 package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -28,13 +28,13 @@ public class ShopServiceTest extends _BaseServiceTest  {
     private IService<Shop> shopService;
 
     @Autowired
-    private LoginUtils loginUtils;
+    private ServiceLoginUtils serviceLoginUtils;
 
 
     @Test
     public void createUpdateDeleteShop() {
 
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
 
         // test-case: create new shop 1
         Shop shop = new Shop();
@@ -85,7 +85,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Test
     public void getAllShop() {
 
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
 
         // test-case: create new shop 1
         Shop shop = new Shop();
@@ -103,7 +103,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         List<Shop> items = shopService.list();
         logger.info(items);
         assertNotNull(items);
@@ -113,7 +113,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
     @Test
     public void getShop() {
 
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
         // test-case: create new shop 1
         Shop shop = new Shop();
         shop.setName("DD");
@@ -130,7 +130,7 @@ public class ShopServiceTest extends _BaseServiceTest  {
         Shop createdShop = shopService.create(shop);
         shopidfortest = createdShop.getShopId();
 
-        loginUtils.loginAsCustomerUser();
+        serviceLoginUtils.loginAsCustomerUser();
         Shop shopp = shopService.get(shopidfortest);
         logger.info(shopp);
         assertNotNull(shopp);

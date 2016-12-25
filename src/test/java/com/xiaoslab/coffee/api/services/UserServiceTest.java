@@ -1,14 +1,17 @@
 package com.xiaoslab.coffee.api.services;
 
+import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.specifications.UserSpecifications;
-import com.xiaoslab.coffee.api.utilities.LoginUtils;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utilities.TestConstants;
+import com.xiaoslab.coffee.api.utilities.TestUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,18 +25,55 @@ public class UserServiceTest extends _BaseServiceTest {
     UserService userService;
 
     @Autowired
-    LoginUtils loginUtils;
+    ShopService shopService;
+
+    @Autowired
+    ServiceLoginUtils serviceLoginUtils;
+
 
     @Test
-    public void createAndGetUsers() {
+    public void createUserWithoutAuthorization() {
 
-        // test-case: create new user
+        serviceLoginUtils.loginAsXAdmin();
+        Shop testShop = testUtils.setupShopObject();
+        testShop = shopService.create(testShop);
+        assertNotNull(testShop);
+        assertNotNull(testShop.getShopId());
+
+        serviceLoginUtils.logout();
         User user1 = new User();
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
         user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
-        User createdUser1 = userService.registerNewUser(user1);
+        user1.setShopId(testShop.getShopId());
+
+        TestUtils.verifyException(() -> {
+            userService.create(user1);
+            return null;
+        }, AuthenticationCredentialsNotFoundException.class);
+
+    }
+
+    @Test
+    public void createAndGetShopUsers() {
+
+        serviceLoginUtils.loginAsXAdmin();
+
+        // test-case: create new shop user
+        Shop testShop = testUtils.setupShopObject();
+        testShop = shopService.create(testShop);
+        assertNotNull(testShop);
+        assertNotNull(testShop.getShopId());
+
+        User user1 = new User();
+        user1.setFirstName("John");
+        user1.setLastName("Doe");
+        user1.setEmailAddress("johndoe@xiaoslab.com");
+        user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
+        user1.setShopId(testShop.getShopId());
+        user1.setStatus(Constants.StatusCodes.ACTIVE);
+        User createdUser1 = userService.create(user1);
         getLogger().info(createdUser1);
 
         assertNotNull(createdUser1);
@@ -41,12 +81,20 @@ public class UserServiceTest extends _BaseServiceTest {
         user1.setStatus(Constants.StatusCodes.ACTIVE);
         assertEquals(user1, createdUser1);
 
-        // test-case: create another user
+        // test-case: list all user
+        List<User> list = userService.list(Optional.empty(), Optional.empty());
+        getLogger().info(list);
+        assertEquals(1, list.size());
+        assertEquals(createdUser1, list.get(0));
+
+        // test-case: create another shop user
         User user2 = new User();
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
         user2.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
+        user2.setShopId(testShop.getShopId());
+        user1.setStatus(Constants.StatusCodes.INACTIVE);
         User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
 
@@ -55,9 +103,8 @@ public class UserServiceTest extends _BaseServiceTest {
         user2.setStatus(Constants.StatusCodes.ACTIVE);
         assertEquals(user2, createdUser2);
 
-        loginUtils.loginAsXAdmin();
         // test-case: list all user
-        List<User> list = userService.list(Optional.empty(), Optional.empty());
+        list = userService.list(Optional.empty(), Optional.empty());
         getLogger().info(list);
         assertEquals(2, list.size());
         assertEquals(createdUser1, list.get(0));
@@ -83,26 +130,34 @@ public class UserServiceTest extends _BaseServiceTest {
     }
 
     @Test
-    public void updateUser() {
+    public void updateShopUser() {
 
-        // test-case: create and update user
-        User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmailAddress("johndoe@xiaoslab.com");
-        user.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
-        User createdUser = userService.registerNewUser(user);
-        getLogger().info(createdUser);
+        serviceLoginUtils.loginAsXAdmin();
 
-        assertNotNull(createdUser);
-        user.setUserId(createdUser.getUserId());
-        assertEquals(user, createdUser);
-        assertEquals("John", createdUser.getFirstName());
+        // test-case: create new shop user
+        Shop testShop = testUtils.setupShopObject();
+        testShop = shopService.create(testShop);
+        assertNotNull(testShop);
+        assertNotNull(testShop.getShopId());
 
-        loginUtils.loginAsXAdmin();
-        user.setFirstName("Jane");
-        User updatedUser = userService.update(user);
-        assertEquals(user, updatedUser);
+        User user1 = new User();
+        user1.setFirstName("John");
+        user1.setLastName("Doe");
+        user1.setEmailAddress("johndoe@xiaoslab.com");
+        user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
+        user1.setShopId(testShop.getShopId());
+        user1.setStatus(Constants.StatusCodes.ACTIVE);
+        User createdUser1 = userService.create(user1);
+        getLogger().info(createdUser1);
+
+        assertNotNull(createdUser1);
+        user1.setUserId(createdUser1.getUserId());
+        user1.setStatus(Constants.StatusCodes.ACTIVE);
+        assertEquals(user1, createdUser1);
+
+        createdUser1.setFirstName("Jane");
+        User updatedUser = userService.update(createdUser1);
+        assertEquals(createdUser1, updatedUser);
         assertEquals("Jane", updatedUser.getFirstName());
 
     }
@@ -110,34 +165,52 @@ public class UserServiceTest extends _BaseServiceTest {
     @Test
     public void deleteUser() {
 
-        // test-case: create two users and delete one of them
+        serviceLoginUtils.loginAsXAdmin();
+
+        // test-case: create new shop user
+        Shop testShop = testUtils.setupShopObject();
+        testShop = shopService.create(testShop);
+        assertNotNull(testShop);
+        assertNotNull(testShop.getShopId());
+
         User user1 = new User();
         user1.setFirstName("John");
         user1.setLastName("Doe");
         user1.setEmailAddress("johndoe@xiaoslab.com");
         user1.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
-        User createdUser1 = userService.registerNewUser(user1);
+        user1.setShopId(testShop.getShopId());
+        user1.setStatus(Constants.StatusCodes.ACTIVE);
+        User createdUser1 = userService.create(user1);
         getLogger().info(createdUser1);
-        assertNotNull(createdUser1);
-        assertEquals(Constants.StatusCodes.PENDING, createdUser1.getStatus());
 
-        // test-case: create another user
+        assertNotNull(createdUser1);
+        user1.setUserId(createdUser1.getUserId());
+        user1.setStatus(Constants.StatusCodes.ACTIVE);
+        assertEquals(user1, createdUser1);
+
+        // test-case: create another shop user
         User user2 = new User();
         user2.setFirstName("Chuck");
         user2.setLastName("Norris");
         user2.setEmailAddress("chucknorris@xiaoslab.com");
         user2.setPassword(TestConstants.TEST_DEFAULT_PASSWORD);
+        user2.setShopId(testShop.getShopId());
+        user1.setStatus(Constants.StatusCodes.INACTIVE);
         User createdUser2 = userService.registerNewUser(user2);
         getLogger().info(createdUser2);
+
         assertNotNull(createdUser2);
-        assertEquals(Constants.StatusCodes.PENDING, createdUser2.getStatus());
+        user2.setUserId(createdUser2.getUserId());
+        user2.setStatus(Constants.StatusCodes.ACTIVE);
+        assertEquals(user2, createdUser2);
+
 
         User deletedUser = userService.delete(createdUser1.getUserId());
         assertEquals(Constants.StatusCodes.DELETED, deletedUser.getStatus());
 
         List<User> list;
         Specification<User> spec;
-        loginUtils.loginAsXAdmin();
+        serviceLoginUtils.loginAsXAdmin();
 
         // test-case: filter by non-deleted users
         spec = UserSpecifications.isNotDeleted();

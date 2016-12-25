@@ -47,7 +47,7 @@ public class AddonService implements IService<Addon> {
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Addon create(Addon addon) {
-        userUtility.checkUserCanAccessShop(addon.getShopId ());
+        userUtility.checkUserCanManageShop(addon.getShopId ());
         if (addon.getStatus() == null) {
             addon.setStatus(Constants.StatusCodes.INACTIVE);
         }
@@ -57,7 +57,7 @@ public class AddonService implements IService<Addon> {
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Addon update(Addon addon) {
-        userUtility.checkUserCanAccessShop(addon.getShopId ());
+        userUtility.checkUserCanManageShop(addon.getShopId ());
         return  addonRepository.save(addon);
     }
 
@@ -65,7 +65,7 @@ public class AddonService implements IService<Addon> {
     @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
     public Addon delete(long addonId) {
         Addon addon = addonRepository.findOne(addonId);
-        userUtility.checkUserCanAccessShop(addon.getShopId ());
+        userUtility.checkUserCanManageShop(addon.getShopId ());
         addon.setStatus(Constants.StatusCodes.DELETED);
         return addonRepository.save(addon);
     }

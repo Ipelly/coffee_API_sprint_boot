@@ -4,12 +4,14 @@ import com.xiaoslab.coffee.api.objects.*;
 import com.xiaoslab.coffee.api.repository.UserRepository;
 import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 public class TestUtils {
 
@@ -18,6 +20,22 @@ public class TestUtils {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    public static void verifyException(Callable<Void> func, Class expectedExceptionClass, String... expectedMessages) {
+        try {
+            func.call();
+        } catch (Throwable tr) {
+            Assert.assertEquals("Expected exception class did not match.", expectedExceptionClass, tr.getClass());
+            for (String expectedMessage : expectedMessages) {
+                Assert.assertTrue(
+                        String.format("Expected message <%s> not found in actual message <%s>.", expectedMessage, tr.getMessage()),
+                        tr.getMessage().contains(expectedMessage)
+                );
+            }
+            return;
+        }
+        Assert.fail(String.format("Expected exception class <%s> was not thrown.", expectedExceptionClass.getSimpleName()));
+    }
 
     public User createXipliAdminUser() {
         User userToCreate = setupBasicUserObject(Roles.ROLE_X_ADMIN);

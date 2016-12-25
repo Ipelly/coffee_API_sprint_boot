@@ -4,11 +4,50 @@ import com.xiaoslab.coffee.api.objects.PasswordUpdateRequest;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.security.Roles;
+import com.xiaoslab.coffee.api.utilities.TestConstants;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 public class UserAPITest extends _BaseAPITest {
+
+    public static class NewUserRequest {
+        public String name;
+        public String emailAddress;
+        public String password;
+    }
+
+    @Test
+    public void registerNewUserAndLogin() throws Exception {
+        NewUserRequest user = new NewUserRequest();
+        user.name = "Hero Alam";
+        user.emailAddress = "heroalam@xipli.com";
+        user.password = TestConstants.TEST_DEFAULT_PASSWORD;
+        ResponseEntity<User> response = api.registerUser(user);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        // verify new user
+        User newUser = response.getBody();
+        assertNotNull(newUser);
+        assertNotNull(newUser.getUserId());
+        assertEquals("Hero", newUser.getFirstName());
+        assertEquals("Alam", newUser.getLastName());
+        assertEquals("Hero Alam", newUser.getName());
+        assertEquals("heroalam@xipli.com", newUser.getEmailAddress());
+        assertEquals(Constants.StatusCodes.PENDING, newUser.getStatus());
+        assertEquals(1, newUser.getRoles().size());
+        assertEquals(Roles.ROLE_USER, newUser.getRoles().stream().findFirst().get().getAuthority());
+
+        // login as new user
+        ResponseEntity loginResponse = api.login(user.emailAddress, user.password);
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        assertNotNull(loginResponse.getBody());
+    }
 
     @Test
     public void createShopAdmin() throws Exception {

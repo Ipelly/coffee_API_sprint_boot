@@ -44,7 +44,7 @@ public class ItemService implements IService<Item> {
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
 
     public Item create(Item item) {
-        userUtility.checkUserCanAccessShop(item.getShopId());
+        userUtility.checkUserCanManageShop(item.getShopId());
         if (item.getStatus() == null) {
             item.setStatus(Constants.StatusCodes.INACTIVE);
         }

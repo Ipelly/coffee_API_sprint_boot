@@ -107,7 +107,7 @@ public class APIAdapter {
         return exchange(path, HttpMethod.DELETE, null, objectType);
     }
 
-    private <T> ResponseEntity<T> exchange(String path, HttpMethod method, Object requestBody, Class<T> objectType) {
+    private <T> ResponseEntity<T> exchange(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
         LOGGER.info("Request: " + method.name() + " " + getBaseApiUrl() + path);
 
         clearLastRequestAndResponse();
@@ -141,7 +141,7 @@ public class APIAdapter {
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             if (responseEntity.getBody() instanceof Map) {
-                return new ResponseEntity<>(convertMapToObject((Map)responseEntity.getBody(), objectType), responseEntity.getHeaders(), responseEntity.getStatusCode());
+                return new ResponseEntity<>(convertMapToObject((Map)responseEntity.getBody(), responseType), responseEntity.getHeaders(), responseEntity.getStatusCode());
             } else if (responseEntity.getBody() instanceof List) {
                 return new ResponseEntity(responseEntity.getBody(), responseEntity.getHeaders(), responseEntity.getStatusCode());
             }
@@ -271,6 +271,8 @@ public class APIAdapter {
         return GET(V1_STATUS_ENDPOINT, Map.class);
     }
 
+    // Users -----------------------
+
     public ResponseEntity<User> getUser(long shopId) {
         return GET(V1_USER_ROOT_PATH + shopId, User.class);
     }
@@ -283,16 +285,20 @@ public class APIAdapter {
         return LIST(V1_USER_ROOT_PATH + queryParams, User.class);
     }
 
-    public ResponseEntity<User> createUser(User shop) {
-        return POST(V1_USER_ROOT_PATH, shop, User.class);
+    public ResponseEntity<User> createUser(User user) {
+        return POST(V1_USER_ROOT_PATH, user, User.class);
     }
 
     public ResponseEntity<User> updateUser(long shopId, User shop) {
         return PUT(V1_USER_ROOT_PATH + shopId, shop, User.class);
     }
 
-    public ResponseEntity<User> deleteUser(long shopId) {
-        return DELETE(V1_USER_ROOT_PATH + shopId, User.class);
+    public ResponseEntity<User> deleteUser(long userId) {
+        return DELETE(V1_USER_ROOT_PATH + userId, User.class);
+    }
+
+    public ResponseEntity<User> registerUser(Object user) {
+        return POST(V1_USER_ROOT_PATH + "register", user, User.class);
     }
 
     public ResponseEntity passwordReset(PasswordUpdateRequest passwordUpdateRequest) {
@@ -302,6 +308,8 @@ public class APIAdapter {
     public ResponseEntity passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
         return POST(V1_USER_ROOT_PATH + "password/update", passwordUpdateRequest, PasswordUpdateRequest.class);
     }
+
+    // Shops -----------------------
 
     public ResponseEntity<Shop> getShop(long shopId) {
         return GET(V1_SHOP_ROOT_PATH + shopId, Shop.class);
@@ -327,6 +335,7 @@ public class APIAdapter {
         return DELETE(V1_SHOP_ROOT_PATH + shopId, Shop.class);
     }
 
+    // Items -----------------------
 
     public ResponseEntity<Item> getItem(Item item, long itemId){return GET(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);}
 
@@ -350,6 +359,7 @@ public class APIAdapter {
         return DELETE(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
     }
 
+    // Item Options -----------------------
 
     public ResponseEntity<ItemOption> createItemOption(ItemOption itemOption,long shopId) {
         return POST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemOption.getItemId()), itemOption, ItemOption.class );
@@ -372,8 +382,7 @@ public class APIAdapter {
         return LIST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId,itemId), ItemOption.class);
     }
 
-
-    // Addon
+    // Item Addons -----------------------
 
     public ResponseEntity<Addon> getAddon(long shopid, long addonId){
         return GET(String.format(V1_ADDON_ROOT_PATH, shopid) + addonId, Addon.class);
