@@ -30,6 +30,16 @@ public class Ingredient {
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
+    //Default Constructor
+    public Ingredient() {
+    }
+
+    // Optional Constructor
+    public Ingredient(String name, Constants.StatusCodes status) {
+        this.name = name;
+        this.status = status;
+    }
+
     public Long getIngredientId() {
         return ingredientId;
     }
