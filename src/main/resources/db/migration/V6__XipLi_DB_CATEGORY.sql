@@ -6,7 +6,7 @@ CREATE TABLE xipli.category (
   name VARCHAR(255) NOT NULL,
   description VARCHAR(255) NULL,
   shop_id INT NOT NULL,
-  statuS VARCHAR(45) NULL,
+  status VARCHAR(45) NULL,
   PRIMARY KEY (category_id),
   UNIQUE INDEX category_id_UNIQUE (category_id ASC)
 );
