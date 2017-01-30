@@ -31,7 +31,7 @@ public class APIAdapter {
     private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ITEMOPTION_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
     private static final String V1_SHOP_USER_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.USER_ENDPOINT + "/";
-
+    private static final String V1_INGREDIENT_ROOT_PATH = Constants.V1 + Constants.INGREDIENT_ENDPOINT + "/";
 
     // REST template values
     private int port;
@@ -415,4 +415,31 @@ public class APIAdapter {
     public ResponseEntity<Addon> deleteAddon(Addon addon, long addonId) {
         return DELETE(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, Addon.class);
     }
+
+    // Ingredient -----------------------
+
+    public ResponseEntity<Ingredient> getIngredient(long ingredientId) {
+        return GET(V1_INGREDIENT_ROOT_PATH + ingredientId, Ingredient.class);
+    }
+
+    public ResponseEntity<List<Ingredient>> listIngredient() {
+        return LIST(V1_INGREDIENT_ROOT_PATH, Ingredient.class);
+    }
+
+    public ResponseEntity<List<Ingredient>> listIngredient(String queryParams) {
+        return LIST(V1_INGREDIENT_ROOT_PATH + queryParams, Ingredient.class);
+    }
+
+    public ResponseEntity<Ingredient> createIngredient(Ingredient ingredient) {
+        return POST(V1_INGREDIENT_ROOT_PATH, ingredient, Ingredient.class);
+    }
+
+    public ResponseEntity<Ingredient> updateIngredient(long ingredientId, Ingredient ingredient) {
+        return PUT(V1_INGREDIENT_ROOT_PATH + ingredientId, ingredient, Ingredient.class);
+    }
+
+    public ResponseEntity<Ingredient> deleteIngredient(long ingredientId) {
+        return DELETE(V1_INGREDIENT_ROOT_PATH + ingredientId, Ingredient.class);
+    }
+
 }
