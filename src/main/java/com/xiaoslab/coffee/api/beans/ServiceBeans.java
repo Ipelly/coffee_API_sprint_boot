@@ -50,4 +50,8 @@ public class ServiceBeans {
     @Bean
     public IService<Ingredient> ingredientService() { return new IngredientService ();
     }
+
+    @Bean
+    public IService<Category> categoryService() { return new CategoryService ();
+    }
 }
