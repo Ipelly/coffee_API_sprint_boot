@@ -1,13 +1,12 @@
 package com.xiaoslab.coffee.api.apis;
 
-import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.ItemOption;
-import com.xiaoslab.coffee.api.objects.Shop;
-import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.objects.*;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -19,7 +18,7 @@ import static org.junit.Assert.*;
  */
 public class ItemOptionAPITest extends _BaseAPITest {
 
-    long shopIdForTest,itemIdFortest;
+    long shopIdForTest,cateGoryIdFortest1,itemIdFortest;
 
     @Test
     public void createAndGetAndListOfItemOption() throws Exception {
@@ -27,7 +26,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
         ResponseEntity<List<ItemOption>> itemOptionListResponse;
         ResponseEntity<ItemOption> itemOptionResponse;
 
-        ctaForItemOptionTest();
+        preReqDataForItemOptionTest();
 
 
         // Auth : Login as SHOP_ADMIN
@@ -50,7 +49,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
     @Test
     public void createItemOptionWithoutAuthorization() throws Exception {
 
-        ctaForItemOptionTest();
+        preReqDataForItemOptionTest();
 
         ResponseEntity<ItemOption> response;
 
@@ -68,7 +67,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
     public void updateItemOptionWithoutAuthorization() throws Exception {
 
         ResponseEntity<ItemOption> response;
-        ctaForItemOptionTest();
+        preReqDataForItemOptionTest();
 
 
         // Auth : Login as SHOP_ADMIN
@@ -99,7 +98,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
     public void deleteItemOptionWithoutAuthorization() throws Exception {
 
         ResponseEntity<ItemOption> response;
-        ctaForItemOptionTest();
+        preReqDataForItemOptionTest();
 
 
         // Auth : Login as SHOP_ADMIN
@@ -131,7 +130,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
 
         ResponseEntity<ItemOption> response;
 
-        ctaForItemOptionTest();
+        preReqDataForItemOptionTest();
 
 
         // Auth : Login as SHOP_ADMIN
@@ -179,7 +178,7 @@ public class ItemOptionAPITest extends _BaseAPITest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    private void ctaForItemOptionTest(){
+    private void preReqDataForItemOptionTest(){
 
         api.login(XIPLI_ADMIN);
 
@@ -195,14 +194,20 @@ public class ItemOptionAPITest extends _BaseAPITest {
         User shopAdmin = testUtils.createShopAdminUser(createdShop1.getShopId());
         api.login(shopAdmin);
 
+        ResponseEntity<Category> categoryResponse1;
+        categoryResponse1 = api.createCategory(new Category("Iced C","Iced Coffee",shopIdForTest),shopIdForTest);
+        Category createdCategory1 = categoryResponse1.getBody();
+        cateGoryIdFortest1 = createdCategory1.getCategory_id();
+
         // test-case: create new item by POST
         ResponseEntity<List<Item>> itemListResponse;
         ResponseEntity<Item> itemResponse;
-        Item item1 = testUtils.setupItemObject(createdShop1.getShopId());
-        itemResponse = api.createItem(item1);
+        Item item1 = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest1, Constants.StatusCodes.ACTIVE);
+        //Item item1 = testUtils.setupItemObject(createdShop1.getShopId());
+        itemResponse = api.createItem(item1,shopIdForTest);
         Item createItem1 = itemResponse.getBody();
 
-        itemIdFortest = createItem1.getItemId();
+        itemIdFortest = createItem1.getitem_id();
 
         api.logout();
 
