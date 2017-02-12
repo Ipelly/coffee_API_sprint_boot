@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.beans;
 
+import com.xiaoslab.coffee.api.utility.CategoryUtility;
 import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,12 @@ public class UtilityBeans {
     public UserUtility userUtility() {
         return new UserUtility();
     }
+
+    @Bean
+    public CategoryUtility categoryUtility() {
+        return new CategoryUtility();
+    }
+
 
     @Bean
     public Docket docket() {

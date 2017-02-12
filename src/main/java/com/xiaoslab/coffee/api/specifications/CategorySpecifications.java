@@ -27,12 +27,12 @@ public class CategorySpecifications {
                 .where(searchName(search));
     }
 
-    public static Specification<Category> itemListForCategory(long categoryID) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),categoryID);
-        //return Specifications.where(searchName(search));
-    }
-    public static Specification<Category> categoryListForShop(long shopID) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopID);
+//    public static Specification<Category> itemListForCategory(long categoryId) {
+//        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),categoryId);
+//        //return Specifications.where(searchName(search));
+//    }
+    public static Specification<Category> categoryListForShop(long shopId) {
+        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopId);
         //return Specifications.where(searchName(search));
     }
 

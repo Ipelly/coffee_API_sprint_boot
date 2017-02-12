@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.security.RolesAllowed;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,22 +28,26 @@ public class ItemService implements IService<Item> {
     UserUtility userUtility;
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public List<Item> list() {
-        return itemRepository.findAll();
+        return list(Optional.empty(), Optional.empty());
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public Item get(long itemId) {
-        return itemRepository.getOne(itemId);
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
+    public Item get(long ItemId) {
+        Item item = itemRepository.getOne(ItemId);
+        if (item == null || item.getStatus() == Constants.StatusCodes.DELETED) {
+            return null;
+        } else {
+            return item;
+        }
     }
 
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
-
     public Item create(Item item) {
-        userUtility.checkUserCanManageShop(item.getShopId());
+        userUtility.checkUserCanManageShop(item.getShopId ());
         if (item.getStatus() == null) {
             item.setStatus(Constants.StatusCodes.INACTIVE);
         }
@@ -54,19 +57,21 @@ public class ItemService implements IService<Item> {
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Item update(Item item) {
+        userUtility.checkUserCanManageShop(item.getShopId ());
         return  itemRepository.save(item);
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public Item delete(long itemId) {
-        Item item = itemRepository.findOne(itemId);
+    @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
+    public Item delete(long ItemId) {
+        Item item = itemRepository.findOne(ItemId);
+        userUtility.checkUserCanManageShop(item.getShopId ());
         item.setStatus(Constants.StatusCodes.DELETED);
         return itemRepository.save(item);
     }
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public List<Item> list(Optional<Specification<Item>> specOptional, Optional<Pageable> pageableOptional) {
         List<Item> list = new ArrayList<>();
 
@@ -84,5 +89,4 @@ public class ItemService implements IService<Item> {
         }
         return list;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Category;
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.specifications.CategorySpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
@@ -60,7 +61,9 @@ public class CategoryController {
     @RequestMapping(path = "/{categoryId}", method=RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable long categoryId) {
         AppUtility.notFoundOnNull(categoryService.get(categoryId));
-        categoryService.delete(categoryId);
+        Category createdCategory = categoryService.delete(categoryId);
+        if(AppUtility.isNullObject(createdCategory))
+            return ResponseEntity.unprocessableEntity().build();
         return ResponseEntity.noContent().build();
     }
 }

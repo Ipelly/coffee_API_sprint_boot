@@ -1,10 +1,12 @@
 package com.xiaoslab.coffee.api.apis;
 
 import com.xiaoslab.coffee.api.objects.*;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -145,6 +147,33 @@ public class CategoryAPITest extends _BaseAPITest {
 
         categoryResponse = api.getCategory(shopIdForTest,createdCategory.getCategory_id ());
         assertEquals(HttpStatus.NOT_FOUND, categoryResponse.getStatusCode());
+    }
+
+    @Test
+    public void deleteCategoryWithItemList() throws Exception {
+
+        ResponseEntity<List<Category>> categoryListResponse;
+        ResponseEntity<Category> categoryResponse;
+
+        preReqDataForCetagoryTest();
+
+
+        // Auth : Login as SHOP_ADMIN
+        User shopAdmin = testUtils.createShopAdminUser(shopIdForTest);
+        api.login(shopAdmin);
+
+        Category createdCategory = categoryCreateWithAssertion();
+
+        ResponseEntity<List<Item>> ItemListResponse;
+        ResponseEntity<Item> ItemResponse;
+
+        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, createdCategory.getCategory_id(), Constants.StatusCodes.ACTIVE);
+
+        ItemResponse = api.createItem(item,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
+        assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
+
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, categoryResponse.getStatusCode());
     }
 
     @Test

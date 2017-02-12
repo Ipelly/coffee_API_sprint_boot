@@ -4,8 +4,11 @@ import com.xiaoslab.coffee.api.objects.Category;
 import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.repository.CategoryRepository;
+import com.xiaoslab.coffee.api.repository.ItemRepository;
 import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.specifications.CategorySpecifications;
+import com.xiaoslab.coffee.api.specifications.ItemSpecifications;
+import com.xiaoslab.coffee.api.utility.CategoryUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
 import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,13 @@ public class CategoryService implements IService<Category> {
     CategoryRepository categoryRepository;
 
     @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
     UserUtility userUtility;
+
+    @Autowired
+    CategoryUtility categoryUtility;
 
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
@@ -53,7 +62,7 @@ public class CategoryService implements IService<Category> {
     public Category create(Category category) {
         userUtility.checkUserCanManageShop(category.getShop_id());
         if (category.getStatus() == null) {
-            category.setStatus(Constants.StatusCodes.INACTIVE);
+            category.setStatus(Constants.StatusCodes.ACTIVE);
         }
         return categoryRepository.save(category);
     }
@@ -67,10 +76,15 @@ public class CategoryService implements IService<Category> {
     @Override
     @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
     public Category delete(long categoryId) {
+
         Category category = categoryRepository.findOne(categoryId);
         userUtility.checkUserCanManageShop(category.getShop_id());
-        category.setStatus(Constants.StatusCodes.DELETED);
-        return categoryRepository.save(category);
+        if(categoryUtility.checkUserDeleteCategory(items(categoryId))) {
+            category.setStatus(Constants.StatusCodes.DELETED);
+            return categoryRepository.save(category);
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -94,5 +108,23 @@ public class CategoryService implements IService<Category> {
         return list;
     }
 
+    @RolesAllowed({ Roles.ROLE_SHOP_ADMIN})
+    private List<Item> items(long categoryId) {
+        List<Item> list = new ArrayList<>();
+
+        Specification<Item> itemSpecification = Specifications.where(ItemSpecifications.itemListForCategory(categoryId));
+
+//        Specification<Item> itemSpecification = new ItemSpecifications();
+//
+//        if (specOptional.isPresent()) {
+//            itemSpecification = Specifications.where(ItemSpecifications.notDeleted()).and(specOptional.get());
+//        } else {
+//            itemSpecification = Specifications.where(ItemSpecifications.notDeleted());
+//        }
+//
+        itemRepository.findAll(itemSpecification).forEach(list::add);
+
+        return list;
+    }
 
 }

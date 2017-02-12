@@ -40,6 +40,9 @@ public class Item {
     @Column(nullable = false)
     private long shop_id;
 
+    @Column(nullable = false)
+    private long category_id;
+
     @Transient
     private Shop shop;
 
@@ -49,11 +52,23 @@ public class Item {
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
-    public long getItemId() {
+    public Item() {
+    }
+
+    public Item(String name, String description, BigDecimal price, long shop_id, long category_id, Constants.StatusCodes status) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.shop_id = shop_id;
+        this.category_id = category_id;
+        this.status = status;
+    }
+
+    public long getitem_id() {
         return item_id;
     }
 
-    public void setItemId(long item_id) {
+    public void setitem_id(long item_id) {
         this.item_id = item_id;
     }
 
@@ -97,6 +112,15 @@ public class Item {
         this.status = status;
     }
 
+
+    public long getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(long category_id) {
+        this.category_id = category_id;
+    }
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
@@ -109,16 +133,15 @@ public class Item {
         Item item = (Item) o;
         return item_id == item.item_id &&
                 shop_id == item.shop_id &&
+                category_id == item.category_id &&
                 Objects.equals(name, item.name) &&
                 Objects.equals(description, item.description) &&
                 Objects.equals(price, item.price) &&
-                Objects.equals(shop, item.shop) &&
-                Objects.equals(itemAddonList, item.itemAddonList) &&
                 status == item.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(item_id, name, description, price, shop_id, shop, itemAddonList, status);
+        return Objects.hash(item_id, name, description, price, shop_id, category_id, status);
     }
 }

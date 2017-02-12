@@ -26,6 +26,7 @@ public class APIAdapter {
     // API Endpoints. Add new ones here as static final String
     private static final String V1_STATUS_ENDPOINT = Constants.V1 + Constants.STATUS_ENDPOINT;
     private static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
+    //private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s"+ Constants.CATEGORY_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
     private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
     private static final String V1_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
     private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ITEMOPTION_ENDPOINT + "/";
@@ -346,20 +347,10 @@ public class APIAdapter {
 
     // Items -----------------------
 
-    public ResponseEntity<Item> getItem(Item item, long itemId){
-        return GET(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
-    }
 
-    public ResponseEntity<List<Item>> listItem(long shopId) {
-        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId), Item.class);
-    }
 
-    public ResponseEntity<List<Item>> listItem(long shopId, String queryParams) {
-        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId) + queryParams, Item.class);
-    }
-
-    public ResponseEntity<Item> createItem(Item item) {
-        return POST(String.format(V1_ITEM_ROOT_PATH, item.getShopId()), item, Item.class);
+    public ResponseEntity<Item> createItem(Item item, long shopId) {
+        return POST(String.format(V1_ITEM_ROOT_PATH, shopId, item.getCategory_id()), item, Item.class);
     }
 
     public ResponseEntity<Item> updateItem(Item item, long itemId) {
@@ -368,6 +359,22 @@ public class APIAdapter {
 
     public ResponseEntity<Item> deleteItem(Item item, long itemId) {
         return DELETE(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
+    }
+
+    public ResponseEntity<Item> getItem(Item item, long itemId){
+        return GET(String.format(V1_ITEM_ROOT_PATH, item.getShopId()) + itemId, Item.class);
+    }
+
+    public ResponseEntity<List<Item>> listItem(long shopId) {
+        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId) , Item.class);
+    }
+
+    public ResponseEntity<List<Item>> listItem(long shopId,long categorId) {
+        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId) + "?categoryId=" + categorId, Item.class);
+    }
+
+    public ResponseEntity<List<Item>> listItem(long shopId,long categorId, String queryParams) {
+        return LIST(String.format(V1_ITEM_ROOT_PATH, shopId) + queryParams, Item.class);
     }
 
     // Item Options -----------------------
