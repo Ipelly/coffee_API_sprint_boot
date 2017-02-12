@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by ipeli on 10/16/16.
+ * Created by ipeli on 10/02/17.
  */
 public class ItemService implements IService<Item> {
 

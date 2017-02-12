@@ -58,7 +58,6 @@ public class CategoryService implements IService<Category> {
 
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
-
     public Category create(Category category) {
         userUtility.checkUserCanManageShop(category.getShop_id());
         if (category.getStatus() == null) {
@@ -113,17 +112,7 @@ public class CategoryService implements IService<Category> {
         List<Item> list = new ArrayList<>();
 
         Specification<Item> itemSpecification = Specifications.where(ItemSpecifications.itemListForCategory(categoryId));
-
-//        Specification<Item> itemSpecification = new ItemSpecifications();
-//
-//        if (specOptional.isPresent()) {
-//            itemSpecification = Specifications.where(ItemSpecifications.notDeleted()).and(specOptional.get());
-//        } else {
-//            itemSpecification = Specifications.where(ItemSpecifications.notDeleted());
-//        }
-//
         itemRepository.findAll(itemSpecification).forEach(list::add);
-
         return list;
     }
 

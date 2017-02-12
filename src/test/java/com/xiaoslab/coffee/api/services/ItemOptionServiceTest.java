@@ -27,7 +27,6 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ItemOptionServiceTest extends _BaseServiceTest {
 
-
     private long itemOptionidfortest;
 
     Logger logger = Logger.getLogger(ItemServiceTest.class);

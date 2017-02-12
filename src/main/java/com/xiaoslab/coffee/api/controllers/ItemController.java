@@ -22,7 +22,6 @@ import java.util.Optional;
  */
 
 @RestController
-//@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.CATEGORY_ENDPOINT + "/{categoryId}" + Constants.ITEM_ENDPOINT )
 @RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.ITEM_ENDPOINT )
 public class ItemController {
 

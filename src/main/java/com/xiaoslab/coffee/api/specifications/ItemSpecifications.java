@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.math.BigDecimal;
 
 /**
- * Created by islamma on 11/1/16.
+ * Created by islamma on 11/02/17.
  */
 public class ItemSpecifications {
 

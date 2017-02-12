@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 /**
- * Created by ipeli on 10/19/16.
+ * Created by ipeli on 10/02/17.
  */
 public class ItemAPITest extends _BaseAPITest {
 

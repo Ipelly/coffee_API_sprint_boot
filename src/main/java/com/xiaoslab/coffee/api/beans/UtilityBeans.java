@@ -24,7 +24,6 @@ public class UtilityBeans {
         return new CategoryUtility();
     }
 
-
     @Bean
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)

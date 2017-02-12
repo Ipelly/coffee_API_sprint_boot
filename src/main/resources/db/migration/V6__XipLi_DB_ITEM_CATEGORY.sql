@@ -9,7 +9,6 @@ CREATE TABLE xipli.category (
   PRIMARY KEY (category_id),
   UNIQUE INDEX category_id_UNIQUE (category_id ASC)
 );
-
 -- Alter item table by adding category_id
 ALTER TABLE xipli.item
 ADD COLUMN category_id INT(11) NOT NULL;

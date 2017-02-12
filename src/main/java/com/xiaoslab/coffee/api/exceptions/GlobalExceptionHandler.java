@@ -50,6 +50,8 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
+
+
     //NotSupportedException
     private static List<String> parseConstraintViolationExceptionMessages(ConstraintViolationException exception) {
         List<String> messages = new ArrayList<>();

@@ -30,5 +30,4 @@ public class Constants {
     public static final String ADDON_ENDPOINT = "/addons";
     public static final String INGREDIENT_ENDPOINT = "/ingredients";
     public static final String CATEGORY_ENDPOINT = "/categories";
-
 }

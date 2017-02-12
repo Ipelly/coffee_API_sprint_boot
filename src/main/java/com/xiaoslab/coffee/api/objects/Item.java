@@ -112,7 +112,6 @@ public class Item {
         this.status = status;
     }
 
-
     public long getCategory_id() {
         return category_id;
     }

@@ -19,14 +19,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by ipeli on 11/1/16.
+ * Created by ipeli on 11/1/17.
  */
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ItemServiceTest extends _BaseServiceTest {
-
 
     private long shopIdForTest, categoryIdForTest;
 

@@ -346,9 +346,6 @@ public class APIAdapter {
     }
 
     // Items -----------------------
-
-
-
     public ResponseEntity<Item> createItem(Item item, long shopId) {
         return POST(String.format(V1_ITEM_ROOT_PATH, shopId, item.getCategory_id()), item, Item.class);
     }
