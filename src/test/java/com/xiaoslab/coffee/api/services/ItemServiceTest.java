@@ -48,7 +48,7 @@ public class ItemServiceTest extends _BaseServiceTest {
         // test-case: create new Item ("Name : Latte") for a item which associate with a shop named "DD"
         Category createdCategory = preRequisiteTestScenarioForItem();
         Item createdItem = itemService.create(new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
-        assertItemName(itemService.get(createdItem.getitem_id()),"Latte");
+        assertItemName(itemService.get(createdItem.getItemId()),"Latte");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ItemServiceTest extends _BaseServiceTest {
         Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
         createdItem.setName("Latte C");
         Item updatedItem = itemService.update(createdItem);
-        assertItemName(itemService.get(createdItem.getitem_id()),"Latte C");
+        assertItemName(itemService.get(createdItem.getItemId()),"Latte C");
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ItemServiceTest extends _BaseServiceTest {
 
         Category createdCategory = preRequisiteTestScenarioForItem();
         Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
-        Item deleteIteam = itemService.delete(createdItem.getitem_id());
+        Item deleteIteam = itemService.delete(createdItem.getItemId());
         assertNoOfItem(0);
     }
 
@@ -86,7 +86,7 @@ public class ItemServiceTest extends _BaseServiceTest {
         Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
         Item createdItemq = itemService.create(new Item("Esprasso","Esprasso Coffe", BigDecimal.valueOf(7.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
         serviceLoginUtils.loginAsCustomerUser();
-        assertItemName(itemService.get(createdItem.getitem_id ()),"Latte");
+        assertItemName(itemService.get(createdItem.getItemId ()),"Latte");
     }
 
     private void assertItemName(Item Item,String ItemName){
@@ -110,7 +110,7 @@ public class ItemServiceTest extends _BaseServiceTest {
         // test-case: create new Item for Latte
         serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
         Category createdCategory = categoryService.create(new Category("Iced","Iced Coffee", createdShop.getShopId()));
-        categoryIdForTest = createdCategory.getCategory_id();
+        categoryIdForTest = createdCategory.getCategoryId();
         return createdCategory;
     }
 }

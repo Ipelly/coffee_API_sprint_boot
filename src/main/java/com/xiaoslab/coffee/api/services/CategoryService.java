@@ -59,7 +59,7 @@ public class CategoryService implements IService<Category> {
     @Override
     @RolesAllowed(Roles.ROLE_SHOP_ADMIN)
     public Category create(Category category) {
-        userUtility.checkUserCanManageShop(category.getShop_id());
+        userUtility.checkUserCanManageShop(category.getShopId());
         if (category.getStatus() == null) {
             category.setStatus(Constants.StatusCodes.ACTIVE);
         }
@@ -77,8 +77,8 @@ public class CategoryService implements IService<Category> {
     public Category delete(long categoryId) {
 
         Category category = categoryRepository.findOne(categoryId);
-        userUtility.checkUserCanManageShop(category.getShop_id());
-        if(categoryUtility.checkUserDeleteCategory(items(categoryId))) {
+        userUtility.checkUserCanManageShop(category.getShopId());
+        if(items(categoryId).size() <= 0) {
             category.setStatus(Constants.StatusCodes.DELETED);
             return categoryRepository.save(category);
         }else{

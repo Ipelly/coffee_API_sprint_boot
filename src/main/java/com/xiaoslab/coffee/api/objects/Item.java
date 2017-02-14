@@ -21,8 +21,8 @@ public class Item {
 
     @Id
     @GeneratedValue
-    @Column(unique = true)
-    private long item_id;
+    @Column(unique = true, name = "item_id")
+    private long itemId;
 
 
     @Column(nullable = false)
@@ -64,12 +64,12 @@ public class Item {
         this.status = status;
     }
 
-    public long getitem_id() {
-        return item_id;
+    public long getItemId() {
+        return itemId;
     }
 
-    public void setitem_id(long item_id) {
-        this.item_id = item_id;
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -130,7 +130,7 @@ public class Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return item_id == item.item_id &&
+        return itemId == item.itemId &&
                 shop_id == item.shop_id &&
                 category_id == item.category_id &&
                 Objects.equals(name, item.name) &&
@@ -141,6 +141,6 @@ public class Item {
 
     @Override
     public int hashCode() {
-        return Objects.hash(item_id, name, description, price, shop_id, category_id, status);
+        return Objects.hash(itemId, name, description, price, shop_id, category_id, status);
     }
 }

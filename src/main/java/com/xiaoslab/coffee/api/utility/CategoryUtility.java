@@ -15,11 +15,11 @@ import java.util.Objects;
 
 public class CategoryUtility {
 
-    public boolean checkUserDeleteCategory(List<Item> items) {
-        // make sure user can access the shop if user is not xipli admin
-        if (items.size() > 0) {
-            return  false;
-        }
-        return true;
-    }
+//    public boolean checkUserDeleteCategory(List<Item> items) {
+//        // make sure user can access the shop if user is not xipli admin
+//        if (items.size() > 0) {
+//            return  false;
+//        }
+//        return true;
+//    }
 }

@@ -19,7 +19,7 @@ public class Category {
     @Id
     @GeneratedValue
     @Column(unique = true)
-    private long category_id;
+    private long categoryId;
 
 
     @Column(nullable = false)
@@ -29,12 +29,8 @@ public class Category {
     @Column(nullable = false)
     private String description;
 
-
     @Column(nullable = false)
     private long shop_id;
-
-    @Transient
-    private Shop shop;
 
     @Transient
     private List<Item> items;
@@ -46,19 +42,19 @@ public class Category {
 
     }
 
-    public Category(String name, String description, long shop_id) {
+    public Category(String name, String description, long shopId) {
         this.name = name;
         this.description = description;
-        this.shop_id = shop_id;
+        this.shop_id = shopId;
         this.status = Constants.StatusCodes.ACTIVE;
     }
 
-    public long getCategory_id() {
-        return category_id;
+    public long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -77,21 +73,21 @@ public class Category {
         this.description = description;
     }
 
-    public long getShop_id() {
+    public long getShopId() {
         return shop_id;
     }
 
-    public void setShop_id(long shop_id) {
-        this.shop_id = shop_id;
+    public void setShopId(long shopId) {
+        this.shop_id = shopId;
     }
-
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
+//
+//    public Shop getShop() {
+//        return shop;
+//    }
+//
+//    public void setShop(Shop shop) {
+//        this.shop = shop;
+//    }
 
     public List<Item> getItems() {
         return items;
@@ -115,7 +111,7 @@ public class Category {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
 
-        return category_id == category.category_id &&
+        return categoryId == category.categoryId &&
                 shop_id == category.shop_id &&
                 Objects.equals(name, category.name) &&
                 Objects.equals(description, category.description) &&
@@ -126,11 +122,10 @@ public class Category {
 
     @Override
     public int hashCode() {
-        int result = (int) (category_id ^ (category_id >>> 32));
+        int result = (int) (categoryId ^ (categoryId >>> 32));
         result = 31 * result + name.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + (int) (shop_id ^ (shop_id >>> 32));
-        result = 31 * result + shop.hashCode();
         result = 31 * result + items.hashCode();
         result = 31 * result + status.hashCode();
         return result;
@@ -139,11 +134,10 @@ public class Category {
     @Override
     public String toString() {
         return "Category{" +
-                "category_id=" + category_id +
+                "category_id=" + categoryId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", shop_id=" + shop_id +
-                ", shop=" + shop +
                 ", items=" + items +
                 ", status=" + status +
                 '}';

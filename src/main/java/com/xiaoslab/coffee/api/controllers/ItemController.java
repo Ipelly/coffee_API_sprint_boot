@@ -39,8 +39,13 @@ public class ItemController {
         Specification<Item> specification;
 
         if(shopId > 0 && categoryId > 0){
-            specification = Specifications.where(ItemSpecifications.itemListForCategoryUnderAShop(shopId,categoryId))
+//            specification = Specifications.where(ItemSpecifications.itemListForCategoryUnderAShop(shopId,categoryId))
+//                    .and(ItemSpecifications.notDeleted ());
+            specification = Specifications.where(ItemSpecifications.itemListForShop(shopId))
+                    .and(ItemSpecifications.itemListForCategory (categoryId))
                     .and(ItemSpecifications.notDeleted ());
+
+
         }else {
             specification = Specifications.where(ItemSpecifications.itemListForShop(shopId))
                     .and(ItemSpecifications.notDeleted());
@@ -61,14 +66,14 @@ public class ItemController {
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Item Item) {
         Item createdItem = itemService.create(Item);
-        URI location = AppUtility.buildCreatedLocation(createdItem.getitem_id ());
+        URI location = AppUtility.buildCreatedLocation(createdItem.getItemId ());
         return ResponseEntity.created(location).body(createdItem);
     }
 
     @RequestMapping(path = "/{itemId}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable long itemId, @RequestBody Item Item) {
+    public ResponseEntity update(@PathVariable long itemId, @RequestBody Item item) {
         AppUtility.notFoundOnNull(itemService.get(itemId));
-        return ResponseEntity.ok(itemService.update(Item));
+        return ResponseEntity.ok(itemService.update(item));
     }
 
     @RequestMapping(path = "/{itemId}", method=RequestMethod.DELETE)

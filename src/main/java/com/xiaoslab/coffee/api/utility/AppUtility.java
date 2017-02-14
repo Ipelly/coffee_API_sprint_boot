@@ -42,12 +42,4 @@ public class AppUtility {
             return obj;
         }
     }
-
-    public static <T> Boolean isNullObject(T obj) {
-        if (obj==null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

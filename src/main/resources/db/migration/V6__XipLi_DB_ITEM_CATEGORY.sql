@@ -6,9 +6,9 @@ CREATE TABLE xipli.category (
   description VARCHAR(255) NULL,
   shop_id int(11) UNSIGNED NOT NULL,
   status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  PRIMARY KEY (category_id),
-  UNIQUE INDEX category_id_UNIQUE (category_id ASC)
+  PRIMARY KEY (category_id)
 );
 -- Alter item table by adding category_id
 ALTER TABLE xipli.item
 ADD COLUMN category_id INT(11) NOT NULL;
+

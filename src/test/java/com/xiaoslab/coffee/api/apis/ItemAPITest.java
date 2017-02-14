@@ -120,15 +120,15 @@ public class ItemAPITest extends _BaseAPITest {
 
 
         createdItem.setName("Iced Coffee");
-        itemResponse = api.updateItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.updateItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.UNAUTHORIZED, itemResponse.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        itemResponse = api.updateItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.updateItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.FORBIDDEN, itemResponse.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        itemResponse = api.updateItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.updateItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.FORBIDDEN, itemResponse.getStatusCode());
 
     }
@@ -149,15 +149,15 @@ public class ItemAPITest extends _BaseAPITest {
 
         api.logout();
 
-        itemResponse = api.deleteItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.deleteItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.UNAUTHORIZED, itemResponse.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        itemResponse = api.deleteItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.deleteItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.FORBIDDEN, itemResponse.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        itemResponse = api.deleteItem(createdItem,createdItem.getitem_id());
+        itemResponse = api.deleteItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.FORBIDDEN, itemResponse.getStatusCode());
 
     }
@@ -178,16 +178,16 @@ public class ItemAPITest extends _BaseAPITest {
 
 
         createdItem.setName("Iced Coffee");
-        ItemResponse = api.updateItem(createdItem,createdItem.getitem_id());
+        ItemResponse = api.updateItem(createdItem,createdItem.getItemId());
         assertEquals(HttpStatus.OK, ItemResponse.getStatusCode());
         Item updatedItem = ItemResponse.getBody();
         assertNotNull(updatedItem);
         assertEquals(createdItem, updatedItem);
         assertThat(updatedItem.getName(), is(equalTo("Iced Coffee")));
 
-        ItemResponse = api.deleteItem(createdItem,createdItem.getitem_id());
+        ItemResponse = api.deleteItem(createdItem,createdItem.getItemId());
 
-        ItemResponse = api.getItem(createdItem,createdItem.getitem_id ());
+        ItemResponse = api.getItem(createdItem,createdItem.getItemId ());
         assertEquals(HttpStatus.NOT_FOUND, ItemResponse.getStatusCode());
     }
 
@@ -238,12 +238,12 @@ public class ItemAPITest extends _BaseAPITest {
         ResponseEntity<Category> categoryResponse1;
         categoryResponse1 = api.createCategory(new Category("Iced C","Iced Coffee",shopIdForTest),shopIdForTest);
         Category createdCategory1 = categoryResponse1.getBody();
-        cateGoryIdFortest1 = createdCategory1.getCategory_id();
+        cateGoryIdFortest1 = createdCategory1.getCategoryId();
 
         ResponseEntity<Category> categoryResponse2;
         categoryResponse2 = api.createCategory(new Category("Hot C","Hot Coffee",shopIdForTest),shopIdForTest);
         Category createdCategory2 = categoryResponse2.getBody();
-        cateGoryIdFortest2 = createdCategory2.getCategory_id();
+        cateGoryIdFortest2 = createdCategory2.getCategoryId();
 
         api.logout();
 
@@ -269,9 +269,9 @@ public class ItemAPITest extends _BaseAPITest {
         Item createdItem1 = ItemResponse.getBody();
 
         assertNotNull(createdItem);
-        assertTrue(createdItem.getitem_id() > 0);
-        item.setitem_id (createdItem.getitem_id());
-        assertEquals(item.getitem_id(), createdItem.getitem_id());
+        assertTrue(createdItem.getItemId() > 0);
+        item.setItemId (createdItem.getItemId());
+        assertEquals(item.getItemId(), createdItem.getItemId());
         assertEquals(item.getName(), createdItem.getName());
         return createdItem;
     }

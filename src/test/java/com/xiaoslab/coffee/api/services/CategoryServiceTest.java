@@ -93,16 +93,16 @@ public class CategoryServiceTest extends _BaseServiceTest{
         Category category = new Category();
         category.setName("Iced");
         category.setDescription("Fresh brewed beans made with the milk of your choice");
-        category.setShop_id (shopidfortest);
+        category.setShopId (shopidfortest);
         category.setStatus(Constants.StatusCodes.ACTIVE);
         Category createdCategory = categoryService.create(category);
-        categoryidfortest = createdCategory.getCategory_id();
+        categoryidfortest = createdCategory.getCategoryId ();
 
         // Adding item2 to the shop
         Category category1 = new Category();
         category1.setName("Hot");
         category1.setDescription("Fresh brewed beans made with the milk of your choice 1");
-        category1.setShop_id (shopidfortest);
+        category1.setShopId (shopidfortest);
         category1.setStatus(Constants.StatusCodes.ACTIVE);
         Category createdCategory1 = categoryService.create(category1);
     }

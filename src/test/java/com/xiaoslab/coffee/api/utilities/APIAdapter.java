@@ -453,15 +453,15 @@ public class APIAdapter {
     // Category -----------------------
 
     public ResponseEntity<Category> createCategory(Category category,long shopId) {
-        return POST(String.format (V1_CATEGORY_ROOT_PATH, shopId, category.getCategory_id()), category, Category.class );
+        return POST(String.format (V1_CATEGORY_ROOT_PATH, shopId, category.getCategoryId()), category, Category.class );
     }
 
     public ResponseEntity<Category> updateCategory(Category category,long shopId,long categoryid) {
-        return PUT(String.format(V1_CATEGORY_ROOT_PATH,shopId, category.getCategory_id ()) + categoryid, category, Category.class);
+        return PUT(String.format(V1_CATEGORY_ROOT_PATH,shopId, category.getCategoryId ()) + categoryid, category, Category.class);
     }
 
     public ResponseEntity<Category> deleteCategory(Category category,long shopId,long categoryid) {
-        return DELETE(String.format(V1_CATEGORY_ROOT_PATH,shopId, category.getCategory_id ()) + categoryid, Category.class);
+        return DELETE(String.format(V1_CATEGORY_ROOT_PATH,shopId, category.getCategoryId ()) + categoryid, Category.class);
     }
 
     public ResponseEntity<Category> getCategory(long shopId, long categoryid) {
@@ -470,7 +470,8 @@ public class APIAdapter {
 
     public ResponseEntity<List<Category>> listCategory(long shopId) {
         //String path = V1_SHOP_ROOT_PATH + "/"+ String.valueOf(shopId) + "/" + Constants.ITEM_ENDPOINT + "/" + String.valueOf(itemId) + "/" + Constants.ITEMOPTION_ENDPOINT + "/";
-        return LIST(String.format (V1_CATEGORY_ROOT_PATH, shopId), Category.class);
+        String path = String.format (V1_CATEGORY_ROOT_PATH, shopId);
+        return LIST(path, Category.class);
     }
 
 }

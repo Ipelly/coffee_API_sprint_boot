@@ -78,15 +78,15 @@ public class CategoryAPITest extends _BaseAPITest {
 
 
         createdCategory.setName("Iced Coffee");
-        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.UNAUTHORIZED, categoryResponse.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.FORBIDDEN, categoryResponse.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.FORBIDDEN, categoryResponse.getStatusCode());
 
     }
@@ -107,15 +107,15 @@ public class CategoryAPITest extends _BaseAPITest {
 
         api.logout();
 
-        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.UNAUTHORIZED, categoryResponse.getStatusCode());
 
         api.login(CUSTOMER_USER);
-        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.FORBIDDEN, categoryResponse.getStatusCode());
 
         api.login(XIPLI_ADMIN);
-        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.FORBIDDEN, categoryResponse.getStatusCode());
 
     }
@@ -136,16 +136,16 @@ public class CategoryAPITest extends _BaseAPITest {
 
 
         createdCategory.setName("Iced Coffee");
-        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.updateCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.OK, categoryResponse.getStatusCode());
         Category updatedCategory = categoryResponse.getBody();
         assertNotNull(updatedCategory);
         assertEquals(createdCategory, updatedCategory);
         assertThat(updatedCategory.getName(), is(equalTo("Iced Coffee")));
 
-        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
 
-        categoryResponse = api.getCategory(shopIdForTest,createdCategory.getCategory_id ());
+        categoryResponse = api.getCategory(shopIdForTest,createdCategory.getCategoryId ());
         assertEquals(HttpStatus.NOT_FOUND, categoryResponse.getStatusCode());
     }
 
@@ -167,12 +167,12 @@ public class CategoryAPITest extends _BaseAPITest {
         ResponseEntity<List<Item>> ItemListResponse;
         ResponseEntity<Item> ItemResponse;
 
-        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, createdCategory.getCategory_id(), Constants.StatusCodes.ACTIVE);
+        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, createdCategory.getCategoryId(), Constants.StatusCodes.ACTIVE);
 
         ItemResponse = api.createItem(item,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
         assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
 
-        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategory_id());
+        categoryResponse = api.deleteCategory(createdCategory,shopIdForTest,createdCategory.getCategoryId());
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, categoryResponse.getStatusCode());
     }
 
@@ -220,8 +220,8 @@ public class CategoryAPITest extends _BaseAPITest {
         assertEquals(HttpStatus.CREATED, categoryResponse.getStatusCode());
         Category createCategory = categoryResponse.getBody();
         assertNotNull(createCategory);
-        assertTrue(createCategory.getCategory_id() > 0);
-        category.setCategory_id (createCategory.getCategory_id());
+        assertTrue(createCategory.getCategoryId() > 0);
+        category.setCategoryId (createCategory.getCategoryId());
         assertEquals(category, createCategory);
         return createCategory;
     }

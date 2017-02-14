@@ -117,7 +117,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         Item createdItem = itemService.create(testUtils.setupItemObject(createdShop.getShopId()));
 
         // test-case: create new item option(Small) for Latte
-        itemOption.setItemId(createdItem.getitem_id());
+        itemOption.setItemId(createdItem.getItemId ());
         return itemOptionService.create(itemOption);
     }
 

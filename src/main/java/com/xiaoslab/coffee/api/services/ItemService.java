@@ -35,8 +35,8 @@ public class ItemService implements IService<Item> {
 
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
-    public Item get(long ItemId) {
-        Item item = itemRepository.getOne(ItemId);
+    public Item get(long itemId) {
+        Item item = itemRepository.getOne(itemId);
         if (item == null || item.getStatus() == Constants.StatusCodes.DELETED) {
             return null;
         } else {

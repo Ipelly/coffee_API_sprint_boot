@@ -15,10 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Created by ipeli on 10/02/17.
+ * Created by ipeli on 10/15/17.
  */
 
 @RestController
@@ -48,7 +49,7 @@ public class CategoryController {
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Category category) {
         Category createdCategory = categoryService.create(category);
-        URI location = AppUtility.buildCreatedLocation(createdCategory.getCategory_id());
+        URI location = AppUtility.buildCreatedLocation(createdCategory.getCategoryId());
         return ResponseEntity.created(location).body(createdCategory);
     }
 
@@ -62,7 +63,7 @@ public class CategoryController {
     public ResponseEntity delete(@PathVariable long categoryId) {
         AppUtility.notFoundOnNull(categoryService.get(categoryId));
         Category createdCategory = categoryService.delete(categoryId);
-        if(AppUtility.isNullObject(createdCategory))
+        if(Objects.isNull(createdCategory))
             return ResponseEntity.unprocessableEntity().build();
         return ResponseEntity.noContent().build();
     }
