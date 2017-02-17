@@ -32,7 +32,7 @@ public class CategorySpecifications {
 //        //return Specifications.where(searchName(search));
 //    }
     public static Specification<Category> categoryListForShop(long shopId) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopId);
+        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shopId")),shopId);
     }
 
 }

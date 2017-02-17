@@ -29,8 +29,8 @@ public class Category {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private long shop_id;
+    @Column(nullable = false, name="shop_id")
+    private long shopId;
 
     @Transient
     private List<Item> items;
@@ -45,7 +45,7 @@ public class Category {
     public Category(String name, String description, long shopId) {
         this.name = name;
         this.description = description;
-        this.shop_id = shopId;
+        this.shopId = shopId;
         this.status = Constants.StatusCodes.ACTIVE;
     }
 
@@ -74,11 +74,11 @@ public class Category {
     }
 
     public long getShopId() {
-        return shop_id;
+        return shopId;
     }
 
     public void setShopId(long shopId) {
-        this.shop_id = shopId;
+        this.shopId = shopId;
     }
 //
 //    public Shop getShop() {
@@ -112,7 +112,7 @@ public class Category {
         Category category = (Category) o;
 
         return categoryId == category.categoryId &&
-                shop_id == category.shop_id &&
+                shopId == category.shopId &&
                 Objects.equals(name, category.name) &&
                 Objects.equals(description, category.description) &&
                 status == category.status;
@@ -125,7 +125,7 @@ public class Category {
         int result = (int) (categoryId ^ (categoryId >>> 32));
         result = 31 * result + name.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + (int) (shop_id ^ (shop_id >>> 32));
+        result = 31 * result + (int) (shopId ^ (shopId >>> 32));
         result = 31 * result + items.hashCode();
         result = 31 * result + status.hashCode();
         return result;
@@ -137,7 +137,7 @@ public class Category {
                 "category_id=" + categoryId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", shop_id=" + shop_id +
+                ", shop_id=" + shopId +
                 ", items=" + items +
                 ", status=" + status +
                 '}';
