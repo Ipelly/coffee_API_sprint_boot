@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.math.BigDecimal;
 
 /**
- * Created by islamma on 11/1/16.
+ * Created by islamma on 11/02/17.
  */
 public class ItemSpecifications {
 
@@ -34,9 +34,19 @@ public class ItemSpecifications {
                 .where(searchName(search));
     }
 
-    public static Specification<Item> itemListForShop(long shopID) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopID);
-        //return Specifications.where(searchName(search));
+    public static Specification<Item> itemListForCategory(long categoryId) {
+        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("category_id")),categoryId);
+    }
+
+    public static Specification<Item> itemListForShop(long shopId) {
+        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopId);
+    }
+
+    public static Specification<Item> itemListForCategoryUnderAShop(long shopId, long categoryId) {
+        return (root, query, criteria) -> criteria.and(
+                criteria.equal(root.get("shop_id"), shopId),
+                criteria.equal(root.get("category_id"), categoryId)
+        );
     }
 
 }

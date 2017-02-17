@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.services;
 
+import com.xiaoslab.coffee.api.objects.Category;
 import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
@@ -18,16 +19,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by islamma on 11/1/16.
+ * Created by ipeli on 11/1/17.
  */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class ItemServiceTest extends _BaseServiceTest {
 
-public class ItemServiceTest extends _BaseServiceTest{
-
-    private long itemidfortest;
-    private long shopidfortest;
+    private long shopIdForTest, categoryIdForTest;
 
     Logger logger = Logger.getLogger(ItemServiceTest.class);
 
@@ -38,153 +37,80 @@ public class ItemServiceTest extends _BaseServiceTest{
     private IService<Shop> shopService;
 
     @Autowired
+    private IService<Category> categoryService;
+
+    @Autowired
     private ServiceLoginUtils serviceLoginUtils;
 
-    @Test
-    public void createUpdateDeleteItem() {
-
-        // test-case: create new shop and add item 1 to it
-        serviceLoginUtils.loginAsXAdmin();
-        Shop shop = new Shop();
-        shop.setName("DD");
-        shop.setAddress1("165 Liberty Ave");
-        shop.setAddress2(", Jersey City");
-        shop.setCity("JC");
-        shop.setState("NJ");
-        shop.setZip("07306");
-        shop.setPhone("6414517510");
-        shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitude(new BigDecimal(-74.0623));
-        shop.setRating(5);
-        shop.setStatus(Constants.StatusCodes.ACTIVE);
-        Shop createdShop = shopService.create(shop);
-        shopidfortest = createdShop.getShopId();
-
-        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
-        // Adding item to the shop
-        Item item = new Item();
-        item.setName("latte");
-        item.setDescription("Fresh brewed beans made with the milk of your choice");
-        item.setPrice(new BigDecimal(3.2));
-        item.setShopId(shopidfortest);
-        item.setStatus(Constants.StatusCodes.ACTIVE);
-        Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItemId();
-
-        // test-case: adding item2
-        Item item2 = new Item();
-        item2.setName("Iced Venila Chai");
-        item2.setDescription("Excellent mix of east and the west");
-        item2.setPrice(new BigDecimal(5.49));
-        item2.setShopId(shopidfortest);
-        item2.setStatus(Constants.StatusCodes.INACTIVE);
-        Item createdItem2 = itemService.create(item2);
-
-        // test-case: Update item2
-        createdItem2.setName("Hot Venila Chai");
-        createdItem2.setPrice(new BigDecimal(5.19));
-        Item createdItemEdit = itemService.update(createdItem2);
-
-        // test-case: Delete new item
-        long itemIDForDelete = createdItem2.getItemId();
-        Item deleteShopdel = itemService.delete(itemIDForDelete);
-
-        List<Item> list = itemService.list();
-        assertEquals(2, list.size());
-   }
 
     @Test
-    public void getAllItems() {
+    public void createItem() {
+        // test-case: create new Item ("Name : Latte") for a item which associate with a shop named "DD"
+        Category createdCategory = preRequisiteTestScenarioForItem();
+        Item createdItem = itemService.create(new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        assertItemName(itemService.get(createdItem.getItemId()),"Latte");
+    }
 
-        // test-case: create new shop and add item 1 to it
-        serviceLoginUtils.loginAsXAdmin();
-        Shop shop = new Shop();
-        shop.setName("DD");
-        shop.setAddress1("165 Liberty Ave");
-        shop.setAddress2(", Jersey City");
-        shop.setCity("JC");
-        shop.setState("NJ");
-        shop.setZip("07306");
-        shop.setPhone("6414517510");
-        shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitude(new BigDecimal(-74.0623));
-        shop.setRating(5);
-        shop.setStatus(Constants.StatusCodes.ACTIVE);
-        Shop createdShop = shopService.create(shop);
-        shopidfortest = createdShop.getShopId();
+    @Test
+    public void updateItem() {
 
-        // Adding item1 to the shop
-        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
-        Item item = new Item();
-        item.setName("latte");
-        item.setDescription("Fresh brewed beans made with the milk of your choice");
-        item.setPrice(new BigDecimal(3.2));
-        item.setShopId(shopidfortest);
-        item.setStatus(Constants.StatusCodes.ACTIVE);
-        Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItemId();
+        Category createdCategory = preRequisiteTestScenarioForItem();
+        Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        createdItem.setName("Latte C");
+        Item updatedItem = itemService.update(createdItem);
+        assertItemName(itemService.get(createdItem.getItemId()),"Latte C");
+    }
 
-        // Adding item2 to the shop
-        Item item2 = new Item();
-        item2.setName("Iced Venila Chai");
-        item2.setDescription("Excellent mix of east and the west");
-        item2.setPrice(new BigDecimal(5.49));
-        item2.setShopId(shopidfortest);
-        item2.setStatus(Constants.StatusCodes.INACTIVE);
-        Item createdItem2 = itemService.create(item2);
+    @Test
+    public void deleteItem() {
 
+        Category createdCategory = preRequisiteTestScenarioForItem();
+        Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        Item deleteIteam = itemService.delete(createdItem.getItemId());
+        assertNoOfItem(0);
+    }
+
+    @Test
+    public void getAllItem() {
+
+        Category createdCategory = preRequisiteTestScenarioForItem();
+        Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        Item createdItemq = itemService.create(new Item("Esprasso","Esprasso Coffe", BigDecimal.valueOf(7.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
         serviceLoginUtils.loginAsCustomerUser();
-        List<Item> items = itemService.list();
-        logger.info(items);
-        assertNotNull(items);
-        assertEquals(2, items.size());
+        assertNoOfItem(2);
     }
 
     @Test
     public void getItem() {
+        Category createdCategory = preRequisiteTestScenarioForItem();
+        Item createdItem = itemService.create(new Item("Latte","Latte Coffe", BigDecimal.valueOf(5.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        Item createdItemq = itemService.create(new Item("Esprasso","Esprasso Coffe", BigDecimal.valueOf(7.00), shopIdForTest, categoryIdForTest,Constants.StatusCodes.ACTIVE));
+        serviceLoginUtils.loginAsCustomerUser();
+        assertItemName(itemService.get(createdItem.getItemId ()),"Latte");
+    }
+
+    private void assertItemName(Item Item,String ItemName){
+        logger.info(Item);
+        assertNotNull(Item);
+        assertEquals(ItemName, Item.getName());
+    }
+    private void assertNoOfItem(int noOfItemOption){
+        List<Item> Items = itemService.list();
+        logger.info(Items);
+        assertNotNull(Items);
+        assertEquals(noOfItemOption, Items.size());
+    }
+    private Category preRequisiteTestScenarioForItem(){
 
         // test-case: create new shop and add item 1 to it
         serviceLoginUtils.loginAsXAdmin();
-        Shop shop = new Shop();
-        shop.setName("DD");
-        shop.setAddress1("165 Liberty Ave");
-        shop.setAddress2(", Jersey City");
-        shop.setCity("JC");
-        shop.setState("NJ");
-        shop.setZip("07306");
-        shop.setPhone("6414517510");
-        shop.setLatitude(new BigDecimal(40.7426));
-        shop.setLongitude(new BigDecimal(-74.0623));
-        shop.setRating(5);
-        shop.setStatus(Constants.StatusCodes.ACTIVE);
-        Shop createdShop = shopService.create(shop);
-        shopidfortest = createdShop.getShopId();
+        Shop createdShop = shopService.create(testUtils.setupShopObject());
+        shopIdForTest = createdShop.getShopId();
 
-        serviceLoginUtils.loginAsShopAdmin(shopidfortest);
-
-        // Adding item1 to the shop
-        Item item = new Item();
-        item.setName("latte");
-        item.setDescription("Fresh brewed beans made with the milk of your choice");
-        item.setPrice(new BigDecimal(3.2));
-        item.setShopId(shopidfortest);
-        item.setStatus(Constants.StatusCodes.ACTIVE);
-        Item createdItem = itemService.create(item);
-        itemidfortest = createdItem.getItemId();
-
-        // Adding item2 to the shop
-        Item item2 = new Item();
-        item2.setName("Iced Venila Chai");
-        item2.setDescription("Excellent mix of east and the west");
-        item2.setPrice(new BigDecimal(5.49));
-        item2.setShopId(shopidfortest);
-        item2.setStatus(Constants.StatusCodes.INACTIVE);
-        Item createdItem2 = itemService.create(item2);
-
-        serviceLoginUtils.loginAsCustomerUser();
-        Item itemm = itemService.get(itemidfortest);
-        logger.info(itemm);
-        assertNotNull(itemm);
-        assertEquals("latte", item.getName());
+        // test-case: create new Item for Latte
+        serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
+        Category createdCategory = categoryService.create(new Category("Iced","Iced Coffee", createdShop.getShopId()));
+        categoryIdForTest = createdCategory.getCategoryId();
+        return createdCategory;
     }
 }

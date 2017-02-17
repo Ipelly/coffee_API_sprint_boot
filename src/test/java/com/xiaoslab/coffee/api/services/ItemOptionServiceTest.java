@@ -27,7 +27,6 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ItemOptionServiceTest extends _BaseServiceTest {
 
-
     private long itemOptionidfortest;
 
     Logger logger = Logger.getLogger(ItemServiceTest.class);
@@ -48,6 +47,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
 
     @Test
     public void createItemOption() {
+
         // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
         ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
         assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
@@ -117,7 +117,9 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         Item createdItem = itemService.create(testUtils.setupItemObject(createdShop.getShopId()));
 
         // test-case: create new item option(Small) for Latte
-        itemOption.setItemId(createdItem.getItemId());
+        itemOption.setItemId(createdItem.getItemId ());
         return itemOptionService.create(itemOption);
     }
+
+
 }
