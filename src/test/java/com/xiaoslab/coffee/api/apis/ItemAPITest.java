@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 public class ItemAPITest extends _BaseAPITest {
 
     long shopIdForTest,cateGoryIdFortest1, cateGoryIdFortest2,itemIdFortest;
+    Category cat1 = new Category();
+    Category cat2 = new Category();
 
     @Test
     public void createAndGetAndListOfItemForFirstCategory() throws Exception {
@@ -26,12 +28,12 @@ public class ItemAPITest extends _BaseAPITest {
         ResponseEntity<List<Item>> itemListResponse;
         ResponseEntity<Item> itemResponse;
 
-        preReqDataForItemTest();
+        List<Category> cats = preReqDataForItemTestWithCate();
 
         User shopAdmin = testUtils.createShopAdminUser(shopIdForTest);
         api.login(shopAdmin);
 
-        Item createItem = ItemCreateWithAssertion();
+        Item createItem = ItemCreateWithAssertion(cats);
 
         api.login(CUSTOMER_USER);
 
@@ -53,8 +55,8 @@ public class ItemAPITest extends _BaseAPITest {
         User shopAdmin = testUtils.createShopAdminUser(shopIdForTest);
         api.login(shopAdmin);
 
-        Item createItem = ItemCreateWithAssertion();
-
+        //Item createItem = ItemCreateWithAssertion();
+        Item createItem =  ItemCreateWithAssertion(new ArrayList<>());
         api.login(CUSTOMER_USER);
 
         itemListResponse = api.listItem(shopIdForTest,cateGoryIdFortest2);
@@ -224,6 +226,7 @@ public class ItemAPITest extends _BaseAPITest {
 
         ResponseEntity<List<Shop>> shopListResponse;
         ResponseEntity<Shop> shopResponse;
+        //List<Category> categories = new ArrayList<Category>();
 
         // test-case: create new shop and Category by POST
         Shop shop1 = testUtils.setupShopObject();
@@ -238,14 +241,60 @@ public class ItemAPITest extends _BaseAPITest {
         ResponseEntity<Category> categoryResponse1;
         categoryResponse1 = api.createCategory(new Category("Iced C","Iced Coffee",shopIdForTest),shopIdForTest);
         Category createdCategory1 = categoryResponse1.getBody();
+        //categories.add(createdCategory1);
         cateGoryIdFortest1 = createdCategory1.getCategoryId();
+        cat1 = createdCategory1;
 
         ResponseEntity<Category> categoryResponse2;
         categoryResponse2 = api.createCategory(new Category("Hot C","Hot Coffee",shopIdForTest),shopIdForTest);
         Category createdCategory2 = categoryResponse2.getBody();
+        //categories.add(createdCategory2);
         cateGoryIdFortest2 = createdCategory2.getCategoryId();
+        cat2 = createdCategory2;
 
         api.logout();
+
+    }
+
+    private List<Category> preReqDataForItemTestWithCate(){
+
+        api.login(XIPLI_ADMIN);
+
+        ResponseEntity<List<Shop>> shopListResponse;
+        ResponseEntity<Shop> shopResponse;
+        List<Category> _categories = new ArrayList<Category>();
+
+//        if (_categories == null) {
+//            _categories = new HashSet<Category>();
+//        }
+
+        // test-case: create new shop and Category by POST
+        Shop shop1 = testUtils.setupShopObject();
+        shopResponse = api.createShop(shop1);
+        Shop createdShop1 = shopResponse.getBody();
+        shopIdForTest = createdShop1.getShopId();
+
+        // Auth : Login as SHOP_ADMIN
+        User shopAdmin = testUtils.createShopAdminUser(shopIdForTest);
+        api.login(shopAdmin);
+
+        ResponseEntity<Category> categoryResponse1;
+        categoryResponse1 = api.createCategory(new Category("Iced C","Iced Coffee",shopIdForTest),shopIdForTest);
+        Category createdCategory1 = categoryResponse1.getBody();
+        _categories.add(createdCategory1);
+        cateGoryIdFortest1 = createdCategory1.getCategoryId();
+        cat1 = createdCategory1;
+
+        ResponseEntity<Category> categoryResponse2;
+        categoryResponse2 = api.createCategory(new Category("Hot C","Hot Coffee",shopIdForTest),shopIdForTest);
+        Category createdCategory2 = categoryResponse2.getBody();
+        _categories.add(createdCategory2);
+        cateGoryIdFortest2 = createdCategory2.getCategoryId();
+        cat1 = createdCategory2;
+
+        api.logout();
+
+        return _categories;
 
     }
     private Item ItemCreateWithAssertion(){
@@ -256,17 +305,47 @@ public class ItemAPITest extends _BaseAPITest {
 
         // CREATE AN ITEM UNDER ICED CATEGORY
 
-        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest1, Constants.StatusCodes.ACTIVE);
+        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest1, null,Constants.StatusCodes.ACTIVE);
         ItemResponse = api.createItem(item,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
         assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
         Item createdItem = ItemResponse.getBody();
 
         // CREATE AN ITEM UNDER HOT CATEGORY
 
-        Item item1 = new Item("Hot Latte","Hot Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest2, Constants.StatusCodes.ACTIVE);
+        Item item1 = new Item("Hot Latte","Hot Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest2, null,Constants.StatusCodes.ACTIVE);
         ItemResponse = api.createItem(item1,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
         assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
         Item createdItem1 = ItemResponse.getBody();
+
+        assertNotNull(createdItem);
+        assertTrue(createdItem.getItemId() > 0);
+        item.setItemId (createdItem.getItemId());
+        assertEquals(item.getItemId(), createdItem.getItemId());
+        assertEquals(item.getName(), createdItem.getName());
+        return createdItem;
+    }
+    private Item ItemCreateWithAssertion(List<Category> categories){
+
+
+        ResponseEntity<List<Item>> ItemListResponse;
+        ResponseEntity<Item> ItemResponse;
+
+        //Set<Category> foo = new HashSet<Category>(categories);
+        // CREATE AN ITEM UNDER ICED CATEGORY
+
+        Item item = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest1, null,Constants.StatusCodes.ACTIVE);
+        item.setCategories(categories);
+        ItemResponse = api.createItem(item,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
+        assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
+        Item createdItem = ItemResponse.getBody();
+
+        // CREATE AN ITEM UNDER HOT CATEGORY
+
+//        Item item1 = new Item("Hot Latte","Hot Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest2, null,Constants.StatusCodes.ACTIVE);
+//        item1.setCategories(categories);
+//        ItemResponse = api.createItem(item1,shopIdForTest);// createItemOption(itemOption1,shopIdForTest);
+//        assertEquals(HttpStatus.CREATED, ItemResponse.getStatusCode());
+//        Item createdItem1 = ItemResponse.getBody();
 
         assertNotNull(createdItem);
         assertTrue(createdItem.getItemId() > 0);

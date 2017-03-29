@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 import java.util.Objects;
 
 /**
@@ -43,6 +43,11 @@ public class Item {
     @Column(nullable = false)
     private long category_id;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "item_category", joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "item_id"),
+                               inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "category_id"))
+    private List<Category> categories;
+
     @Transient
     private Shop shop;
 
@@ -55,12 +60,23 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, String description, BigDecimal price, long shop_id, long category_id, Constants.StatusCodes status) {
+    public Item(String name, String description, BigDecimal price, long shop_id, long category_id,Constants.StatusCodes status) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.shop_id = shop_id;
         this.category_id = category_id;
+        //this.categories = categories;
+        this.status = status;
+    }
+
+    public Item(String name, String description, BigDecimal price, long shop_id, long category_id,List<Category> categories, Constants.StatusCodes status) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.shop_id = shop_id;
+        this.category_id = category_id;
+        this.categories = categories;
         this.status = status;
     }
 
@@ -120,10 +136,10 @@ public class Item {
         this.category_id = category_id;
     }
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-    }
+//    @Override
+//    public String toString() {
+//        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -142,5 +158,13 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(itemId, name, description, price, shop_id, category_id, status);
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

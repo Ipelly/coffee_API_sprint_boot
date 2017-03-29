@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoslab.coffee.api.utility.Constants;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 import java.util.Objects;
 
 /**
@@ -14,11 +14,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "category")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Category {
+public class Category{
 
     @Id
     @GeneratedValue
-    @Column(unique = true)
+    @Column(unique = true, name="category_id")
     private long categoryId;
 
 
@@ -32,7 +32,8 @@ public class Category {
     @Column(nullable = false, name="shop_id")
     private long shopId;
 
-    @Transient
+    //@Transient
+    @ManyToMany(mappedBy = "categories")
     private List<Item> items;
 
     @Column(nullable = false)
