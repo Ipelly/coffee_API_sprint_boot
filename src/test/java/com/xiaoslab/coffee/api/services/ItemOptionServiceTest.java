@@ -7,10 +7,7 @@ import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,8 +20,6 @@ import static org.junit.Assert.assertNotNull;
  */
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ItemOptionServiceTest extends _BaseServiceTest {
 
     private long itemOptionidfortest;
@@ -114,7 +109,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         Shop createdShop = shopService.create(testUtils.setupShopObject());
 
         serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
-        Item createdItem = itemService.create(testUtils.setupItemObject(createdShop.getShopId()));
+        Item createdItem = itemService.create(testUtils.setupItemObjectForShop(createdShop.getShopId()));
 
         // test-case: create new item option(Small) for Latte
         itemOption.setItemId(createdItem.getItemId ());

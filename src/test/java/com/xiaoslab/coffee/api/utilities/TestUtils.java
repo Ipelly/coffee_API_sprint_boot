@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class TestUtils {
@@ -91,13 +90,33 @@ public class TestUtils {
         return shop;
     }
 
-    public Item setupItemObject(long shopId) {
+    public Category setupCategoryObject(long shopId) {
+        long time = System.currentTimeMillis();
+        Category category = new Category();
+        category.setName("Test Category " + time);
+        category.setDescription("Just a test");
+        category.setShopId(shopId);
+        category.setStatus(Constants.StatusCodes.ACTIVE);
+        return category;
+    }
+
+    public Item setupItemObjectForShop(long shopId) {
         Item item = new Item();
-        item.setName("latte");
+        item.setName("Latte " + System.currentTimeMillis());
         item.setDescription("Fresh brewed beans made with the milk of your choice");
-        item.setPrice(new BigDecimal(3.2));
+        item.setPrice(new BigDecimal(3.25));
         item.setShopId(shopId);
         item.setStatus(Constants.StatusCodes.ACTIVE);
+        return item;
+    }
+
+    public Item setupItemObjectForShopAndCategory(long shopId, long... categoryIds) {
+        Item item = setupItemObjectForShop(shopId);
+        Set<Long> categoryIdList = new HashSet<>();
+        for (long categoryId : categoryIds) {
+            categoryIdList.add(categoryId);
+        }
+        item.setCategoryIds(categoryIdList);
         return item;
     }
 

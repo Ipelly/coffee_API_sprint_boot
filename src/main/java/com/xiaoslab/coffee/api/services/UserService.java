@@ -47,7 +47,7 @@ public class UserService implements IService<User>, UserDetailsService {
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})
     public User get(long userId) {
         // TODO: validations
-        return userRepository.getOne(userId);
+        return userRepository.findOne(userId);
     }
 
     @RolesAllowed({Roles.ROLE_X_ADMIN, Roles.ROLE_SHOP_ADMIN})

@@ -35,18 +35,11 @@ public class ItemSpecifications {
     }
 
     public static Specification<Item> itemListForCategory(long categoryId) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("category_id")),categoryId);
+        return (root, query, criteria) -> criteria.isMember(categoryId, root.get("categoryIds"));
     }
 
     public static Specification<Item> itemListForShop(long shopId) {
-        return (root, query, criteria) -> criteria.equal(criteria.lower(root.get("shop_id")),shopId);
-    }
-
-    public static Specification<Item> itemListForCategoryUnderAShop(long shopId, long categoryId) {
-        return (root, query, criteria) -> criteria.and(
-                criteria.equal(root.get("shop_id"), shopId),
-                criteria.equal(root.get("category_id"), categoryId)
-        );
+        return (root, query, criteria) -> criteria.equal(root.get("shopId"), shopId);
     }
 
 }

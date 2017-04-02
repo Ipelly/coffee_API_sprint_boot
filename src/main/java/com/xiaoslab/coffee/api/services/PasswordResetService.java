@@ -36,7 +36,7 @@ public class PasswordResetService {
         //TODO: validate userId
         //TODO: implement 24hour expiry of a code
 
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findOne(userId);
         if (user == null || user.getStatus() == Constants.StatusCodes.DELETED || user.getStatus() == Constants.StatusCodes.INACTIVE) {
             throw new IllegalArgumentException("Invalid userId");
         }
@@ -76,7 +76,7 @@ public class PasswordResetService {
         String[] splitted_code = fullResetCode.split("-", 2);
 
         String codeId = splitted_code[0];
-        PasswordResetCode resetCode = passwordResetCodeRepository.getOne(codeId);
+        PasswordResetCode resetCode = passwordResetCodeRepository.findOne(codeId);
         if (resetCode == null || splitted_code.length < 2) {
             throw new IllegalArgumentException(errInvalidCode);
         }
@@ -107,7 +107,7 @@ public class PasswordResetService {
     }
 
     public User getUserByCodeId(String codeId) {
-        PasswordResetCode resetCode = passwordResetCodeRepository.getOne(codeId);
+        PasswordResetCode resetCode = passwordResetCodeRepository.findOne(codeId);
         return userRepository.findOne(resetCode.getUserId());
     }
 

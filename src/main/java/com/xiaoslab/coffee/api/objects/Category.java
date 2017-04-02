@@ -2,8 +2,12 @@ package com.xiaoslab.coffee.api.objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoslab.coffee.api.utility.Constants;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.*;
 import java.util.Objects;
 
@@ -18,23 +22,22 @@ public class Category{
 
     @Id
     @GeneratedValue
-    @Column(unique = true, name="category_id")
+    @Column(unique = true)
     private long categoryId;
-
 
     @Column(nullable = false)
     private String name;
 
-
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false, name="shop_id")
+    @Column(nullable = false)
     private long shopId;
 
-    //@Transient
-    @ManyToMany(mappedBy = "categories")
-    private List<Item> items;
+    @ElementCollection
+    @CollectionTable(name="item_category", joinColumns=@JoinColumn(name="category_id"))
+    @Column(name="item_id")
+    private Set<Long> itemIds = new HashSet<>();
 
     @Column(nullable = false)
     private Constants.StatusCodes status;
@@ -81,22 +84,6 @@ public class Category{
     public void setShopId(long shopId) {
         this.shopId = shopId;
     }
-//
-//    public Shop getShop() {
-//        return shop;
-//    }
-//
-//    public void setShop(Shop shop) {
-//        this.shop = shop;
-//    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 
     public Constants.StatusCodes getStatus() {
         return status;
@@ -104,6 +91,14 @@ public class Category{
 
     public void setStatus(Constants.StatusCodes status) {
         this.status = status;
+    }
+
+    public Set<Long> getItemIds() {
+        return itemIds;
+    }
+
+    public void setItemIds(Set<Long> itemIds) {
+        this.itemIds = itemIds;
     }
 
     @Override
@@ -116,31 +111,18 @@ public class Category{
                 shopId == category.shopId &&
                 Objects.equals(name, category.name) &&
                 Objects.equals(description, category.description) &&
+                Objects.equals(itemIds, category.itemIds) &&
                 status == category.status;
-
-
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (categoryId ^ (categoryId >>> 32));
-        result = 31 * result + name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + (int) (shopId ^ (shopId >>> 32));
-        result = 31 * result + items.hashCode();
-        result = 31 * result + status.hashCode();
-        return result;
+        return Objects.hash(categoryId, name, description, shopId, itemIds, status);
     }
 
     @Override
     public String toString() {
-        return "Category{" +
-                "category_id=" + categoryId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", shop_id=" + shopId +
-                ", items=" + items +
-                ", status=" + status +
-                '}';
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
     }
+
 }
