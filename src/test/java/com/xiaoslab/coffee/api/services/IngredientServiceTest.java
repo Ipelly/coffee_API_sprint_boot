@@ -21,9 +21,6 @@ import static org.junit.Assert.assertNotNull;
  * Created by ipeli on 11/1/16.
  */
 
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IngredientServiceTest extends _BaseServiceTest {
 
 

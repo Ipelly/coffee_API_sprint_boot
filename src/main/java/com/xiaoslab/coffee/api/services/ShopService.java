@@ -34,7 +34,7 @@ public class ShopService implements IService<Shop> {
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
     public Shop get(long shopId) {
-        Shop shop = shopRepository.getOne(shopId);
+        Shop shop = shopRepository.findOne(shopId);
         if (shop == null || shop.getStatus() == Constants.StatusCodes.DELETED) {
             return null;
         } else {

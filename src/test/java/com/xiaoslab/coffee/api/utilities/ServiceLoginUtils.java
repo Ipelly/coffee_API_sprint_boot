@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.utilities;
 
+import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.security.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class ServiceLoginUtils {
         User user = testUtils.setupBasicUserObject(Roles.ROLE_X_ADMIN);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public void loginAsShopAdmin(Shop shop) {
+        loginAsShopAdmin(shop.getShopId());
     }
 
     public void loginAsShopAdmin(long shopId) {

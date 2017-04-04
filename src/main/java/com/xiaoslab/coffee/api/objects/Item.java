@@ -1,13 +1,14 @@
 package com.xiaoslab.coffee.api.objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 import java.util.Objects;
 
 /**
@@ -16,52 +17,52 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "item")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Item {
 
     @Id
     @GeneratedValue
-    @Column(unique = true, name = "item_id")
+    @Column(unique = true)
     private long itemId;
-
 
     @Column(nullable = false)
     private String name;
 
-
     @Column(nullable = false)
     private String description;
-
 
     @Column(nullable = false)
     private BigDecimal price;
 
-
     @Column(nullable = false)
-    private long shop_id;
+    private long shopId;
 
-    @Column(nullable = false)
-    private long category_id;
-
-    @Transient
-    private Shop shop;
-
-    @Transient
-    private List<ItemAddon> itemAddonList;
+    @ElementCollection
+    @CollectionTable(name="item_category", joinColumns=@JoinColumn(name="item_id"))
+    @Column(name="category_id")
+    private Set<Long> categoryIds = new HashSet<>();
 
     @Column(nullable = false)
     private Constants.StatusCodes status;
 
     public Item() {
+
     }
 
-    public Item(String name, String description, BigDecimal price, long shop_id, long category_id, Constants.StatusCodes status) {
+    public Item(String name, String description, BigDecimal price, long shopId, Constants.StatusCodes status) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.shop_id = shop_id;
-        this.category_id = category_id;
+        this.shopId = shopId;
         this.status = status;
+    }
+
+    public Item(String name, String description, BigDecimal price, long shopId, long categoryId, Constants.StatusCodes status) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.shopId = shopId;
+        this.status = status;
+        this.categoryIds = new HashSet<>(Arrays.asList(categoryId));
     }
 
     public long getItemId() {
@@ -97,11 +98,11 @@ public class Item {
     }
 
     public long getShopId() {
-        return shop_id;
+        return shopId;
     }
 
     public void setShopId(long shop_id) {
-        this.shop_id = shop_id;
+        this.shopId = shop_id;
     }
 
     public Constants.StatusCodes getStatus() {
@@ -112,12 +113,12 @@ public class Item {
         this.status = status;
     }
 
-    public long getCategory_id() {
-        return category_id;
+    public Set<Long> getCategoryIds() {
+        return categoryIds;
     }
 
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
+    public void setCategoryIds(Set<Long> categoryIds) {
+        this.categoryIds = categoryIds;
     }
 
     @Override
@@ -131,16 +132,17 @@ public class Item {
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
         return itemId == item.itemId &&
-                shop_id == item.shop_id &&
-                category_id == item.category_id &&
+                shopId == item.shopId &&
                 Objects.equals(name, item.name) &&
                 Objects.equals(description, item.description) &&
                 Objects.equals(price, item.price) &&
+                Objects.equals(categoryIds, item.categoryIds) &&
                 status == item.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemId, name, description, price, shop_id, category_id, status);
+        return Objects.hash(itemId, name, description, price, shopId, categoryIds, status);
     }
+
 }

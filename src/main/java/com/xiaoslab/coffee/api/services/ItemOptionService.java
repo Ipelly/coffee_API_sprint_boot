@@ -55,7 +55,7 @@ public class ItemOptionService implements IService<ItemOption> {
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
     public ItemOption get(long itemOptionid) {
 
-        ItemOption itemOption = itemOptionRepository.getOne(itemOptionid);;
+        ItemOption itemOption = itemOptionRepository.findOne(itemOptionid);;
         if (itemOption == null || itemOption.getStatus() == Constants.StatusCodes.DELETED) {
             return null;
         } else {

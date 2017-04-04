@@ -13,6 +13,8 @@ import java.util.Objects;
 
 public class UserUtility {
 
+    private static final byte NO_SHOP_ID = -1;
+
     public User getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
@@ -29,6 +31,10 @@ public class UserUtility {
 
     public boolean isShopAdmin() {
         return getLoggedInUser() != null && hasRole(Roles.ROLE_SHOP_ADMIN);
+    }
+
+    public boolean isShopUser() {
+        return getLoggedInUser() != null && (hasRole(Roles.ROLE_SHOP_USER) || hasRole(Roles.ROLE_SHOP_ADMIN));
     }
 
     public boolean hasRole(String role) {
@@ -48,6 +54,15 @@ public class UserUtility {
             }
         }
         return false;
+    }
+
+    public long getUserShopId() {
+        User user = getLoggedInUser();
+        if (user == null || user.getShopId() == null) {
+            return NO_SHOP_ID;
+        } else {
+            return user.getShopId();
+        }
     }
 
     public boolean canUserManageShop(Long shopId) {

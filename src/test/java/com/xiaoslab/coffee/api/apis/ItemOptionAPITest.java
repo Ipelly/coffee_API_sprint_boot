@@ -195,16 +195,16 @@ public class ItemOptionAPITest extends _BaseAPITest {
         api.login(shopAdmin);
 
         ResponseEntity<Category> categoryResponse1;
-        categoryResponse1 = api.createCategory(new Category("Iced C","Iced Coffee",shopIdForTest),shopIdForTest);
+        categoryResponse1 = api.createCategory(shopIdForTest, new Category("Iced C","Iced Coffee", shopIdForTest));
         Category createdCategory1 = categoryResponse1.getBody();
         cateGoryIdFortest1 = createdCategory1.getCategoryId ();
 
         // test-case: create new item by POST
         ResponseEntity<List<Item>> itemListResponse;
         ResponseEntity<Item> itemResponse;
-        Item item1 = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, cateGoryIdFortest1, Constants.StatusCodes.ACTIVE);
-        //Item item1 = testUtils.setupItemObject(createdShop1.getShopId());
-        itemResponse = api.createItem(item1,shopIdForTest);
+        Item item1 = new Item("Latte","Late Coffe", BigDecimal.valueOf(5.00), shopIdForTest, Constants.StatusCodes.ACTIVE);
+        //Item item1 = testUtils.setupItemObjectForShop(createdShop1.getShopId());
+        itemResponse = api.createItem(shopIdForTest, item1);
         Item createItem1 = itemResponse.getBody();
 
         itemIdFortest = createItem1.getItemId();

@@ -36,7 +36,7 @@ public class AddonService implements IService<Addon> {
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public Addon get(long addonId) {
-        Addon addon = addonRepository.getOne(addonId);
+        Addon addon = addonRepository.findOne(addonId);
         if (addon == null || addon.getStatus() == Constants.StatusCodes.DELETED) {
             return null;
         } else {

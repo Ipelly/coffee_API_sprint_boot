@@ -36,7 +36,7 @@ public class IngredientService implements IService<Ingredient> {
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN,Roles.ROLE_X_ADMIN})
     public Ingredient get(long ingredientId) {
-        Ingredient ingredient = ingredientRepository.getOne(ingredientId);
+        Ingredient ingredient = ingredientRepository.findOne(ingredientId);
         if (ingredient == null || ingredient.getStatus() == Constants.StatusCodes.DELETED) {
             return null;
         } else {
