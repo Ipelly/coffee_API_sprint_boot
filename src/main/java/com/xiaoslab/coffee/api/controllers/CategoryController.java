@@ -47,7 +47,7 @@ public class CategoryController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Category category) {
+    public ResponseEntity create(@RequestBody Category category,@PathVariable long shopId) {
         Category createdCategory = categoryService.create(category);
         URI location = AppUtility.buildCreatedLocation(createdCategory.getCategoryId());
         return ResponseEntity.created(location).body(createdCategory);
