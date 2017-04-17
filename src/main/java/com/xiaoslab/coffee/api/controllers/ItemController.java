@@ -64,7 +64,7 @@ public class ItemController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Item Item) {
+    public ResponseEntity create(@RequestBody Item Item,@PathVariable long shopId) {
         Item createdItem = itemService.create(Item);
         URI location = AppUtility.buildCreatedLocation(createdItem.getItemId ());
         return ResponseEntity.created(location).body(createdItem);
