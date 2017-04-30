@@ -1,6 +1,5 @@
 package com.xiaoslab.coffee.api.utility;
 
-import com.xiaoslab.coffee.api.objects.AppAuthority;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.security.Roles;
 import org.springframework.security.access.AccessDeniedException;
@@ -84,11 +83,11 @@ public class UserUtility {
 
     public void checkUserCanGrantRoles(User user) {
         if (!isXipliAdmin()) {
-            for (AppAuthority role : user.getRoles()) {
-                if (role.getAuthority().equalsIgnoreCase(Roles.ROLE_X_ADMIN)) {
+            for (String role : user.getRoles()) {
+                if (role.equalsIgnoreCase(Roles.ROLE_X_ADMIN)) {
                     throw new AccessDeniedException("User not allowed to grant role: " + Roles.ROLE_X_ADMIN);
                 }
-                if (role.getAuthority().equalsIgnoreCase(Roles.ROLE_USER)) {
+                if (role.equalsIgnoreCase(Roles.ROLE_USER)) {
                     throw new AccessDeniedException("User not allowed to grant role: " + Roles.ROLE_USER);
                 }
             }

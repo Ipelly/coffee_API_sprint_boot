@@ -1,6 +1,5 @@
 package com.xiaoslab.coffee.api.security;
 
-import com.xiaoslab.coffee.api.objects.AppAuthority;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.repository.UserRepository;
 import com.xiaoslab.coffee.api.specifications.UserSpecifications;
@@ -38,7 +37,7 @@ public class ProviderUserToLocalUserBridge {
 
         if (localUsers.isEmpty()) {
             providerUser.setStatus(Constants.StatusCodes.ACTIVE);
-            providerUser.setRoles(Arrays.asList(new AppAuthority(Roles.ROLE_USER)));
+            providerUser.setRoles(Arrays.asList(Roles.ROLE_USER));
             foundLocalUser = userRepository.save(providerUser);
             logger.info(String.format("Local user [userId:%s] created for provider user [%s:%s].",
                     foundLocalUser.getUserId(), providerUser.getProviderType(), providerUser.getProviderUserId()));

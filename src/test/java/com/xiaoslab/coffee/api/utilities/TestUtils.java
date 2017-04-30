@@ -64,11 +64,7 @@ public class TestUtils {
         userObject.setLastName("User " + System.currentTimeMillis());
         userObject.setEmailAddress("testuser" + System.currentTimeMillis() + "@xipli.com");
         userObject.setPassword(passwordEncoder.encode(TestConstants.TEST_DEFAULT_PASSWORD));
-        Set<AppAuthority> authorities = new HashSet<>();
-        for (String role : roles) {
-            authorities.add(new AppAuthority(role));
-        }
-        userObject.setRoles(authorities);
+        userObject.setRoles(new ArrayList<>(Arrays.asList(roles)));
         userObject.setStatus(Constants.StatusCodes.ACTIVE);
         userObject.setProviderType(Constants.LoginProviderType.XIPLI);
         return userObject;

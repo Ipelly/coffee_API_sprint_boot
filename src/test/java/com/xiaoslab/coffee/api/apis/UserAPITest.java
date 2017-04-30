@@ -36,7 +36,7 @@ public class UserAPITest extends _BaseAPITest {
         assertEquals("heroalam@xipli.com", newUser.getEmailAddress());
         assertEquals(Constants.StatusCodes.PENDING, newUser.getStatus());
         assertEquals(1, newUser.getRoles().size());
-        assertEquals(Roles.ROLE_USER, newUser.getRoles().stream().findFirst().get().getAuthority());
+        assertEquals(Roles.ROLE_USER, newUser.getRoles().stream().findFirst().get());
 
         // login as new user
         ResponseEntity loginResponse = api.login(user);

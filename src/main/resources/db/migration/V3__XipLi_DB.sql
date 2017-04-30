@@ -140,20 +140,3 @@ CREATE TABLE xipli.user_role (
   role varchar(45) NOT NULL,
   PRIMARY KEY (user_id,role)
 );
-
-
-CREATE TABLE xipli.role (
-  role varchar(45) NOT NULL,
-  PRIMARY KEY (role)
-);
-
-
-INSERT INTO xipli.role (role)
-VALUES
-  ('ROLE_USER'),
-  ('ROLE_SHOP_USER'),
-  ('ROLE_SHOP_ADMIN'),
-  ('ROLE_X_ADMIN');
-
-
-

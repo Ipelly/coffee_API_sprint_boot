@@ -72,12 +72,11 @@ public class User implements UserDetails, Serializable {
     @NotEmpty(groups = ProviderUser.class)
     private String providerUserId;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "role"))
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="user_role", joinColumns=@JoinColumn(name="user_id"))
+    @Column(name="role")
     @NotEmpty(groups = ShopUser.class)
-    private Collection<AppAuthority> roles;
+    private Collection<String> roles;
 
     @Column
     @NotNull(groups = ShopUser.class)
@@ -238,15 +237,15 @@ public class User implements UserDetails, Serializable {
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> simpleAuthorities = new HashSet<>();
-        getRoles().forEach(authority -> simpleAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
+        getRoles().forEach(role -> simpleAuthorities.add(new SimpleGrantedAuthority(role)));
         return simpleAuthorities;
     }
 
-    public Collection<AppAuthority> getRoles() {
+    public Collection<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<AppAuthority> roles) {
+    public void setRoles(Collection<String> roles) {
         this.roles = roles;
     }
 

@@ -1,6 +1,5 @@
 package com.xiaoslab.coffee.api.services;
 
-import com.xiaoslab.coffee.api.objects.AppAuthority;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.repository.UserRepository;
@@ -150,7 +149,7 @@ public class UserService implements IService<User>, UserDetailsService {
         newUser.setProviderType(Constants.LoginProviderType.XIPLI);
         newUser.setProviderUserId(null);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        newUser.setRoles(new ArrayList<>(Arrays.asList(new AppAuthority(Roles.ROLE_USER))));
+        newUser.setRoles(new ArrayList<>(Arrays.asList(Roles.ROLE_USER)));
         parseFirstAndLastName(newUser);
         checkIfEmailAddressIsUnique(newUser.getEmailAddress());
 

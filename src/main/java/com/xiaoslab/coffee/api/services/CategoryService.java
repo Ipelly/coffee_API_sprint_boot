@@ -2,14 +2,11 @@ package com.xiaoslab.coffee.api.services;
 
 import com.xiaoslab.coffee.api.objects.Category;
 import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.repository.CategoryRepository;
 import com.xiaoslab.coffee.api.repository.ItemRepository;
 import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.specifications.CategorySpecifications;
-import com.xiaoslab.coffee.api.specifications.ItemSpecifications;
 import com.xiaoslab.coffee.api.utility.BeanValidator;
-import com.xiaoslab.coffee.api.utility.CategoryUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
 import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +35,6 @@ public class CategoryService implements IService<Category> {
 
     @Autowired
     UserUtility userUtility;
-
-    @Autowired
-    CategoryUtility categoryUtility;
 
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
