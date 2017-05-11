@@ -1,23 +1,17 @@
 package com.xiaoslab.coffee.api.controllers;
 
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.ItemOption;
 import com.xiaoslab.coffee.api.services.IService;
-import com.xiaoslab.coffee.api.specifications.ItemOptionSpecifications;
 import com.xiaoslab.coffee.api.utility.AppUtility;
 import com.xiaoslab.coffee.api.utility.Constants;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.net.URI;
-import java.util.Objects;
-import java.util.Optional;
+import javax.ws.rs.DefaultValue;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by ipeli on 10/29/16.
@@ -25,64 +19,27 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.ITEM_ENDPOINT +  "/{itemId}" + Constants.ITEMOPTION_ENDPOINT)
-//@RequestMapping("/v1/itemoptions")
+@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.ITEM_ENDPOINT +  "/{itemId}" + Constants.OPTION_ENDPOINT)
 public class ItemOptionController {
+
     @Autowired
     private IService<ItemOption> itemOptionService;
 
+    @Autowired
+    private IService<Item> itemService;
+
+    // retrieve all options in one call
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public ResponseEntity list(
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) int size,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "maxPrice", required = false) BigDecimal maxPrice,
-            @RequestParam(name = "minPrice", required = false) BigDecimal minPrice ) {
-
-        Pageable pageable = new PageRequest(page, size);
-
-
-        Specification<ItemOption> specification = ItemOptionSpecifications.notDeleted();
-        if (StringUtils.isNotBlank(search)) {
-            specification = Specifications.where(specification).and(ItemOptionSpecifications.search(search));
-        }
-        if (!Objects.isNull(maxPrice)) {
-            specification = Specifications.where(specification).and(ItemOptionSpecifications.maxPrice(maxPrice));
-        }
-        if (!Objects.isNull(minPrice)) {
-            specification = Specifications.where(specification).and(ItemOptionSpecifications.minPrice(minPrice));
-        }
-//
-//        Specification<ItemOption> specification = Specifications.where(ItemOptionSpecifications.search(search))
-//                                                                .and(ItemOptionSpecifications.maxPrice(maxPrice))
-//                                                                .and(ItemOptionSpecifications.minPrice(minPrice));
-
-        return ResponseEntity.ok(itemOptionService.list(Optional.of(specification), Optional.of(pageable)));
+    public ResponseEntity list(@PathVariable long shopId, @PathVariable long itemId) {
+        AppUtility.notFoundOnNull(itemService.get(itemId));
+        return ResponseEntity.ok(itemOptionService.list(itemId));
     }
 
-    @RequestMapping(path = "/{itemOptionId}", method = RequestMethod.GET)
-    public ResponseEntity get(@PathVariable long itemOptionId) {
-        ItemOption itemOption = AppUtility.notFoundOnNull(itemOptionService.get(itemOptionId));
-        return ResponseEntity.ok(itemOption);
-    }
-
-    @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody ItemOption itemOption) {
-        ItemOption createdItemOption = itemOptionService.create(itemOption);
-        URI location = AppUtility.buildCreatedLocation(createdItemOption.getItemOptionId());
-        return ResponseEntity.created(location).body(createdItemOption);
-    }
-
-    @RequestMapping(path = "/{itemoptionid}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable long itemoptionid, @RequestBody ItemOption itemOption) {
-        AppUtility.notFoundOnNull(itemOptionService.get(itemoptionid));
-        return ResponseEntity.ok(itemOptionService.update(itemOption));
-    }
-
-    @RequestMapping(path = "/{itemoptionid}", method=RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable long itemoptionid) {
-        AppUtility.notFoundOnNull(itemOptionService.get(itemoptionid));
-        itemOptionService.delete(itemoptionid);
-        return ResponseEntity.noContent().build();
+    // update all options in one call
+    @RequestMapping(path = "/", method = RequestMethod.PUT)
+    public ResponseEntity updateAll(@PathVariable long shopId, @PathVariable long itemId, @RequestBody ItemOption[] itemOptions) {
+        AppUtility.notFoundOnNull(itemService.get(itemId));
+        List<ItemOption> listOfOptions = Arrays.asList(itemOptions);
+        return ResponseEntity.ok(itemOptionService.updateAll(itemId, listOfOptions));
     }
 }

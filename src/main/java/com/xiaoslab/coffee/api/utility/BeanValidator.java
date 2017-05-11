@@ -2,6 +2,7 @@ package com.xiaoslab.coffee.api.utility;
 
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import javax.validation.*;
 import java.util.Set;
 

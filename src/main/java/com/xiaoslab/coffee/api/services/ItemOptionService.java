@@ -1,88 +1,73 @@
 package com.xiaoslab.coffee.api.services;
 
+import com.xiaoslab.coffee.api.objects.Item;
 import com.xiaoslab.coffee.api.objects.ItemOption;
 import com.xiaoslab.coffee.api.repository.ItemOptionRepository;
+import com.xiaoslab.coffee.api.repository.ItemRepository;
 import com.xiaoslab.coffee.api.security.Roles;
 import com.xiaoslab.coffee.api.specifications.ItemOptionSpecifications;
+import com.xiaoslab.coffee.api.utility.BeanValidator;
 import com.xiaoslab.coffee.api.utility.Constants;
+import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by ipeli on 11/15/16.
  */
 public class ItemOptionService implements IService<ItemOption> {
 
-
     @Autowired
     ItemOptionRepository itemOptionRepository;
 
-    @Override
-    public List<ItemOption> list() {
-        return list(Optional.empty(), Optional.empty());
-    }
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    UserUtility userUtility;
 
     @Override
     @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public List<ItemOption> list(Optional<Specification<ItemOption>> specOptional, Optional<Pageable> pageableOptional) {
-        List<ItemOption> list = new ArrayList<>();
+    public List<ItemOption> list(long itemId) {
 
-        Specification<ItemOption> specification;
+        Specification<ItemOption> specification = Specifications
+                .where(ItemOptionSpecifications.filterByItemId(itemId))
+                .and(ItemOptionSpecifications.notDeleted());
 
-        if (specOptional.isPresent()) {
-            specification = Specifications.where(ItemOptionSpecifications.notDeleted()).and(specOptional.get());
-        } else {
-            specification = Specifications.where(ItemOptionSpecifications.notDeleted());
-        }
-
-        if (pageableOptional.isPresent()) {
-            itemOptionRepository.findAll(specification, pageableOptional.get()).forEach(list::add);
-        } else {
-            itemOptionRepository.findAll(specification).forEach(list::add);
-        }
-
-        return list;
-    }
-
-    @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public ItemOption get(long itemOptionid) {
-
-        ItemOption itemOption = itemOptionRepository.findOne(itemOptionid);;
-        if (itemOption == null || itemOption.getStatus() == Constants.StatusCodes.DELETED) {
-            return null;
-        } else {
-            return itemOption;
-        }
-    }
-
-    @Override
-    @RolesAllowed({Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
-    public ItemOption create(ItemOption itemOption) {
-        if (itemOption.getStatus() == null) {
-            itemOption.setStatus(Constants.StatusCodes.ACTIVE);
-        }
-        return itemOptionRepository.save(itemOption);
+        return itemOptionRepository.findAll(specification);
     }
 
     @Override
     @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
-    public ItemOption update(ItemOption itemOption) {
-        return  itemOptionRepository.save(itemOption);
-    }
+    public List<ItemOption> updateAll(long itemId, List<ItemOption> itemOptions) {
+        Item item = itemRepository.findOne(itemId);
+        userUtility.checkUserCanManageShop(item.getShopId());
 
-    @Override
-    @RolesAllowed({Roles.ROLE_SHOP_ADMIN})
-    public ItemOption delete(long itemOptionid) {
-        ItemOption itemOption = itemOptionRepository.findOne(itemOptionid);
-        itemOption.setStatus(Constants.StatusCodes.DELETED);
-        return itemOptionRepository.save(itemOption);
+        Set<String> newOptionNames = new HashSet<>();
+        for (ItemOption option : itemOptions) {
+            option.setItemId(itemId);
+            if (option.getStatus() == null) {
+                option.setStatus(Constants.StatusCodes.INACTIVE);
+            }
+            BeanValidator.validate(option);
+            newOptionNames.add(option.getName());
+        }
+
+        // delete options that do not exist in updated list
+        List<ItemOption> existingOptions = list(itemId);
+        for (ItemOption existingOption : existingOptions) {
+            if (!newOptionNames.contains(existingOption.getName())) {
+                existingOption.setStatus(Constants.StatusCodes.DELETED);
+                itemOptionRepository.save(existingOption);
+            }
+        }
+
+        itemOptionRepository.save(itemOptions);
+        return list(itemId);
     }
 }

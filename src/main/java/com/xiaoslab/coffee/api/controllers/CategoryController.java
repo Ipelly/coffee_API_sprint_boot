@@ -47,14 +47,16 @@ public class CategoryController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Category category,@PathVariable long shopId) {
+    public ResponseEntity create(@RequestBody Category category, @PathVariable long shopId) {
+        category.setShopId(shopId);
         Category createdCategory = categoryService.create(category);
         URI location = AppUtility.buildCreatedLocation(createdCategory.getCategoryId());
         return ResponseEntity.created(location).body(createdCategory);
     }
 
     @RequestMapping(path = "/{categoryId}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable long categoryId, @RequestBody Category category) {
+    public ResponseEntity update(@PathVariable long categoryId, @PathVariable long shopId, @RequestBody Category category) {
+        category.setShopId(shopId);
         AppUtility.notFoundOnNull(categoryService.get(categoryId));
         return ResponseEntity.ok(categoryService.update(category));
     }

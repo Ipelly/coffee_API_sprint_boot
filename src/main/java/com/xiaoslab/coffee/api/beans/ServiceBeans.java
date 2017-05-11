@@ -44,14 +44,17 @@ public class ServiceBeans {
     }
 
     @Bean
-    public IService<Addon> addonService() { return new AddonService ();
+    public IService<Addon> addonService() {
+        return new AddonService();
     }
 
     @Bean
-    public IService<Ingredient> ingredientService() { return new IngredientService ();
+    public IService<Ingredient> ingredientService() {
+        return new IngredientService();
     }
 
     @Bean
-    public IService<Category> categoryService() { return new CategoryService ();
+    public IService<Category> categoryService() {
+        return new CategoryService();
     }
 }

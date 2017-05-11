@@ -26,7 +26,7 @@ public class Constants {
     public static final String USER_ENDPOINT = "/users";
     public static final String SHOP_ENDPOINT = "/shops";
     public static final String ITEM_ENDPOINT = "/items";
-    public static final String ITEMOPTION_ENDPOINT = "/item-options";
+    public static final String OPTION_ENDPOINT = "/options";
     public static final String ADDON_ENDPOINT = "/addons";
     public static final String INGREDIENT_ENDPOINT = "/ingredients";
     public static final String CATEGORY_ENDPOINT = "/categories";

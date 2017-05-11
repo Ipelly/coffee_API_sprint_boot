@@ -64,14 +64,16 @@ public class ItemController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
-    public ResponseEntity create(@RequestBody Item Item,@PathVariable long shopId) {
-        Item createdItem = itemService.create(Item);
+    public ResponseEntity create(@RequestBody Item item, @PathVariable long shopId) {
+        item.setShopId(shopId);
+        Item createdItem = itemService.create(item);
         URI location = AppUtility.buildCreatedLocation(createdItem.getItemId ());
         return ResponseEntity.created(location).body(createdItem);
     }
 
     @RequestMapping(path = "/{itemId}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable long itemId, @RequestBody Item item) {
+    public ResponseEntity update(@PathVariable long itemId, @PathVariable long shopId, @RequestBody Item item) {
+        item.setShopId(shopId);
         AppUtility.notFoundOnNull(itemService.get(itemId));
         return ResponseEntity.ok(itemService.update(item));
     }

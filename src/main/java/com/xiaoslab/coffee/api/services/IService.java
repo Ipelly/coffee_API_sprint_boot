@@ -13,15 +13,36 @@ import java.util.Optional;
 @Service
 public interface IService<T>  {
 
-    List<T> list();
+    default List<T> list() {
+        throw new UnsupportedOperationException();
+    }
 
-    List<T> list(Optional<Specification<T>> specOptional, Optional<Pageable> pageableOptional);
+    default List<T> list(long owningEntityId) {
+        throw new UnsupportedOperationException();
+    }
 
-    T get(long id);
+    default List<T> list(Optional<Specification<T>> specOptional, Optional<Pageable> pageableOptional) {
+        throw new UnsupportedOperationException();
+    }
 
-    T create(T obj);
+    default T get(long id) {
+        throw new UnsupportedOperationException();
+    }
 
-    T update(T obj);
+    default T create(T obj) {
+        throw new UnsupportedOperationException();
+    }
 
-    T delete(long id);
+    default T update(T obj) {
+        throw new UnsupportedOperationException();
+    }
+
+    default List<T> updateAll(long owningEntityId, List<T> list) {
+        throw new UnsupportedOperationException();
+    }
+
+    default T delete(long id) {
+        throw new UnsupportedOperationException();
+    }
+
 }

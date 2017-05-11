@@ -28,7 +28,7 @@ public class APIAdapter {
     private static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
     private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
     private static final String V1_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
-    private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ITEMOPTION_ENDPOINT + "/";
+    private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.OPTION_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
     private static final String V1_SHOP_USER_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.USER_ENDPOINT + "/";
     private static final String V1_INGREDIENT_ROOT_PATH = Constants.V1 + Constants.INGREDIENT_ENDPOINT + "/";
@@ -416,7 +416,7 @@ public class APIAdapter {
     }
 
     public ResponseEntity<List<ItemOption>> listItemOption(long shopId, long itemId) {
-        //String path = V1_SHOP_ROOT_PATH + "/"+ String.valueOf(shopId) + "/" + Constants.ITEM_ENDPOINT + "/" + String.valueOf(itemId) + "/" + Constants.ITEMOPTION_ENDPOINT + "/";
+        //String path = V1_SHOP_ROOT_PATH + "/"+ String.valueOf(shopId) + "/" + Constants.ITEM_ENDPOINT + "/" + String.valueOf(itemId) + "/" + Constants.OPTION_ENDPOINT + "/";
         return LIST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId,itemId), ItemOption.class);
     }
 
