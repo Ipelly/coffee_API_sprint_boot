@@ -92,9 +92,9 @@ public class APIAdapter {
     }
 
     public <T> ResponseEntity<List<T>> LIST(String path, Class<T> responseType) {
-        ResponseEntity<List> entity = GET(path, List.class);
-        List<T> body = parseListFromResponseEntity(entity, responseType);
-        return new ResponseEntity<>(body, entity.getHeaders(), entity.getStatusCode());
+        ResponseEntity<List> responseEntity = GET(path, List.class);
+        List<T> list = parseListFromResponseEntity(responseEntity, responseType);
+        return new ResponseEntity<>(list, responseEntity.getHeaders(), responseEntity.getStatusCode());
     }
 
     public <T> ResponseEntity<T> POST(String path, Object requestBody, Class<T> responseType) {
@@ -103,6 +103,12 @@ public class APIAdapter {
 
     public <T> ResponseEntity<T> PUT(String path, Object requestBody, Class<T> responseType) {
         return exchange(path, HttpMethod.PUT, requestBody, responseType);
+    }
+
+    public <T> ResponseEntity<List<T>> PUT_ARRAY(String path, Object requestBody, Class<T> responseType) {
+        ResponseEntity<List> responseEntity = PUT(path, requestBody, List.class);
+        List<T> list = parseListFromResponseEntity(responseEntity, responseType);
+        return new ResponseEntity<>(list, responseEntity.getHeaders(), responseEntity.getStatusCode());
     }
 
     public <T> ResponseEntity<T> DELETE(String path, Class<T> objectType) {
@@ -153,6 +159,7 @@ public class APIAdapter {
     }
 
     private static <T> List<T> parseListFromResponseEntity(ResponseEntity entity, Class<T> objectType) {
+        if (entity == null || entity.getBody() == null) return null;
         List<Map> listOfMap = (List) entity.getBody();
         List<T> listOfObjects = new ArrayList<>();
         listOfMap.forEach(item -> listOfObjects.add((T) convertMapToObject(item, objectType)));
@@ -398,26 +405,29 @@ public class APIAdapter {
 
     // Item Options -----------------------
 
-    public ResponseEntity<ItemOption> createItemOption(ItemOption itemOption,long shopId) {
-        return POST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemOption.getItemId()), itemOption, ItemOption.class );
+    public ResponseEntity<ItemOption> createItemOption(long shopId, long itemId, ItemOption itemOption) {
+        return POST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemId), itemOption, ItemOption.class );
     }
 
-    public ResponseEntity<ItemOption> updateItemOption(ItemOption itemOption,long shopId,long itemoptionid) {
-        return PUT(String.format(V1_ITEM_OPTION_ROOT_PATH,shopId, itemOption.getItemId ()) + itemoptionid, itemOption, ItemOption.class);
+    public ResponseEntity<ItemOption> updateItemOption(long shopId, long itemId, long itemOptionId, ItemOption itemOption) {
+        return PUT(String.format(V1_ITEM_OPTION_ROOT_PATH, shopId, itemId) + itemOptionId, itemOption, ItemOption.class);
     }
 
-    public ResponseEntity<ItemOption> deleteItemOption(ItemOption itemOption,long shopId,long itemoptionid) {
-        return DELETE(String.format(V1_ITEM_OPTION_ROOT_PATH,shopId, itemOption.getItemId ()) + itemoptionid, ItemOption.class);
+    public ResponseEntity<ItemOption> deleteItemOption(long shopId, long itemId, long itemOptionId) {
+        return DELETE(String.format(V1_ITEM_OPTION_ROOT_PATH, shopId, itemId) + itemOptionId, ItemOption.class);
     }
 
     public ResponseEntity<ItemOption> getItemOption(long shopId, long itemId, long itemOptionId) {
-        return GET(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId,itemId) + itemOptionId, ItemOption.class);
+        return GET(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemId) + itemOptionId, ItemOption.class);
 
     }
 
+    public ResponseEntity<List<ItemOption>> updateAllItemOptions(long shopId, long itemId, List<ItemOption> itemOptions) {
+        return PUT_ARRAY(String.format(V1_ITEM_OPTION_ROOT_PATH, shopId, itemId), itemOptions, ItemOption.class);
+    }
+
     public ResponseEntity<List<ItemOption>> listItemOption(long shopId, long itemId) {
-        //String path = V1_SHOP_ROOT_PATH + "/"+ String.valueOf(shopId) + "/" + Constants.ITEM_ENDPOINT + "/" + String.valueOf(itemId) + "/" + Constants.OPTION_ENDPOINT + "/";
-        return LIST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId,itemId), ItemOption.class);
+        return LIST(String.format (V1_ITEM_OPTION_ROOT_PATH, shopId, itemId), ItemOption.class);
     }
 
     // Item Addons -----------------------

@@ -2,7 +2,7 @@ package com.xiaoslab.coffee.api.apis;
 
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.utilities.APIAdapter;
-import com.xiaoslab.coffee.api.utilities.APITestUtils;
+import com.xiaoslab.coffee.api.utilities.APIDataCreator;
 import com.xiaoslab.coffee.api.utilities.TestUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.Logger;
@@ -36,7 +36,7 @@ public abstract class _BaseAPITest {
     protected TestUtils testUtils;
 
     @Autowired
-    protected APITestUtils apiTestUtils;
+    protected APIDataCreator apiDataCreator;
 
     @Autowired
     protected APIAdapter api;

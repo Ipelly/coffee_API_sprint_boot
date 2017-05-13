@@ -55,7 +55,7 @@ public class UserAPITest extends _BaseAPITest {
     @Test
     public void createShopAdminAndLogin() throws Exception {
         api.login(XIPLI_ADMIN);
-        Shop shop = apiTestUtils.createShop();
+        Shop shop = apiDataCreator.createShopHelper();
         User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
         shopAdmin.setShopId(shop.getShopId());
         ResponseEntity<User> response = api.createShopUser(shop.getShopId(), shopAdmin);
@@ -73,7 +73,7 @@ public class UserAPITest extends _BaseAPITest {
     @Test
     public void createShopAdminWithPassword() throws Exception {
         api.login(XIPLI_ADMIN);
-        Shop shop = apiTestUtils.createShop();
+        Shop shop = apiDataCreator.createShopHelper();
         NewUserRequest shopAdmin = new NewUserRequest();
         shopAdmin.setFirstName("Shop");
         shopAdmin.setLastName("Admin");
@@ -94,7 +94,7 @@ public class UserAPITest extends _BaseAPITest {
     @Test
     public void passwordReset() throws Exception {
         api.login(XIPLI_ADMIN);
-        Shop shop = apiTestUtils.createShop();
+        Shop shop = apiDataCreator.createShopHelper();
         User shopAdmin = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
         ResponseEntity<User> userResponse = api.createShopUser(shop.getShopId(), shopAdmin);
         User createdUser = userResponse.getBody();
