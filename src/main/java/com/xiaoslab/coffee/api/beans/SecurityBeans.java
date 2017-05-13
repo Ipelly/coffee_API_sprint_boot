@@ -1,11 +1,9 @@
 package com.xiaoslab.coffee.api.beans;
 
-import com.xiaoslab.coffee.api.security.FacebookAuthenticationProvider;
-import com.xiaoslab.coffee.api.security.GoogleAuthenticationProvider;
-import com.xiaoslab.coffee.api.security.ProviderUserToLocalUserBridge;
-import com.xiaoslab.coffee.api.security.SocialTokenFilter;
+import com.xiaoslab.coffee.api.security.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

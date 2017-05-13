@@ -123,7 +123,7 @@ public class UserService implements IService<User>, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = userRepository.findOne(Specifications
+        User user = userRepository.findOne(Specifications
                 .where(UserSpecifications.hasEmailAddress(username))
                 .and(UserSpecifications.isNotDeleted())
                 .and(UserSpecifications.notEmptyPassword())

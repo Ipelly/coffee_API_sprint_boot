@@ -35,8 +35,10 @@ public class FacebookAuthenticationProvider implements AuthenticationProvider {
             return new FacebookToken(userInfo, authentication.getCredentials(), userInfo.getAuthorities());
 
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new AuthenticationServiceException("Internal error occurred");
         }
     }

@@ -81,7 +81,6 @@ public class SecurityConfig {
         @Autowired
         private AuthenticationManager authenticationManager;
 
-
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
             endpoints
@@ -92,7 +91,8 @@ public class SecurityConfig {
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            clients.inMemory()
+            clients
+                    .inMemory()
                     .withClient("coffee-web")
                     .secret("xiaoslab")
                     .authorizedGrantTypes("authorization_code", "refresh_token","password")
@@ -114,11 +114,23 @@ public class SecurityConfig {
         @Autowired
         private PasswordEncoder passwordEncoder;
 
+        @Bean
+        public XipliAuthenticationProvider xipliAuthenticationProvider() {
+            XipliAuthenticationProvider xipliAuthenticationProvider = new XipliAuthenticationProvider();
+            xipliAuthenticationProvider.setUserDetailsService(userService);
+            xipliAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+            xipliAuthenticationProvider.setAuthoritiesMapper(authoritiesMapper());
+            return xipliAuthenticationProvider;
+        }
+
+        @Bean
+        public CustomAuthoritiesMapper authoritiesMapper() {
+            return new CustomAuthoritiesMapper();
+        }
+
         @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                    .userDetailsService(userService)
-                    .passwordEncoder(passwordEncoder);
+            auth.authenticationProvider(xipliAuthenticationProvider());
         }
 
     }
