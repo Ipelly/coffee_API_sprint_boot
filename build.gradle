@@ -6,6 +6,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'application'
@@ -146,6 +147,21 @@ test {
         }
     }
 }
+
+jacoco {
+    toolVersion = "0.7.9"
+    reportsDir = file("$buildDir/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacoco"
+    }
+}
+
+test.finalizedBy jacocoTestReport
 
 task rpm(type: Rpm) {
 
