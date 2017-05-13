@@ -34,6 +34,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
 
     private static Shop SHOP1;
     private static Item SHOP1_ITEM1;
+    private static Item SHOP1_ITEM2;
 
     @Before
     public void dataSetup(){
@@ -43,6 +44,7 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
 
         serviceLoginUtils.loginAsShopAdmin(SHOP1.getShopId());
         SHOP1_ITEM1 = itemService.create(testUtils.setupItemObjectForShop(SHOP1.getShopId()));
+        SHOP1_ITEM2 = itemService.create(testUtils.setupItemObjectForShop(SHOP1.getShopId()));
     }
 
     @Test
@@ -103,6 +105,34 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         assertEquals(itemOptionMedium, gottenOptions.get(1));
         assertEquals(itemOptionLarge, gottenOptions.get(2));
 
+    }
+
+    @Test
+    public void sameOptionMultipleItems() {
+        long itemId1 = SHOP1_ITEM1.getItemId();
+        long itemId2 = SHOP1_ITEM2.getItemId();
+
+        serviceLoginUtils.loginAsShopAdmin(SHOP1.getShopId());
+
+        // add small option for item1
+        ItemOption item1OptionSmall = new ItemOption(itemId1, "Small", BigDecimal.valueOf(3.12), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(itemId1, Arrays.asList(item1OptionSmall));
+        List<ItemOption> gottenOptions1 = itemOptionService.list(itemId1);
+        assertEquals(1, gottenOptions1.size());
+        assertEquals(item1OptionSmall, gottenOptions1.get(0));
+
+        // add small option for item2 different price
+        ItemOption item2OptionSmall = new ItemOption(itemId2, "Small", BigDecimal.valueOf(4.78), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(itemId2, Arrays.asList(item2OptionSmall));
+        List<ItemOption> gottenOptions2 = itemOptionService.list(itemId2);
+        assertEquals(1, gottenOptions2.size());
+        assertEquals(item2OptionSmall, gottenOptions2.get(0));
+
+        // make sure price for item1 small option did not change
+        gottenOptions1 = itemOptionService.list(itemId1);
+        assertEquals(1, gottenOptions1.size());
+        assertEquals(item1OptionSmall, gottenOptions1.get(0));
+        assertEquals(item1OptionSmall.getPrice(), gottenOptions1.get(0).getPrice());
     }
 
     @Test(expected = AccessDeniedException.class)
