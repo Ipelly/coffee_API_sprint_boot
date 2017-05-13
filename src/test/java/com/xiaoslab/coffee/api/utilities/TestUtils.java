@@ -83,6 +83,7 @@ public class TestUtils {
         shop.setLatitude(new BigDecimal(40.7426));
         shop.setLongitude(new BigDecimal(-74.0623));
         shop.setRating(5);
+        shop.setStatus(Constants.StatusCodes.ACTIVE);
         return shop;
     }
 

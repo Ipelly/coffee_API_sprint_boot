@@ -26,13 +26,13 @@ public class ShopAPITest extends _BaseAPITest {
 
         // test-case: create new shop by POST
         Shop shop1 = testUtils.setupShopObject();
+        shop1.setStatus(Constants.StatusCodes.INACTIVE);
         response = api.createShop(shop1);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop1 = response.getBody();
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
         shop1.setShopId(createdShop1.getShopId());
-        shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
         // test-case: list shops by GET
@@ -48,13 +48,13 @@ public class ShopAPITest extends _BaseAPITest {
         api.login(XIPLI_ADMIN);
 
         Shop shop2 = testUtils.setupShopObject();
+        shop2.setStatus(Constants.StatusCodes.ACTIVE);
         response = api.createShop(shop2);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop createdShop2 = response.getBody();
         assertNotNull(createdShop2);
         assertTrue(createdShop2.getShopId() > 0);
         shop2.setShopId(createdShop2.getShopId());
-        shop2.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop2, createdShop2);
 
         // test-case: list shops by GET
@@ -118,7 +118,6 @@ public class ShopAPITest extends _BaseAPITest {
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
         shop1.setShopId(createdShop1.getShopId());
-        shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
         api.logout();
@@ -146,7 +145,6 @@ public class ShopAPITest extends _BaseAPITest {
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
         shop1.setShopId(createdShop1.getShopId());
-        shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
         api.logout();
@@ -176,7 +174,6 @@ public class ShopAPITest extends _BaseAPITest {
         assertNotNull(createdShop1);
         assertTrue(createdShop1.getShopId() > 0);
         shop1.setShopId(createdShop1.getShopId());
-        shop1.setStatus(Constants.StatusCodes.INACTIVE);
         assertEquals(shop1, createdShop1);
 
         // test-case: update shop by PUT

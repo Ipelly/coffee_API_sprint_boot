@@ -1,6 +1,11 @@
 package com.xiaoslab.coffee.api.security;
+import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.repository.ShopRepository;
+import com.xiaoslab.coffee.api.services.ShopService;
+import com.xiaoslab.coffee.api.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -12,13 +17,32 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 
 @Component
 public class XipliAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
     CustomAuthoritiesMapper customAuthoritiesMapper;
+
+    @Autowired
+    ShopRepository shopRepository;
+
+    @Override
+    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        if (userDetails instanceof User) {
+            User user = (User) userDetails;
+            if (user.getRoles().contains(Roles.ROLE_SHOP_USER) || user.getRoles().contains(Roles.ROLE_SHOP_ADMIN)) {
+                if (user.getShopId() == null || user.getShopId() < 1) {
+                    throw new BadCredentialsException("User is not assigned to any shop yet");
+                } else {
+                    Shop shop = shopRepository.findOne(user.getShopId());
+                    if (shop == null || shop.getStatus() != Constants.StatusCodes.ACTIVE) {
+                        throw new BadCredentialsException("The shop this user is assigned to is not active");
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {

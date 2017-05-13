@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  */
 public class CategoryAPITest extends _BaseAPITest {
 
-    long shopIdForTest,categoryIdFortest;
+    long shopIdForTest, categoryIdFortest;
 
     @Test
     public void createAndGetAndListOfCategory() throws Exception {
