@@ -45,7 +45,8 @@ public class ItemOption {
 
     }
     // Optional Constructor
-    public ItemOption(String name, BigDecimal price, Constants.StatusCodes status) {
+    public ItemOption(long itemId, String name, BigDecimal price, Constants.StatusCodes status) {
+        this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.status = status;

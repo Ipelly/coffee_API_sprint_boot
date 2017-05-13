@@ -32,7 +32,7 @@ public class ItemOptionService implements IService<ItemOption> {
     UserUtility userUtility;
 
     @Override
-    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN, Roles.ROLE_X_ADMIN})
+    @RolesAllowed({Roles.ROLE_USER, Roles.ROLE_SHOP_USER, Roles.ROLE_SHOP_ADMIN})
     public List<ItemOption> list(long itemId) {
 
         Specification<ItemOption> specification = Specifications

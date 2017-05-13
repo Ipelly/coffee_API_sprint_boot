@@ -1,120 +1,130 @@
-//package com.xiaoslab.coffee.api.services;
-//
-//import com.xiaoslab.coffee.api.objects.Item;
-//import com.xiaoslab.coffee.api.objects.ItemOption;
-//import com.xiaoslab.coffee.api.objects.Shop;
-//import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
-//import com.xiaoslab.coffee.api.utility.Constants;
-//import org.apache.log4j.Logger;
-//import org.junit.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//import java.math.BigDecimal;
-//import java.util.List;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertNotNull;
-//
-///**
-// * Created by ipeli on 11/1/16.
-// */
-//
-//
-//public class ItemOptionServiceTest extends _BaseServiceTest {
-//
-//    private long itemOptionidfortest;
-//
-//    Logger logger = Logger.getLogger(ItemServiceTest.class);
-//
-//    @Autowired
-//    private IService<ItemOption> itemOptionService;
-//
-//    @Autowired
-//    private IService<Item> itemService;
-//
-//    @Autowired
-//    private IService<Shop> shopService;
-//
-//
-//    @Autowired
-//    private ServiceLoginUtils serviceLoginUtils;
-//
-//
-//    @Test
-//    public void createItemOption() {
-//
-//        // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-//        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
-//        assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
-//    }
-//
-//    @Test
-//    public void updateItemOption() {
-//        // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-//        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
-//
-//        // test-case: Update item option by name ("Name : Small in Size") and price  for a item which associate with a shop named "DD"
-//        createdItemOption.setName("Small in size");
-//        createdItemOption.setPrice(BigDecimal.valueOf(3.50));
-//        ItemOption updatedItemOption = itemOptionService.update(createdItemOption);
-//
-//        assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small in size");
-//    }
-//
-//    @Test
-//    public void deleteItemOption() {
-//
-//        // test-case: create new item option("Name : Small") for a item which associate with a shop named "DD"
-//        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
-//
-//        // test-case: delete item option
-//        ItemOption deletedItemOption = itemOptionService.delete(createdItemOption.getItemOptionId());
-//        assertNoOfItemOption(0);
-//    }
-//
-//    @Test
-//    public void getAllItemOption() {
-//
-//        // test-case: create new item option for a item which associate with a shop named "DD"
-//        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
-//
-//        serviceLoginUtils.loginAsCustomerUser();
-//        assertNoOfItemOption(1);
-//    }
-//
-//    @Test
-//    public void getItemOption() {
-//        // test-case: create new item option for a item which associate with a shop named "DD"
-//        ItemOption createdItemOption = preRequisiteTestScenarioForItemOption(new ItemOption("Small",BigDecimal.valueOf(3.00),Constants.StatusCodes.ACTIVE));
-//
-//        serviceLoginUtils.loginAsCustomerUser();
-//        assertItemOptionName(itemOptionService.get(createdItemOption.getItemOptionId()),"Small");
-//    }
-//
-//    private void assertItemOptionName(ItemOption item,String itemOptionName){
-//        logger.info(item);
-//        assertNotNull(item);
-//        assertEquals(itemOptionName, item.getName());
-//    }
-//    private void assertNoOfItemOption(int noOfItemOption){
-//        List<ItemOption> itemOptions = itemOptionService.list();
-//        logger.info(itemOptions);
-//        assertNotNull(itemOptions);
-//        assertEquals(noOfItemOption, itemOptions.size());
-//    }
-//    private ItemOption preRequisiteTestScenarioForItemOption(ItemOption itemOption){
-//
-//        // test-case: create new shop and add item 1 to it
-//        serviceLoginUtils.loginAsXAdmin();
-//        Shop createdShop = shopService.create(testUtils.setupShopObject());
-//
-//        serviceLoginUtils.loginAsShopAdmin(createdShop.getShopId());
-//        Item createdItem = itemService.create(testUtils.setupItemObjectForShop(createdShop.getShopId()));
-//
-//        // test-case: create new item option(Small) for Latte
-//        itemOption.setItemId(createdItem.getItemId ());
-//        return itemOptionService.create(itemOption);
-//    }
-//
-//
-//}
+package com.xiaoslab.coffee.api.services;
+
+import com.xiaoslab.coffee.api.objects.Item;
+import com.xiaoslab.coffee.api.objects.ItemOption;
+import com.xiaoslab.coffee.api.objects.Shop;
+import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
+import com.xiaoslab.coffee.api.utility.Constants;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+
+public class ItemOptionServiceTest extends _BaseServiceTest {
+
+    @Autowired
+    private IService<ItemOption> itemOptionService;
+
+    @Autowired
+    private IService<Item> itemService;
+
+    @Autowired
+    private IService<Shop> shopService;
+
+    @Autowired
+    private ServiceLoginUtils serviceLoginUtils;
+
+    private static Shop SHOP1;
+    private static Item SHOP1_ITEM1;
+
+    @Before
+    public void dataSetup(){
+
+        serviceLoginUtils.loginAsXAdmin();
+        SHOP1 = shopService.create(testUtils.setupShopObject());
+
+        serviceLoginUtils.loginAsShopAdmin(SHOP1.getShopId());
+        SHOP1_ITEM1 = itemService.create(testUtils.setupItemObjectForShop(SHOP1.getShopId()));
+    }
+
+    @Test
+    public void addRemoveGetItemOptions() {
+        long itemId = SHOP1_ITEM1.getItemId();
+
+        // add small option
+        serviceLoginUtils.loginAsShopAdmin(SHOP1.getShopId());
+        ItemOption itemOptionSmall = new ItemOption(itemId, "Small", BigDecimal.valueOf(3.12), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall));
+        List<ItemOption> gottenOptions = itemOptionService.list(itemId);
+        assertEquals(1, gottenOptions.size());
+        assertEquals(itemOptionSmall, gottenOptions.get(0));
+
+        // add small + medium options
+        ItemOption itemOptionMedium = new ItemOption(itemId, "Medium", BigDecimal.valueOf(4.50), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall, itemOptionMedium));
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(2, gottenOptions.size());
+        assertEquals(itemOptionSmall, gottenOptions.get(0));
+        assertEquals(itemOptionMedium, gottenOptions.get(1));
+
+        // add medium new price + large options
+        itemOptionMedium.setPrice(BigDecimal.valueOf(4.66));
+        ItemOption itemOptionLarge = new ItemOption(itemId, "Large", BigDecimal.valueOf(5.99), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(itemId, Arrays.asList(itemOptionMedium, itemOptionLarge));
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(2, gottenOptions.size());
+        assertEquals(itemOptionMedium, gottenOptions.get(0));
+        assertEquals(itemOptionLarge, gottenOptions.get(1));
+
+        // remove all
+        itemOptionService.updateAll(itemId, new ArrayList<>());
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(0, gottenOptions.size());
+
+        // add all
+        itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall, itemOptionMedium, itemOptionLarge));
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(3, gottenOptions.size());
+        assertEquals(itemOptionSmall, gottenOptions.get(0));
+        assertEquals(itemOptionMedium, gottenOptions.get(1));
+        assertEquals(itemOptionLarge, gottenOptions.get(2));
+
+        // get as customer user
+        serviceLoginUtils.loginAsCustomerUser();
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(3, gottenOptions.size());
+        assertEquals(itemOptionSmall, gottenOptions.get(0));
+        assertEquals(itemOptionMedium, gottenOptions.get(1));
+        assertEquals(itemOptionLarge, gottenOptions.get(2));
+
+        // get as shop user
+        serviceLoginUtils.loginAsShopUser(SHOP1.getShopId());
+        gottenOptions = itemOptionService.list(itemId);
+        assertEquals(3, gottenOptions.size());
+        assertEquals(itemOptionSmall, gottenOptions.get(0));
+        assertEquals(itemOptionMedium, gottenOptions.get(1));
+        assertEquals(itemOptionLarge, gottenOptions.get(2));
+
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void updateAsRegularUser() {
+        serviceLoginUtils.loginAsCustomerUser();
+        ItemOption itemOptionSmall = new ItemOption(SHOP1_ITEM1.getItemId(), "Small", BigDecimal.valueOf(3.12), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(SHOP1_ITEM1.getItemId(), Arrays.asList(itemOptionSmall));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void updateAsShopUser() {
+        serviceLoginUtils.loginAsShopUser(SHOP1.getShopId());
+        ItemOption itemOptionSmall = new ItemOption(SHOP1_ITEM1.getItemId(), "Small", BigDecimal.valueOf(3.12), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(SHOP1_ITEM1.getItemId(), Arrays.asList(itemOptionSmall));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void updateAsXAdmin() {
+        serviceLoginUtils.loginAsXAdmin();
+        ItemOption itemOptionSmall = new ItemOption(SHOP1_ITEM1.getItemId(), "Small", BigDecimal.valueOf(3.12), Constants.StatusCodes.ACTIVE);
+        itemOptionService.updateAll(SHOP1_ITEM1.getItemId(), Arrays.asList(itemOptionSmall));
+    }
+
+
+}

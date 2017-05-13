@@ -30,7 +30,14 @@ public class ServiceLoginUtils {
     }
 
     public void loginAsShopAdmin(long shopId) {
-        User user = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN);
+        User user = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_ADMIN, Roles.ROLE_SHOP_USER);
+        user.setShopId(shopId);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public void loginAsShopUser(long shopId) {
+        User user = testUtils.setupBasicUserObject(Roles.ROLE_SHOP_USER);
         user.setShopId(shopId);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
