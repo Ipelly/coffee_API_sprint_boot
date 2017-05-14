@@ -7,6 +7,7 @@ public class Constants {
         ACTIVE,   // 1
         INACTIVE, // 2
         PENDING,  // 3
+        SUSPENDED,// 4
     }
 
     public enum LoginProviderType {

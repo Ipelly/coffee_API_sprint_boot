@@ -36,8 +36,8 @@ public class XipliAuthenticationProvider extends DaoAuthenticationProvider {
                     throw new BadCredentialsException("User is not assigned to any shop yet");
                 } else {
                     Shop shop = shopRepository.findOne(user.getShopId());
-                    if (shop == null || shop.getStatus() != Constants.StatusCodes.ACTIVE) {
-                        throw new BadCredentialsException("The shop this user is assigned to is not active");
+                    if (shop == null || shop.getStatus() == Constants.StatusCodes.DELETED || shop.getStatus() == Constants.StatusCodes.SUSPENDED) {
+                        throw new BadCredentialsException("The shop this user is assigned to is either deleted or suspended");
                     }
                 }
             }
