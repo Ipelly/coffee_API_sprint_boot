@@ -182,10 +182,6 @@ public class APIAdapter {
         }
     }
 
-    private void setAuthorizationHeader(String authorization) {
-        customHeaders.set(HttpHeaders.AUTHORIZATION, authorization);
-    }
-
     public void logout() {
         customHeaders.remove(HttpHeaders.AUTHORIZATION);
     }
@@ -203,66 +199,37 @@ public class APIAdapter {
     }
 
     public ResponseEntity login(String clientId, String clientSecret, String username, String password) {
+        // set basic authorization headers bas64(clientId:clientSecret)
         customHeaders.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.getEncoder().encode((clientId + ":" + clientSecret).getBytes())));
         customHeaders.set(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
+        // set url encoded form parameters for password grant
         MultiValueMap<String, String> tokenRequest = new LinkedMultiValueMap<>();
         tokenRequest.put("grant_type", Arrays.asList("password"));
         tokenRequest.put("username", Arrays.asList(username));
         tokenRequest.put("password", Arrays.asList(password));
+        // make the oauth/token request
         ResponseEntity<TokenResponse> responseEntity = POST(Constants.TOKEN_ENDPOINT, tokenRequest, TokenResponse.class);
+        // verify access token was generated successfully
+        Assert.assertNotNull("response body for token is invalid", responseEntity.getBody());
+        String accessToken = responseEntity.getBody().access_token;
+        Assert.assertNotNull("access_token is null", accessToken);
+        customHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
         customHeaders.set(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType());
-        String access_token = responseEntity.getBody().getAccess_token();
-        Assert.assertNotNull("access_token is null", access_token);
-        setAuthorizationHeader("Bearer " + access_token);
         return responseEntity;
     }
 
     private static class TokenResponse {
 
-        private String access_token;
-        private String refresh_token;
-        private String token_type;
-        private Long expires_in;
-        private String scope;
+        public String access_token;
+        public String refresh_token;
+        public String token_type;
+        public Long expires_in;
+        public String scope;
+        public String error;
+        public String error_description;
 
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
-
-        public String getRefresh_token() {
-            return refresh_token;
-        }
-
-        public void setRefresh_token(String refresh_token) {
-            this.refresh_token = refresh_token;
-        }
-
-        public String getToken_type() {
-            return token_type;
-        }
-
-        public void setToken_type(String token_type) {
-            this.token_type = token_type;
-        }
-
-        public Long getExpires_in() {
-            return expires_in;
-        }
-
-        public void setExpires_in(Long expires_in) {
-            this.expires_in = expires_in;
-        }
-
-        public String getScope() {
-            return scope;
-        }
-
-        public void setScope(String scope) {
-            this.scope = scope;
+        public void setError(String error) {
+            this.error = error;
         }
 
         @Override
