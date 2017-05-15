@@ -1,7 +1,7 @@
 package com.xiaoslab.coffee.api.controllers;
 
 import com.xiaoslab.coffee.api.objects.Item;
-import com.xiaoslab.coffee.api.objects.ItemOption;
+import com.xiaoslab.coffee.api.objects.ItemAddon;
 import com.xiaoslab.coffee.api.objects.Shop;
 import com.xiaoslab.coffee.api.services.IService;
 import com.xiaoslab.coffee.api.utility.AppUtility;
@@ -17,11 +17,11 @@ import java.util.Objects;
 
 
 @RestController
-@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.ITEM_ENDPOINT +  "/{itemId}" + Constants.OPTION_ENDPOINT)
-public class ItemOptionController {
+@RequestMapping(path = Constants.V1 + Constants.SHOP_ENDPOINT + "/{shopId}" + Constants.ITEM_ENDPOINT +  "/{itemId}" + Constants.ADDON_ENDPOINT)
+public class ItemAddonController {
 
     @Autowired
-    private IService<ItemOption> itemOptionService;
+    private IService<ItemAddon> itemAddonService;
 
     @Autowired
     private IService<Item> itemService;
@@ -29,19 +29,19 @@ public class ItemOptionController {
     @Autowired
     private IService<Shop> shopService;
 
-    // retrieve all options in one call
+    // retrieve all addons in one call
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity list(@PathVariable long shopId, @PathVariable long itemId) {
         checkShopAndItem(shopId, itemId);
-        return ResponseEntity.ok(itemOptionService.list(itemId));
+        return ResponseEntity.ok(itemAddonService.list(itemId));
     }
 
-    // update all options in one call
+    // update all addons in one call
     @RequestMapping(path = "/", method = RequestMethod.PUT)
-    public ResponseEntity updateAll(@PathVariable long shopId, @PathVariable long itemId, @RequestBody ItemOption[] itemOptions) {
+    public ResponseEntity updateAll(@PathVariable long shopId, @PathVariable long itemId, @RequestBody ItemAddon[] itemAddons) {
         checkShopAndItem(shopId, itemId);
-        List<ItemOption> listOfOptions = Arrays.asList(itemOptions);
-        return ResponseEntity.ok(itemOptionService.updateAll(itemId, listOfOptions));
+        List<ItemAddon> listOfAddons = Arrays.asList(itemAddons);
+        return ResponseEntity.ok(itemAddonService.updateAll(itemId, listOfAddons));
     }
 
     private void checkShopAndItem(long shopId, long itemId) {
@@ -53,4 +53,5 @@ public class ItemOptionController {
             throw new EntityNotFoundException();
         }
     }
+
 }

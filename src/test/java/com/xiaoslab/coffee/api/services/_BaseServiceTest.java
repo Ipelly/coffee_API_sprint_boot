@@ -18,9 +18,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 
 @RunWith(SpringRunner.class)
-@Transactional
+@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 @Rollback
 @Sql(scripts = "classpath:database/ClearDatabaseForTest.sql")
 @SpringBootTest
@@ -63,6 +64,18 @@ public abstract class _BaseServiceTest {
         }
         for (Item item : itemRepository.findAll()) {
             entityManager.refresh(item);
+        }
+    }
+
+    <T> void assertContains(Collection<T> collection, T item) {
+        if (!collection.contains(item)) {
+            throw new AssertionError(String.format("Collection <%s> does not contain the expected item <%s>", collection, item));
+        }
+    }
+
+    <T> void assertContains(String full, String sub) {
+        if (!full.contains(sub)) {
+            throw new AssertionError(String.format("String <%s> does not contain the expected sub string <%s>", full, sub));
         }
     }
 }

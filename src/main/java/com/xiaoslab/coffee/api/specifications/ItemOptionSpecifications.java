@@ -7,9 +7,6 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import java.math.BigDecimal;
 
-/**
- * Created by ipeli on 10/29/16.
- */
 public class ItemOptionSpecifications {
     public static Specification<ItemOption> isActive() {
         return (root, query, criteria) -> criteria.equal(root.get("status"), Constants.StatusCodes.ACTIVE);

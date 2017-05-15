@@ -10,16 +10,12 @@ import com.xiaoslab.coffee.api.utility.BeanValidator;
 import com.xiaoslab.coffee.api.utility.Constants;
 import com.xiaoslab.coffee.api.utility.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.*;
 
-/**
- * Created by ipeli on 11/15/16.
- */
 public class ItemOptionService implements IService<ItemOption> {
 
     @Autowired

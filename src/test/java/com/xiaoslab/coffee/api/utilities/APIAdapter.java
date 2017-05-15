@@ -27,8 +27,8 @@ public class APIAdapter {
     private static final String V1_STATUS_ENDPOINT = Constants.V1 + Constants.STATUS_ENDPOINT;
     private static final String V1_SHOP_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/";
     private static final String V1_ITEM_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/";
-    private static final String V1_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
     private static final String V1_ITEM_OPTION_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.OPTION_ENDPOINT + "/";
+    private static final String V1_ITEM_ADDON_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.ITEM_ENDPOINT + "/%s" + Constants.ADDON_ENDPOINT + "/";
     private static final String V1_USER_ROOT_PATH = Constants.V1 + Constants.USER_ENDPOINT + "/";
     private static final String V1_SHOP_USER_ROOT_PATH = Constants.V1 + Constants.SHOP_ENDPOINT + "/%s" + Constants.USER_ENDPOINT + "/";
     private static final String V1_INGREDIENT_ROOT_PATH = Constants.V1 + Constants.INGREDIENT_ENDPOINT + "/";
@@ -399,54 +399,29 @@ public class APIAdapter {
 
     // Item Addons -----------------------
 
-    public ResponseEntity<Addon> getAddon(long shopid, long addonId){
-        return GET(String.format(V1_ADDON_ROOT_PATH, shopid) + addonId, Addon.class);
+    public ResponseEntity<ItemAddon> createItemAddon(long shopId, long itemId, ItemAddon itemAddon) {
+        return POST(String.format (V1_ITEM_ADDON_ROOT_PATH, shopId, itemId), itemAddon, ItemAddon.class );
     }
 
-    public ResponseEntity<List<Addon>> listOfAddon(long shopId) {
-        return LIST(String.format(V1_ADDON_ROOT_PATH, shopId), Addon.class);
+    public ResponseEntity<ItemAddon> updateItemAddon(long shopId, long itemId, long itemAddonId, ItemAddon itemAddon) {
+        return PUT(String.format(V1_ITEM_ADDON_ROOT_PATH, shopId, itemId) + itemAddonId, itemAddon, ItemAddon.class);
     }
 
-    public ResponseEntity<List<Addon>> listOfAddon(long shopId, String queryParams) {
-        return LIST(String.format(V1_ADDON_ROOT_PATH, shopId) + queryParams, Addon.class);
+    public ResponseEntity<ItemAddon> deleteItemAddon(long shopId, long itemId, long itemAddonId) {
+        return DELETE(String.format(V1_ITEM_ADDON_ROOT_PATH, shopId, itemId) + itemAddonId, ItemAddon.class);
     }
 
-    public ResponseEntity<Addon> createAddon(Addon addon) {
-        return POST(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()), addon, Addon.class);
+    public ResponseEntity<ItemAddon> getItemAddon(long shopId, long itemId, long itemAddonId) {
+        return GET(String.format (V1_ITEM_ADDON_ROOT_PATH, shopId, itemId) + itemAddonId, ItemAddon.class);
+
     }
 
-    public ResponseEntity<Addon> updateAddon(Addon addon, long addonId) {
-        return PUT(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, addon, Addon.class);
+    public ResponseEntity<List<ItemAddon>> updateAllItemAddons(long shopId, long itemId, List<ItemAddon> itemAddons) {
+        return PUT_ARRAY(String.format(V1_ITEM_ADDON_ROOT_PATH, shopId, itemId), itemAddons, ItemAddon.class);
     }
 
-    public ResponseEntity<Addon> deleteAddon(Addon addon, long addonId) {
-        return DELETE(String.format(V1_ADDON_ROOT_PATH, addon.getShopId ()) + addonId, Addon.class);
-    }
-
-    // Ingredient -----------------------
-
-    public ResponseEntity<Ingredient> getIngredient(long ingredientId) {
-        return GET(V1_INGREDIENT_ROOT_PATH + ingredientId, Ingredient.class);
-    }
-
-    public ResponseEntity<List<Ingredient>> listIngredient() {
-        return LIST(V1_INGREDIENT_ROOT_PATH, Ingredient.class);
-    }
-
-    public ResponseEntity<List<Ingredient>> listIngredient(String queryParams) {
-        return LIST(V1_INGREDIENT_ROOT_PATH + queryParams, Ingredient.class);
-    }
-
-    public ResponseEntity<Ingredient> createIngredient(Ingredient ingredient) {
-        return POST(V1_INGREDIENT_ROOT_PATH, ingredient, Ingredient.class);
-    }
-
-    public ResponseEntity<Ingredient> updateIngredient(long ingredientId, Ingredient ingredient) {
-        return PUT(V1_INGREDIENT_ROOT_PATH + ingredientId, ingredient, Ingredient.class);
-    }
-
-    public ResponseEntity<Ingredient> deleteIngredient(long ingredientId) {
-        return DELETE(V1_INGREDIENT_ROOT_PATH + ingredientId, Ingredient.class);
+    public ResponseEntity<List<ItemAddon>> listItemAddon(long shopId, long itemId) {
+        return LIST(String.format (V1_ITEM_ADDON_ROOT_PATH, shopId, itemId), ItemAddon.class);
     }
 
 }

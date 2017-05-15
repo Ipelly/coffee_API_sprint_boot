@@ -57,15 +57,15 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall));
         List<ItemOption> gottenOptions = itemOptionService.list(itemId);
         assertEquals(1, gottenOptions.size());
-        assertEquals(itemOptionSmall, gottenOptions.get(0));
+        assertContains(gottenOptions, itemOptionSmall);
 
         // add small + medium options
         ItemOption itemOptionMedium = new ItemOption(itemId, "Medium", BigDecimal.valueOf(4.50), Constants.StatusCodes.ACTIVE);
         itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall, itemOptionMedium));
         gottenOptions = itemOptionService.list(itemId);
         assertEquals(2, gottenOptions.size());
-        assertEquals(itemOptionSmall, gottenOptions.get(0));
-        assertEquals(itemOptionMedium, gottenOptions.get(1));
+        assertContains(gottenOptions, itemOptionSmall);
+        assertContains(gottenOptions, itemOptionMedium);
 
         // add medium new price + large options
         itemOptionMedium.setPrice(BigDecimal.valueOf(4.66));
@@ -73,8 +73,8 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         itemOptionService.updateAll(itemId, Arrays.asList(itemOptionMedium, itemOptionLarge));
         gottenOptions = itemOptionService.list(itemId);
         assertEquals(2, gottenOptions.size());
-        assertEquals(itemOptionMedium, gottenOptions.get(0));
-        assertEquals(itemOptionLarge, gottenOptions.get(1));
+        assertContains(gottenOptions, itemOptionMedium);
+        assertContains(gottenOptions, itemOptionLarge);
 
         // remove all
         itemOptionService.updateAll(itemId, new ArrayList<>());
@@ -85,25 +85,25 @@ public class ItemOptionServiceTest extends _BaseServiceTest {
         itemOptionService.updateAll(itemId, Arrays.asList(itemOptionSmall, itemOptionMedium, itemOptionLarge));
         gottenOptions = itemOptionService.list(itemId);
         assertEquals(3, gottenOptions.size());
-        assertEquals(itemOptionSmall, gottenOptions.get(0));
-        assertEquals(itemOptionMedium, gottenOptions.get(1));
-        assertEquals(itemOptionLarge, gottenOptions.get(2));
+        assertContains(gottenOptions, itemOptionSmall);
+        assertContains(gottenOptions, itemOptionMedium);
+        assertContains(gottenOptions, itemOptionLarge);
 
         // get as customer user
         serviceLoginUtils.loginAsCustomerUser();
         gottenOptions = itemOptionService.list(itemId);
         assertEquals(3, gottenOptions.size());
-        assertEquals(itemOptionSmall, gottenOptions.get(0));
-        assertEquals(itemOptionMedium, gottenOptions.get(1));
-        assertEquals(itemOptionLarge, gottenOptions.get(2));
+        assertContains(gottenOptions, itemOptionSmall);
+        assertContains(gottenOptions, itemOptionMedium);
+        assertContains(gottenOptions, itemOptionLarge);
 
         // get as shop user
         serviceLoginUtils.loginAsShopUser(SHOP1.getShopId());
         gottenOptions = itemOptionService.list(itemId);
         assertEquals(3, gottenOptions.size());
-        assertEquals(itemOptionSmall, gottenOptions.get(0));
-        assertEquals(itemOptionMedium, gottenOptions.get(1));
-        assertEquals(itemOptionLarge, gottenOptions.get(2));
+        assertContains(gottenOptions, itemOptionSmall);
+        assertContains(gottenOptions, itemOptionMedium);
+        assertContains(gottenOptions, itemOptionLarge);
 
     }
 

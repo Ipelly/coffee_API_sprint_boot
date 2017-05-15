@@ -118,6 +118,13 @@ sourceSets {
     }
 }
 
+clean {
+    delete 'out'
+    delete 'build'
+    delete 'target'
+    delete 'dist'
+}
+
 test {
     testLogging {
         events "passed", "skipped", "failed" //, "standardOut", "standardError"
