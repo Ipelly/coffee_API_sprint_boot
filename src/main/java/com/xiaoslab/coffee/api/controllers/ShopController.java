@@ -33,8 +33,8 @@ public class ShopController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity list(
+            @RequestParam(name = "size", required = true) int size,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) int size,
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "rating", required = false) Integer rating,
             @RequestParam(name = "zip", required = false) String zip,
@@ -42,7 +42,7 @@ public class ShopController {
             @RequestParam(name = "lon", required = false) BigDecimal lon,
             @RequestParam(name = "radius", required = false) BigDecimal radius) {
 
-        Pageable pageable = new PageRequest(page, size);
+        Pageable pageable = AppUtility.createPageRequest(page, size);
 
         Specification<Shop> specification = ShopSpecifications.notDeleted();
         if (StringUtils.isNotBlank(search)) {

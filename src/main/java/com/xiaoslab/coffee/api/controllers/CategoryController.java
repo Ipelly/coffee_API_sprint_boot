@@ -31,10 +31,10 @@ public class CategoryController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity list(@PathVariable long shopId,
+           @RequestParam(name = "size", required = true) int size,
            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-           @RequestParam(name = "size", defaultValue = "10", required = false) int size,
            @RequestParam(name = "search", defaultValue = "", required = false) String search) {
-        Pageable pageable = new PageRequest(page, size);
+        Pageable pageable = AppUtility.createPageRequest(page, size);
         Specification<Category> specification = Specifications
                 .where(CategorySpecifications.categoryListForShop(shopId));
         return ResponseEntity.ok(categoryService.list(Optional.of(specification), Optional.of(pageable)));

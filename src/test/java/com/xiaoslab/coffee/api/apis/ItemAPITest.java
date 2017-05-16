@@ -148,7 +148,7 @@ public class ItemAPITest extends _BaseAPITest {
 
         api.login(CUSTOMER_USER);
 
-        itemListResponse = api.listItemForCategory(shopIdForTest, categoryIdForTest1);
+        itemListResponse = api.listItemForCategory(shopIdForTest, categoryIdForTest1, 1000);
         assertEquals(HttpStatus.OK, itemListResponse.getStatusCode());
         List<Item> ItemList = itemListResponse.getBody();
         assertEquals(1, ItemList.size());
@@ -168,7 +168,7 @@ public class ItemAPITest extends _BaseAPITest {
         Item createItem =  itemCreateWithAssertion(Arrays.asList(shop1Category2));
         api.login(CUSTOMER_USER);
 
-        itemListResponse = api.listItemForCategory(shopIdForTest, categoryIdForTest2);
+        itemListResponse = api.listItemForCategory(shopIdForTest, categoryIdForTest2, 1000);
         assertEquals(HttpStatus.OK, itemListResponse.getStatusCode());
         List<Item> ItemList2 = itemListResponse.getBody();
         assertEquals(1, ItemList2.size());
@@ -188,7 +188,7 @@ public class ItemAPITest extends _BaseAPITest {
 
         api.login(CUSTOMER_USER);
 
-        itemListResponse = api.listItem(shopIdForTest);
+        itemListResponse = api.listItem(shopIdForTest, "?size=1000");
         assertEquals(HttpStatus.OK, itemListResponse.getStatusCode());
         List<Item> ItemList = itemListResponse.getBody();
         assertEquals(2, ItemList.size());
@@ -415,5 +415,19 @@ public class ItemAPITest extends _BaseAPITest {
         assertEquals(item.getItemId(), createdItem.getItemId());
         assertEquals(item.getName(), createdItem.getName());
         return createdItem;
+    }
+
+    @Test
+    public void listItemsExceedMaxSize() throws Exception {
+        api.login(XIPLI_ADMIN);
+        ResponseEntity<List<Item>> response;
+
+        Shop shop1 = testUtils.setupShopObject();
+        ResponseEntity<Shop> shopResponse = api.createShop(shop1);
+        Shop createdShop1 = shopResponse.getBody();
+
+        response = api.listItem(createdShop1.getShopId(), "?size=1001");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertContains(api.getLastResponseAsString(), "Maximum page size can be 1000");
     }
 }

@@ -3,25 +3,18 @@ package com.xiaoslab.coffee.api.apis;
 import com.xiaoslab.coffee.api.objects.User;
 import com.xiaoslab.coffee.api.utilities.APIAdapter;
 import com.xiaoslab.coffee.api.utilities.APIDataCreator;
-import com.xiaoslab.coffee.api.utilities.TestUtils;
+import com.xiaoslab.coffee.api._BaseTestScript;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@Sql("classpath:database/ClearDatabaseForTest.sql")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class _BaseAPITest {
+public abstract class _BaseAPITest extends _BaseTestScript {
 
     @Value("${local.server.port}")
     protected int port;
@@ -31,9 +24,6 @@ public abstract class _BaseAPITest {
 
     @Autowired
     protected TestRestTemplate template;
-
-    @Autowired
-    protected TestUtils testUtils;
 
     @Autowired
     protected APIDataCreator apiDataCreator;
@@ -53,13 +43,9 @@ public abstract class _BaseAPITest {
     }
 
     @Before
-    public void setupUsers() {
+    public void setupApiUsers() {
         if (CUSTOMER_USER == null) CUSTOMER_USER = testUtils.createCustomerUser();
         if (XIPLI_ADMIN == null) XIPLI_ADMIN = testUtils.createXipliAdminUser();
-    }
-
-    public Logger getLogger() {
-        return Logger.getLogger(this.getClass());
     }
 
     @Rule

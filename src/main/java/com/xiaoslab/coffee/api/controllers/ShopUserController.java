@@ -34,12 +34,12 @@ public class ShopUserController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity list(
             @PathVariable long shopId,
+            @RequestParam(name = "size", required = true) int size,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "20", required = false) int size,
             @RequestParam(name = "search", required = false) String search) {
 
+        Pageable pageable = AppUtility.createPageRequest(page, size);
         AppUtility.notFoundOnNull(shopService.get(shopId));
-        Pageable pageable = new PageRequest(page, size);
 
         Specification<User> specification = UserSpecifications.isNotDeleted();
         specification = Specifications.where(specification).and(UserSpecifications.belongsToShopId(shopId));

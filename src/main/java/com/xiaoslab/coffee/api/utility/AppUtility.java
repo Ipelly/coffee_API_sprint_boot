@@ -1,5 +1,6 @@
 package com.xiaoslab.coffee.api.utility;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -41,5 +42,12 @@ public class AppUtility {
         } else {
             return obj;
         }
+    }
+
+    public static PageRequest createPageRequest(int page, int size) {
+        if (size > Constants.MAX_LIST_PAGE_SIZE) {
+            throw new IllegalArgumentException("Maximum page size can be " + Constants.MAX_LIST_PAGE_SIZE);
+        }
+        return new PageRequest(page, size);
     }
 }

@@ -1,6 +1,8 @@
 package com.xiaoslab.coffee.api.apis;
 
 import com.xiaoslab.coffee.api.objects.Shop;
+import com.xiaoslab.coffee.api.objects.User;
+import com.xiaoslab.coffee.api.utilities.APIAdapter;
 import com.xiaoslab.coffee.api.utility.Constants;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -38,7 +40,7 @@ public class ShopAPITest extends _BaseAPITest {
         // test-case: list shops by GET
         api.login(CUSTOMER_USER);
 
-        listResponse = api.listShop();
+        listResponse = api.listShop("?size=1000");
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         List<Shop> shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
@@ -60,7 +62,7 @@ public class ShopAPITest extends _BaseAPITest {
         // test-case: list shops by GET
         api.login(CUSTOMER_USER);
 
-        listResponse = api.listShop();
+        listResponse = api.listShop("?size=1000");
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(2, shopList.size());
@@ -78,14 +80,14 @@ public class ShopAPITest extends _BaseAPITest {
         assertEquals(createdShop2, gottenShop2);
 
         // test search shop1 by address
-        listResponse = api.listShop("?search=" + shop1.getAddress1());
+        listResponse = api.listShop("?size=1000&search=" + shop1.getAddress1());
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
         assertEquals(createdShop1, shopList.get(0));
 
         // test search shop2 by name
-        listResponse = api.listShop("?search=" + shop2.getName());
+        listResponse = api.listShop("?size=1000&search=" + shop2.getName());
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         shopList = listResponse.getBody();
         assertEquals(1, shopList.size());
@@ -215,4 +217,26 @@ public class ShopAPITest extends _BaseAPITest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @Test
+    public void listShopExceedMaxSize() throws Exception {
+        api.login(XIPLI_ADMIN);
+        ResponseEntity<List<Shop>> response;
+        response = api.listShop("?size=1001");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertContains(api.getLastResponseAsString(), "Maximum page size can be 1000");
+    }
+
+    @Test
+    public void listShopUserExceedMaxSize() throws Exception {
+        api.login(XIPLI_ADMIN);
+        ResponseEntity<List<User>> response;
+
+        Shop shop1 = testUtils.setupShopObject();
+        ResponseEntity<Shop> shopResponse = api.createShop(shop1);
+        Shop createdShop1 = shopResponse.getBody();
+
+        response = api.listShopUsers(createdShop1.getShopId(), "?size=1001");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertContains(api.getLastResponseAsString(), "Maximum page size can be 1000");
+    }
 }

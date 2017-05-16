@@ -37,7 +37,7 @@ public class CategoryAPITest extends _BaseAPITest {
 
         api.login(CUSTOMER_USER);
 
-        categoryListResponse = api.listCategory(shopIdForTest);
+        categoryListResponse = api.listCategory(shopIdForTest, "?size=1000");
         assertEquals(HttpStatus.OK, categoryListResponse.getStatusCode());
         List<Category> categoryList = categoryListResponse.getBody();
         assertEquals(1, categoryList.size());
@@ -211,6 +211,7 @@ public class CategoryAPITest extends _BaseAPITest {
         api.logout();
 
     }
+
     private Category categoryCreateWithAssertion(){
         ResponseEntity<List<Category>> categoryListResponse;
         ResponseEntity<Category> categoryResponse;
@@ -224,5 +225,19 @@ public class CategoryAPITest extends _BaseAPITest {
         category.setCategoryId (createCategory.getCategoryId());
         assertEquals(category, createCategory);
         return createCategory;
+    }
+
+    @Test
+    public void listCategoriesExceedMaxSize() throws Exception {
+        api.login(XIPLI_ADMIN);
+        ResponseEntity<List<Category>> response;
+
+        Shop shop1 = testUtils.setupShopObject();
+        ResponseEntity<Shop> shopResponse = api.createShop(shop1);
+        Shop createdShop1 = shopResponse.getBody();
+
+        response = api.listCategory(createdShop1.getShopId(), "?size=1001");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertContains(api.getLastResponseAsString(), "Maximum page size can be 1000");
     }
 }

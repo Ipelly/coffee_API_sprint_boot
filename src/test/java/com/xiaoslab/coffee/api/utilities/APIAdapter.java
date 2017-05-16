@@ -66,6 +66,10 @@ public class APIAdapter {
         return lastResponse;
     }
 
+    public String getLastResponseAsString() {
+        return lastResponse.toString();
+    }
+
     private static void clearLastRequestAndResponse() {
         lastRequest = null;
         lastResponse = null;
@@ -292,6 +296,14 @@ public class APIAdapter {
         return POST(String.format(V1_SHOP_USER_ROOT_PATH, shopId), user, User.class);
     }
 
+    public ResponseEntity<List<User>> listShopUsers(long shopId) {
+        return LIST(String.format(V1_SHOP_USER_ROOT_PATH, shopId), User.class);
+    }
+
+    public ResponseEntity<List<User>> listShopUsers(long shopId, String queryParams) {
+        return LIST(String.format(V1_SHOP_USER_ROOT_PATH + queryParams, shopId), User.class);
+    }
+
     // Shops -----------------------
 
     public ResponseEntity<Shop> getShop(long shopId) {
@@ -348,6 +360,10 @@ public class APIAdapter {
         return listItem(shopId, "?categoryId=" + categoryId);
     }
 
+    public ResponseEntity<List<Item>> listItemForCategory(long shopId, long categoryId, long size) {
+        return listItem(shopId, "?categoryId=" + categoryId + "&size=" + size);
+    }
+
     // Category -----------------------
 
     public ResponseEntity<Category> createCategory(long shopId, Category category) {
@@ -368,6 +384,10 @@ public class APIAdapter {
 
     public ResponseEntity<List<Category>> listCategory(long shopId) {
         return LIST(String.format (V1_CATEGORY_ROOT_PATH, shopId), Category.class);
+    }
+
+    public ResponseEntity<List<Category>> listCategory(long shopId, String queryParams) {
+        return LIST(String.format (V1_CATEGORY_ROOT_PATH + queryParams, shopId), Category.class);
     }
 
     // Item Options -----------------------

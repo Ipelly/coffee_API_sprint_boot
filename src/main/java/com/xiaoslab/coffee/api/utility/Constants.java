@@ -21,6 +21,8 @@ public class Constants {
     public static final int LAT_LONG_PRECISION = 20;
     public static final int ITEM_PRICE_SCALE = 2;
 
+    public static final int MAX_LIST_PAGE_SIZE = 1000;
+
     public static final String V1 = "/v1";
     public static final String STATUS_ENDPOINT = "/status";
     public static final String TOKEN_ENDPOINT = "/oauth/token";

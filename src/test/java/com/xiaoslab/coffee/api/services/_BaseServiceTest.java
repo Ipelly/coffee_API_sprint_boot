@@ -7,25 +7,17 @@ import com.xiaoslab.coffee.api.repository.CategoryRepository;
 import com.xiaoslab.coffee.api.repository.ItemRepository;
 import com.xiaoslab.coffee.api.utilities.ServiceLoginUtils;
 import com.xiaoslab.coffee.api.utilities.TestUtils;
-import org.apache.log4j.Logger;
-import org.junit.runner.RunWith;
+import com.xiaoslab.coffee.api._BaseTestScript;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Collection;
 
-@RunWith(SpringRunner.class)
 @Transactional(isolation = Isolation.READ_UNCOMMITTED)
 @Rollback
-@Sql(scripts = "classpath:database/ClearDatabaseForTest.sql")
-@SpringBootTest
-public abstract class _BaseServiceTest {
+public abstract class _BaseServiceTest extends _BaseTestScript {
 
     @Autowired
     protected IService<Item> itemService;
@@ -51,10 +43,6 @@ public abstract class _BaseServiceTest {
     @Autowired
     protected EntityManager entityManager;
 
-    protected Logger getLogger() {
-        return Logger.getLogger(this.getClass());
-    }
-
     // This method is needed to refresh the bi-directional entities in JPA repository.
     // Otherwise JPA repository is unable to pickup the changes done from one side.
     protected void refreshEntities() {
@@ -64,18 +52,6 @@ public abstract class _BaseServiceTest {
         }
         for (Item item : itemRepository.findAll()) {
             entityManager.refresh(item);
-        }
-    }
-
-    <T> void assertContains(Collection<T> collection, T item) {
-        if (!collection.contains(item)) {
-            throw new AssertionError(String.format("Collection <%s> does not contain the expected item <%s>", collection, item));
-        }
-    }
-
-    <T> void assertContains(String full, String sub) {
-        if (!full.contains(sub)) {
-            throw new AssertionError(String.format("String <%s> does not contain the expected sub string <%s>", full, sub));
         }
     }
 }

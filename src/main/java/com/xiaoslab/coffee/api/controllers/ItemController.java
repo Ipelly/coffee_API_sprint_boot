@@ -30,12 +30,12 @@ public class ItemController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity list(@PathVariable long shopId,
+                               @RequestParam(name = "size", required = true) int size,
                                @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                               @RequestParam(name = "size", defaultValue = "10", required = false) int size,
                                @RequestParam(name = "categoryId", defaultValue = "0", required = false) long categoryId,
                                @RequestParam(name = "search", required = false) String search) {
 
-        Pageable pageable = new PageRequest(page, size);
+        Pageable pageable = AppUtility.createPageRequest(page, size);
         Specification<Item> specification;
 
         if(shopId > 0 && categoryId > 0){
